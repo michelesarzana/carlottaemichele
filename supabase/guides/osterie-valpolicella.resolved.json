@@ -1,0 +1,230 @@
+[
+ {
+  "name": "Enoteca della Valpolicella",
+  "osm": [
+   {
+    "name": "Enoteca della Valpolicella",
+    "lat": 45.5407008,
+    "lng": 10.891441,
+    "amenity": "restaurant",
+    "addr": "Via Osan 45 Fumane",
+    "website": "https://www.enotecadellavalpolicella.it/",
+    "phone": "+390456839146",
+    "opening_hours": null
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Fumane, Verona, Veneto, 37022, Italia",
+    "lat": 45.5810074,
+    "lng": 10.8840946,
+    "type": "administrative"
+   },
+   {
+    "display": "Fumane, Verona, Veneto, 37022, Italia",
+    "lat": 45.5429525,
+    "lng": 10.8839737,
+    "type": "village"
+   }
+  ]
+ },
+ {
+  "name": "Trattoria Dalla Rosa Alda",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": []
+ },
+ {
+  "name": "Trattoria alla Ruota",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Via Proale, Provale, Fane, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5670111,
+    "lng": 10.9604363,
+    "type": "secondary"
+   }
+  ]
+ },
+ {
+  "name": "Trattoria Caprini",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5605323,
+    "lng": 10.9418661,
+    "type": "village"
+   },
+   {
+    "display": "Torbe, Via Galdè, Ca del Gallo, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5603428,
+    "lng": 10.9418745,
+    "type": "bus_stop"
+   }
+  ]
+ },
+ {
+  "name": "Osteria Dalla Bice",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Via Bottega, Ca del Gallo, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5602054,
+    "lng": 10.9393483,
+    "type": "residential"
+   },
+   {
+    "display": "Via Bottega, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5594211,
+    "lng": 10.9383205,
+    "type": "residential"
+   }
+  ]
+ },
+ {
+  "name": "Antica Trattoria da Bepi",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Via Valpolicella, Canzago, Marano di Valpolicella, Verona, Veneto, 37020, Italia",
+    "lat": 45.5560348,
+    "lng": 10.9155538,
+    "type": "secondary"
+   }
+  ]
+ },
+ {
+  "name": "Antica Osteria della Valpolicella",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Antica Osteria della Valpolicella, 33, Via Monti Lessini, Carazzole, San Rocco, Marano di Valpolicella, Verona, Veneto, 37020, Italia",
+    "lat": 45.5655749,
+    "lng": 10.9141253,
+    "type": "restaurant"
+   }
+  ]
+ },
+ {
+  "name": "La Locanda dal Nane",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Via Chiesa, Ossan, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
+    "lat": 45.5166015,
+    "lng": 10.8807716,
+    "type": "residential"
+   },
+   {
+    "display": "Via Chiesa, Contine, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
+    "lat": 45.5143398,
+    "lng": 10.8776161,
+    "type": "residential"
+   }
+  ]
+ },
+ {
+  "name": "Groto de Corgnan",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Corrubbio di Negarine, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
+    "lat": 45.4880843,
+    "lng": 10.9028367,
+    "type": "village"
+   }
+  ]
+ },
+ {
+  "name": "Trattoria da Andrea",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Piazza Roma, Vigolo, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5309035,
+    "lng": 10.9370511,
+    "type": "tertiary"
+   }
+  ]
+ },
+ {
+  "name": "Alla Coà",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Pescantina, Verona, Veneto, 37026, Italia",
+    "lat": 45.4904974,
+    "lng": 10.8562597,
+    "type": "administrative"
+   },
+   {
+    "display": "Pescantina, Verona, Veneto, 37026, Italia",
+    "lat": 45.4833716,
+    "lng": 10.8691009,
+    "type": "town"
+   }
+  ]
+ },
+ {
+  "name": "Trattoria alla Porchetta",
+  "osm": [
+   {
+    "error": "The read operation timed out"
+   }
+  ],
+  "nominatim": [
+   {
+    "display": "Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5394575,
+    "lng": 10.9521505,
+    "type": "administrative"
+   },
+   {
+    "display": "Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5296706,
+    "lng": 10.9400217,
+    "type": "town"
+   }
+  ]
+ }
+]
