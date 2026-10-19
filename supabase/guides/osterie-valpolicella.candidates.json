@@ -1,0 +1,14 @@
+[
+  {"name": "Enoteca della Valpolicella", "key": "Enoteca della Valpolicella", "address": "Fumane, Verona"},
+  {"name": "Trattoria Dalla Rosa Alda", "key": "Rosa Alda", "address": "Strada Garibaldi 4, San Giorgio, Sant'Ambrogio di Valpolicella"},
+  {"name": "Trattoria alla Ruota", "key": "Ruota", "address": "Via Proale 6, Mazzano, Negrar di Valpolicella"},
+  {"name": "Trattoria Caprini", "key": "Caprini", "address": "Torbe, Negrar di Valpolicella"},
+  {"name": "Osteria Dalla Bice", "key": "Bice", "address": "Via Bottega 1, Torbe, Negrar di Valpolicella"},
+  {"name": "Antica Trattoria da Bepi", "key": "Bepi", "address": "Via Valpolicella 14, Marano di Valpolicella"},
+  {"name": "Antica Osteria della Valpolicella", "key": "Antica Osteria", "address": "Via Monti Lessini 33, Marano di Valpolicella"},
+  {"name": "La Locanda dal Nane", "key": "Nane", "address": "Via Chiesa 73, San Pietro in Cariano"},
+  {"name": "Groto de Corgnan", "key": "Corgnan", "address": "Corrubbio, San Pietro in Cariano"},
+  {"name": "Trattoria da Andrea", "key": "Andrea", "address": "Piazza Roma 4, Negrar di Valpolicella"},
+  {"name": "Alla Coà", "key": "Coà", "address": "Pescantina, Verona"},
+  {"name": "Trattoria alla Porchetta", "key": "Porchetta", "address": "Negrar di Valpolicella"}
+]

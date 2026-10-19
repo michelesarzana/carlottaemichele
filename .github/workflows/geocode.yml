@@ -1,0 +1,25 @@
+# Verifica su OpenStreetMap i candidati delle guide e salva i risultati nella repo.
+name: Verifica guide
+
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/guides/*.candidates.json', '.github/scripts/geocode.py']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  geocode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/geocode.py
+      - name: Salva i risultati
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add supabase/guides/*.resolved.json
+          git commit -m "Verifica guide su OpenStreetMap" || exit 0
+          git pull --rebase -q && git push
