@@ -49,11 +49,51 @@ function urlFromHtml(html: string): URL | null {
   try { return new URL(m[1] || m[0]); } catch { return null; }
 }
 
+const HEADERS = {
+  'User-Agent': UA,
+  'Accept-Language': 'it-IT,it',
+  'Accept': 'text/html',
+  // Salta la pagina del consenso cookie che Google mostra in Europa
+  'Cookie': 'CONSENT=YES+cb; SOCS=CAI'
+};
+
+function coordsFromUrl(s: string) {
+  const m = s.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || s.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) ||
+    s.match(/[?&](?:q|ll|query|sll|center)=(-?\d+\.\d+)(?:,|%2C)\s*(-?\d+\.\d+)/i);
+  return m ? { lat: Number(m[1]), lng: Number(m[2]) } : null;
+}
+
+// Coordinate e nome dalla pagina di Google Maps
+async function inspectPage(u: URL) {
+  try {
+    const res = await fetch(u, { headers: HEADERS });
+    const html = (await res.text()).slice(0, 1_500_000);
+    const finalUrl = res.url;
+    let coords = coordsFromUrl(finalUrl);
+    if (!coords) {
+      const s = html.match(/staticmap\?[^"']*?center=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/) ||
+        html.match(/markers=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/);
+      if (s) coords = { lat: Number(s[1]), lng: Number(s[2]) };
+    }
+    if (!coords) {
+      // APP_INITIALIZATION_STATE=[[[zoom, lng, lat] …
+      const a = html.match(/APP_INITIALIZATION_STATE=\[\[\[(-?[\d.]+),(-?[\d.]+),(-?[\d.]+)\]/);
+      if (a) coords = { lat: Number(a[3]), lng: Number(a[2]) };
+    }
+    const title = html.match(/<meta[^>]+(?:property|itemprop)=["'](?:og:title|name)["'][^>]+content=["']([^"']+)["']/i)?.[1];
+    return { finalUrl, coords, title: title ? title.replace(/&amp;/g, '&').replace(/ · .*$/, '').trim() : null };
+  } catch {
+    return { finalUrl: u.href, coords: null, title: null };
+  }
+}
+
 async function resolveShort(req: Request, start: URL) {
   if (!SHORT.some((r) => r.test(start.hostname))) return json(req, { error: 'solo link corti di Google Maps' }, 400);
   let current = start;
+  const hops: string[] = [];
   for (let hop = 0; hop < 8; hop++) {
-    const res = await fetch(current, { redirect: 'manual', headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it', 'Accept': 'text/html' } });
+    const res = await fetch(current, { redirect: 'manual', headers: HEADERS });
+    hops.push(`${res.status} ${current.hostname}`);
     const loc = res.headers.get('location');
     if (res.status >= 300 && res.status < 400 && loc) {
       await res.body?.cancel();
@@ -69,7 +109,27 @@ async function resolveShort(req: Request, start: URL) {
     if (found && FOLLOW.some((r) => r.test(found.hostname))) current = unwrapConsent(found);
     break;
   }
-  return json(req, { url: current.href });
+
+  // Nome e indirizzo dal parametro q (tipico dei link condivisi da iPhone)
+  const q = current.searchParams.get('q') || current.searchParams.get('query') || '';
+  const isText = q && !/^-?\d+\.\d+,/.test(q);
+  let coords = coordsFromUrl(current.href);
+  let title: string | null = null;
+  if (!coords && isMapsUrl(current)) {
+    const page = await inspectPage(current);
+    coords = page.coords;
+    title = page.title;
+    hops.push(`pagina: ${coords ? 'coordinate trovate' : 'niente coordinate'}`);
+  }
+  const parts = isText ? q.split(',').map((s) => s.trim()).filter(Boolean) : [];
+  return json(req, {
+    url: current.href,
+    lat: coords?.lat ?? null,
+    lng: coords?.lng ?? null,
+    name: title || parts[0] || null,
+    address: parts.length > 1 ? parts.slice(1).join(', ') : null,
+    hops
+  });
 }
 
 async function ogImage(req: Request, start: URL) {

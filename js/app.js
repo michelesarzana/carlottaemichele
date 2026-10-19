@@ -1115,8 +1115,12 @@ function parseLink(u) {
   else {
     try {
       const url = new URL(u);
-      const q = url.searchParams.get('q') || url.searchParams.get('name');
-      if (q && !/^-?\d/.test(q)) out.name = q;
+      const q = url.searchParams.get('q') || url.searchParams.get('query') || url.searchParams.get('name');
+      if (q && !/^-?\d/.test(q)) {
+        const parts = q.split(',').map((s) => s.trim()).filter(Boolean);
+        out.name = parts[0];
+        if (parts.length > 1) out.address = parts.slice(1).join(', ');
+      }
     } catch { /* non un URL */ }
   }
   out.isMap = /(google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.apple\.com|openstreetmap\.org)/i.test(u);
@@ -1364,10 +1368,14 @@ function openPlaceForm(place = null, preset = {}) {
           try {
             const { data, error } = await sb.functions.invoke('resolve-link', { body: { url: u } });
             if (error) throw error;
+            console.info('resolve-link', data);
             if (data?.url) {
               const full = parseLink(data.url);
               r = { ...r, ...Object.fromEntries(Object.entries(full).filter(([, v]) => v != null && v !== '')), isMap: true, isShort: true };
             }
+            if (typeof data?.lat === 'number') { r.lat = data.lat; r.lng = data.lng; }
+            if (data?.name) r.name = data.name;
+            if (data?.address) r.address = data.address;
           } catch (e) {
             console.warn('resolve-link', e);
             let detail = e?.message || '';
@@ -1385,6 +1393,22 @@ function openPlaceForm(place = null, preset = {}) {
           renderLocated(); validate();
           try { Object.assign(f, await nominatimReverse(r.lat, r.lng)); renderLocated(); } catch { /* ok */ }
           toast('Trovato dal link');
+        } else if (r.address) {
+          // Prima l'indirizzo, che OpenStreetMap trova bene; il nome resta quello di Google
+          q('#pf-q').value = r.address;
+          q('#pf-results').innerHTML = '<div class="field-hint">Cerco l’indirizzo…</div>';
+          try {
+            const list = await nominatimSearch(r.address, false);
+            if (list.length) {
+              const a = list[0];
+              f.lat = a.lat; f.lng = a.lng; f.area = a.area; f.address = a.address;
+              renderResults(null); renderLocated(); validate();
+              toast('Trovato dal link');
+            } else {
+              q('#pf-q').value = `${r.name || ''} ${r.address}`.trim();
+              doSearch(q('#pf-q').value);
+            }
+          } catch { doSearch(r.address); }
         } else if (r.name) {
           q('#pf-q').value = r.name;
           doSearch(r.name);

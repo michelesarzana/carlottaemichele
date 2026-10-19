@@ -1,0 +1,42 @@
+# Prova la funzione resolve-link con i link in supabase/test-links.txt
+# e salva le risposte in supabase/test-results.txt (per il debug).
+name: Prova link
+
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/test-links.txt']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Chiama la funzione
+        run: |
+          fn="https://btyvzzmyzmlvyhxwavxd.supabase.co/functions/v1/resolve-link"
+          key="sb_publishable_u8wHUg1_eKbo1U3nwGphRA_vVF-u8Vj"
+          : > supabase/test-results.txt
+          while IFS= read -r link; do
+            [ -z "$link" ] && continue
+            echo "### $link" >> supabase/test-results.txt
+            jq -n --arg u "$link" '{url: $u}' > /tmp/b.json
+            curl -sS -m 40 -X POST "$fn" -H "apikey: $key" -H "Content-Type: application/json" --data @/tmp/b.json \
+              -w "\nHTTP %{http_code}\n" >> supabase/test-results.txt 2>&1 || true
+            echo >> supabase/test-results.txt
+            # Anche la catena di rimandi vista da un server qualunque
+            echo "--- rimandi" >> supabase/test-results.txt
+            curl -sS -m 20 -I -L -A "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" "$link" 2>&1 | grep -iE "^(HTTP|location)" >> supabase/test-results.txt || true
+            echo >> supabase/test-results.txt
+          done < supabase/test-links.txt
+      - name: Salva i risultati
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add supabase/test-results.txt
+          git commit -m "Risultati prova link" || exit 0
+          git push
