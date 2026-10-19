@@ -32,7 +32,14 @@
   "name": "Trattoria Dalla Rosa Alda",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Trattoria dalla Rosa Alda",
+    "lat": 45.5344463,
+    "lng": 10.8496394,
+    "amenity": "restaurant",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": []
@@ -41,7 +48,24 @@
   "name": "Trattoria alla Ruota",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "La Ruota dell'Usato",
+    "lat": 45.4168617,
+    "lng": 10.9494209,
+    "amenity": "second_hand",
+    "addr": "Via Villafranca 100 Verona",
+    "website": null,
+    "phone": null,
+    "opening_hours": "Mo 16:00-19:30; Tu-Sa 09:30-12:30,16:00-19:30"
+   },
+   {
+    "name": "Trattoria alla Ruota",
+    "lat": 45.5696827,
+    "lng": 10.9568263,
+    "amenity": "restaurant",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": [
@@ -57,7 +81,24 @@
   "name": "Trattoria Caprini",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Trattoria Caprini",
+    "lat": 45.5606062,
+    "lng": 10.9418261,
+    "amenity": "restaurant",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Laboratorio Caprini",
+    "lat": 45.5606283,
+    "lng": 10.9418477,
+    "amenity": "bakery",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": [
@@ -79,7 +120,24 @@
   "name": "Osteria Dalla Bice",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Trattoria dalla Bice",
+    "lat": 45.5596471,
+    "lng": 10.9383957,
+    "amenity": "restaurant",
+    "addr": "Via Bottega 2",
+    "website": "https://www.dallabice.it/",
+    "phone": "+39 045 7500720",
+    "opening_hours": null
+   },
+   {
+    "name": "Marco Bicego",
+    "lat": 45.4427069,
+    "lng": 10.9950562,
+    "amenity": "jewelry",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": [
@@ -99,11 +157,7 @@
  },
  {
   "name": "Antica Trattoria da Bepi",
-  "osm": [
-   {
-    "error": "The read operation timed out"
-   }
-  ],
+  "osm": [],
   "nominatim": [
    {
     "display": "Via Valpolicella, Canzago, Marano di Valpolicella, Verona, Veneto, 37020, Italia",
@@ -117,7 +171,34 @@
   "name": "Antica Osteria della Valpolicella",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Antica Osteria",
+    "lat": 45.5698696,
+    "lng": 10.7464036,
+    "amenity": "restaurant",
+    "addr": "",
+    "website": "http://www.anticaosteria.eu/",
+    "phone": "+39 045 6200320; +39 340 3723606",
+    "opening_hours": null
+   },
+   {
+    "name": "Antica Osteria Molinari",
+    "lat": 45.4671468,
+    "lng": 10.7205722,
+    "amenity": "restaurant",
+    "addr": "Via Porto 1 Pacengo",
+    "website": null,
+    "phone": "+39 045 759 0163",
+    "opening_hours": null
+   },
+   {
+    "name": "Antica Osteria della Valpolicella",
+    "lat": 45.5655749,
+    "lng": 10.9141253,
+    "amenity": "restaurant",
+    "addr": "Via Monti Lessini 33 San Rocco",
+    "website": "https://www.anticaosteriavalpolicella.it/",
+    "phone": "+39 045 775 5010",
+    "opening_hours": "We-Fr 19:30-22:00; Sa-Su 12:00-14:30, 19:30-22:00"
    }
   ],
   "nominatim": [
@@ -133,7 +214,14 @@
   "name": "La Locanda dal Nane",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Osteria dal Nane",
+    "lat": 45.4964091,
+    "lng": 10.8182619,
+    "amenity": "restaurant",
+    "addr": "Località Pol 55 Pastrengo",
+    "website": "https://www.dalnane1921.com/",
+    "phone": "+39 045 7170771",
+    "opening_hours": "We-Mo 12:00-14:00,19:00-22:00"
    }
   ],
   "nominatim": [
@@ -145,8 +233,8 @@
    },
    {
     "display": "Via Chiesa, Contine, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
-    "lat": 45.5143398,
-    "lng": 10.8776161,
+    "lat": 45.5145486,
+    "lng": 10.8768179,
     "type": "residential"
    }
   ]
@@ -155,7 +243,24 @@
   "name": "Groto de Corgnan",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Ristorante Groto De Corgnan",
+    "lat": 45.5242628,
+    "lng": 10.8412561,
+    "amenity": "restaurant",
+    "addr": "Via Corgnan 41 Sant'Ambrogio di Valpolicella",
+    "website": "https://www.grotodecorgnan.it/",
+    "phone": null,
+    "opening_hours": "Tu-Sa 20:00-23:30"
+   },
+   {
+    "name": "Bottega de Corgnan",
+    "lat": 45.524159,
+    "lng": 10.8408792,
+    "amenity": "restaurant",
+    "addr": "Via Corgnan 12 Sant'Ambrogio di Valpolicella",
+    "website": "https://bottegadecorgnan.com",
+    "phone": "+39 045 6862272",
+    "opening_hours": null
    }
   ],
   "nominatim": [
@@ -171,7 +276,154 @@
   "name": "Trattoria da Andrea",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Zenti Andrea",
+    "lat": 45.4943574,
+    "lng": 10.9407312,
+    "amenity": "fuel",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Andrea Cesta Parrucchiere",
+    "lat": 45.4443924,
+    "lng": 10.955339,
+    "amenity": "hairdresser",
+    "addr": "Via Gracco Spaziani 17 Verona",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Andrea Armani",
+    "lat": 45.4306557,
+    "lng": 11.0593899,
+    "amenity": "bicycle",
+    "addr": "Via Pietro Sgulmero 22a Verona",
+    "website": "http://www.cicliandrearmani.it/",
+    "phone": "+39 045 975688",
+    "opening_hours": null
+   },
+   {
+    "name": "Acconciature Uomo Andrea",
+    "lat": 45.4375966,
+    "lng": 10.9733876,
+    "amenity": "hairdresser",
+    "addr": "Via Baldassare Longhena 11a Verona",
+    "website": null,
+    "phone": "+39 328 4873116",
+    "opening_hours": "Tu, We, Fr 08:00-12:30,14:00-19:00 \"preferibilmente su appuntamento\"; Sa 08:00-17:00 \"preferibilmente su appuntamento\"; Th 08:00-12:30,14:00-19:00 \"solo su appuntamento\"; Mo off"
+   },
+   {
+    "name": "Dottor Andrea Compri",
+    "lat": 45.4364107,
+    "lng": 10.9814894,
+    "amenity": "dentist",
+    "addr": "",
+    "website": "https://www.studiocompri.com/",
+    "phone": "+39 045 8342825",
+    "opening_hours": "Tu-Fr 10:00-19:30"
+   },
+   {
+    "name": "Andrea Concato",
+    "lat": 45.4399392,
+    "lng": 10.9941108,
+    "amenity": "jewelry",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Andrea",
+    "lat": 45.5734899,
+    "lng": 10.710876,
+    "amenity": "hairdresser",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "chiesa di Sant'Andrea",
+    "lat": 45.5229861,
+    "lng": 11.0410151,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Chiesa di sant'andrea",
+    "lat": 45.4074675,
+    "lng": 10.835199,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Sant'Andrea Apostolo",
+    "lat": 45.4024652,
+    "lng": 11.0152063,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Chiesa di Sant'Andrea",
+    "lat": 45.6796514,
+    "lng": 10.8931852,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Tomelini Andrea Falegnameria",
+    "lat": 45.5596599,
+    "lng": 10.9977343,
+    "amenity": null,
+    "addr": "Via Domenico da Lugo 52 Grezzana",
+    "website": "https://www.tomeliniserramenti.it/",
+    "phone": "+393487642963",
+    "opening_hours": null
+   },
+   {
+    "name": "Chiesa di Sant'Andrea",
+    "lat": 45.5536002,
+    "lng": 10.7666695,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Chiesa di Sant'Andrea Apostolo",
+    "lat": 45.4599193,
+    "lng": 10.7859052,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Chiesa di Sant'Andrea",
+    "lat": 45.4080808,
+    "lng": 10.841919,
+    "amenity": "place_of_worship",
+    "addr": "",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": [
@@ -185,11 +437,7 @@
  },
  {
   "name": "Alla Coà",
-  "osm": [
-   {
-    "error": "The read operation timed out"
-   }
-  ],
+  "osm": [],
   "nominatim": [
    {
     "display": "Pescantina, Verona, Veneto, 37026, Italia",
@@ -209,7 +457,14 @@
   "name": "Trattoria alla Porchetta",
   "osm": [
    {
-    "error": "The read operation timed out"
+    "name": "Macelleria alla porchetta",
+    "lat": 45.5287469,
+    "lng": 10.9505501,
+    "amenity": "butcher",
+    "addr": "Via San Peretto 18 Negrar",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ],
   "nominatim": [
