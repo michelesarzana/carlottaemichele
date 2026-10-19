@@ -1,4 +1,4 @@
--- carlottaemichele · viaggi e foto
+-- carlottaemichele · viaggi e foto (applicato in automatico da GitHub)
 -- Da incollare una volta nel SQL Editor di Supabase, dopo schema.sql.
 
 -- ─────────────────────────────────────────────
