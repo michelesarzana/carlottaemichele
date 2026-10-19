@@ -16,13 +16,13 @@ BBOX = (45.40, 10.70, 45.68, 11.10)  # sud, ovest, nord, est
 
 def get(url, data=None):
     req = urllib.request.Request(url, data=data, headers=UA)
-    with urllib.request.urlopen(req, timeout=60) as r:
+    with urllib.request.urlopen(req, timeout=120) as r:
         return json.loads(r.read().decode())
 
 
 def overpass(key):
     safe = key.replace('"', "")
-    q = f'[out:json][timeout:40];nwr["name"~"{safe}",i]({BBOX[0]},{BBOX[1]},{BBOX[2]},{BBOX[3]});out tags center;'
+    q = f'[out:json][timeout:90];nwr["name"~"{safe}",i]({BBOX[0]},{BBOX[1]},{BBOX[2]},{BBOX[3]});out tags center;'
     for ep in ("https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"):
         try:
             j = get(ep, ("data=" + urllib.parse.quote(q)).encode())
@@ -58,11 +58,21 @@ def nominatim(address):
 
 for path in glob.glob("supabase/guides/*.candidates.json"):
     items = json.load(open(path))
+    # Una sola richiesta Overpass per tutti i candidati, con qualche tentativo
+    pattern = "|".join(it["key"] for it in items)
+    allosm = [{"error": "nessun tentativo"}]
+    for attempt in range(4):
+        allosm = overpass(pattern)
+        if not (allosm and "error" in allosm[0]):
+            break
+        time.sleep(10)
     result = []
     for it in items:
-        osm = overpass(it["key"])
-        time.sleep(1.2)
+        k = it["key"].lower()
+        osm = [o for o in allosm if "error" in o or (o.get("name") and k in o["name"].lower())]
         nom = nominatim(it["address"])
+        if not nom or "error" in nom[0]:
+            nom = nominatim(it["name"] + ", " + it["address"])
         time.sleep(1.2)
         result.append({"name": it["name"], "osm": osm, "nominatim": nom})
     out = path.replace(".candidates.json", ".resolved.json")
