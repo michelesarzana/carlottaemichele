@@ -1185,7 +1185,7 @@ function openPlaceForm(place = null, preset = {}) {
         <div>
           <label class="field-label" for="pf-link">Da un link</label>
           <div class="inline-input">
-            <input id="pf-link" type="url" placeholder="Google Maps, Apple Maps, sito…" value="${esc(f.source_url)}">
+            <input id="pf-link" type="text" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="Google Maps, Apple Maps, sito…" value="${esc(f.source_url)}">
             <button class="btn btn-quiet" id="pf-read">Leggi</button>
           </div>
         </div>
@@ -1348,19 +1348,31 @@ function openPlaceForm(place = null, preset = {}) {
       q('#pf-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(e.target.value); } });
 
       const readLink = async () => {
-        const u = q('#pf-link').value.trim();
-        if (!u) return;
+        const raw = q('#pf-link').value.trim();
+        if (!raw) return;
+        // Da app e condivisioni arriva spesso "Nome · Indirizzo https://maps.app.goo.gl/…"
+        const m = raw.match(/https?:\/\/\S+/);
+        const u = m ? m[0].replace(/[),.;]+$/, '') : raw;
+        const textName = m ? raw.slice(0, m.index).split(/\n|·|,|–| - /)[0].trim() : '';
+        if (m && u !== raw) q('#pf-link').value = u;
         f.source_url = u;
         let r = parseLink(u);
-        if (r.isShort && r.lat == null && !r.name) {
+        if (!r.name && textName && textName.length < 80) r.name = textName;
+        if (r.isShort && r.lat == null) {
           q('#pf-read').disabled = true;
           q('#pf-read').textContent = 'Apro…';
           try {
             const { data, error } = await sb.functions.invoke('resolve-link', { body: { url: u } });
             if (error) throw error;
-            if (data?.url) r = { ...parseLink(data.url), isMap: true, isShort: true };
+            if (data?.url) {
+              const full = parseLink(data.url);
+              r = { ...r, ...Object.fromEntries(Object.entries(full).filter(([, v]) => v != null && v !== '')), isMap: true, isShort: true };
+            }
           } catch (e) {
             console.warn('resolve-link', e);
+            let detail = e?.message || '';
+            try { detail = (await e?.context?.json?.())?.error || detail; } catch { /* niente */ }
+            toast('Non riesco ad aprire il link corto' + (detail ? `: ${detail}` : ''));
           } finally {
             q('#pf-read').disabled = false;
             q('#pf-read').textContent = 'Leggi';

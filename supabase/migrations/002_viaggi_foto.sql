@@ -20,7 +20,9 @@ create table if not exists public.trips (
   created_at   timestamptz not null default now()
 );
 alter table public.trips enable row level security;
+drop policy if exists "viaggi: lettura pubblica" on public.trips;
 create policy "viaggi: lettura pubblica" on public.trips for select using (true);
+drop policy if exists "viaggi: scrittura editor" on public.trips;
 create policy "viaggi: scrittura editor" on public.trips for all
   using (public.is_editor()) with check (public.is_editor());
 
@@ -31,6 +33,7 @@ create table if not exists public.trip_dates (
   end_on   date
 );
 alter table public.trip_dates enable row level security;
+drop policy if exists "date viaggi: solo editor" on public.trip_dates;
 create policy "date viaggi: solo editor" on public.trip_dates for all
   using (public.is_editor()) with check (public.is_editor());
 revoke all on public.trip_dates from anon;
@@ -58,11 +61,15 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('photos', 'photos', true, 2097152, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do nothing;
 
+drop policy if exists "foto: lettura pubblica" on storage.objects;
 create policy "foto: lettura pubblica" on storage.objects for select
   using (bucket_id = 'photos');
+drop policy if exists "foto: caricamento editor" on storage.objects;
 create policy "foto: caricamento editor" on storage.objects for insert
   with check (bucket_id = 'photos' and public.is_editor());
+drop policy if exists "foto: modifica editor" on storage.objects;
 create policy "foto: modifica editor" on storage.objects for update
   using (bucket_id = 'photos' and public.is_editor());
+drop policy if exists "foto: eliminazione editor" on storage.objects;
 create policy "foto: eliminazione editor" on storage.objects for delete
   using (bucket_id = 'photos' and public.is_editor());

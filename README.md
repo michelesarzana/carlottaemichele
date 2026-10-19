@@ -28,8 +28,7 @@ Voti e recensioni sono pubblici. Le date delle visite stanno in `visit_dates`, l
    - Site URL: l'indirizzo del sito
    - Redirect URLs: lo stesso indirizzo
 
-4. SQL Editor › incolla `supabase/migrations/002_viaggi_foto.sql` › Run (viaggi, foto, spazio file).
-5. Edge Functions › `resolve-link` › incolla `supabase/functions/resolve-link/index.ts` › Deploy.
+4. Il resto lo fa GitHub: il flusso `.github/workflows/supabase.yml` applica gli script in `supabase/migrations` e pubblica le funzioni. Serve il segreto `SUPABASE_ACCESS_TOKEN` (Supabase › Account › Access Tokens) nelle impostazioni della repo.
 
 ## Foto
 
