@@ -13,7 +13,7 @@ function stripHtml(s) {
   return (d.textContent || '').replace(/\s+/g, ' ').trim();
 }
 const STOP = new Set(['di', 'del', 'della', 'dei', 'delle', 'da', 'la', 'il', 'lo', 'le', 'i', 'gli', 'e', 'al', 'alla', 'ai', 'the', 'de', 'do', 'da', 'osteria', 'trattoria', 'ristorante', 'bar', 'caffe', 'cantina', 'hotel', 'museo']);
-function similar(a, b) {
+export function similar(a, b) {
   const ta = norm(a).split(' ').filter((w) => w.length > 2 && !STOP.has(w));
   const tb = new Set(norm(b).split(' '));
   if (!ta.length) return false;

@@ -166,6 +166,42 @@ async function ogImage(req: Request, start: URL) {
   }
 }
 
+// Cerca il link al menù nella home del locale
+async function findMenu(req: Request, start: URL) {
+  if (isPrivateHost(start.hostname)) return json(req, { error: 'indirizzo non valido' }, 400);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const res = await fetch(start, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'it-IT,it' }, signal: ctrl.signal });
+    if (!res.ok) return json(req, { menu: null });
+    const html = (await res.text()).slice(0, 800_000);
+    const links = [...html.matchAll(/<a\b[^>]*href=["']([^"'#]+)["'][^>]*>([\s\S]*?)<\/a>/gi)].map((m) => ({
+      href: m[1].replace(/&amp;/g, '&'),
+      text: m[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase()
+    }));
+    const score = (l: { href: string; text: string }) => {
+      const h = l.href.toLowerCase();
+      let s = 0;
+      if (/\bmen[uù]\b|menu/.test(l.text)) s += 5;
+      if (/\bla carta\b|\bcarta\b|\bpiatti\b|\bproposte\b|\bcucina\b|\bfood\b|\bdegustazion/.test(l.text)) s += 3;
+      if (/men[uù]|carta|food|piatti/.test(h)) s += 3;
+      if (/\.pdf($|\?)/.test(h)) s += 1;
+      if (/vini|wine|bevande|drink/.test(l.text) && s < 5) s -= 1;
+      if (/^(mailto|tel|javascript):/.test(h)) s = -10;
+      return s;
+    };
+    const best = links.map((l) => ({ ...l, s: score(l) })).filter((l) => l.s >= 3).sort((a, b) => b.s - a.s)[0];
+    if (!best) return json(req, { menu: null });
+    const u = new URL(best.href, res.url);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return json(req, { menu: null });
+    return json(req, { menu: u.href });
+  } catch {
+    return json(req, { menu: null });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors(req) });
   if (req.method !== 'POST') return json(req, { error: 'metodo non valido' }, 405);
@@ -175,14 +211,16 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json();
     start = new URL(String(body.url).trim());
-    if (body.mode === 'og') mode = 'og';
+    if (body.mode === 'og' || body.mode === 'menu') mode = body.mode;
   } catch {
     return json(req, { error: 'link non valido' }, 400);
   }
   if (start.protocol !== 'https:' && start.protocol !== 'http:') return json(req, { error: 'link non valido' }, 400);
 
   try {
-    return mode === 'og' ? await ogImage(req, start) : await resolveShort(req, start);
+    if (mode === 'og') return await ogImage(req, start);
+    if (mode === 'menu') return await findMenu(req, start);
+    return await resolveShort(req, start);
   } catch (e) {
     return json(req, { error: String(e?.message || e) }, 502);
   }

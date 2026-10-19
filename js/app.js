@@ -3,6 +3,9 @@ import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABEL
 import { icon, CATEGORY_ICONS } from './icons.js';
 import { Sheet } from './sheet.js';
 import { findPlacePhoto, findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js';
+import { enrichPlace, prettyHours } from './enrich.js';
+
+const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' }
@@ -623,20 +626,33 @@ function viewPlace() {
 
   const links = [];
   const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+  const menu = safeUrl(p.menu_url);
+  if (menu) links.push({ label: 'Menù', sub: host(menu), href: menu, ic: 'fork' });
   if (site) links.push({ label: 'Sito', sub: host(site), href: site, ic: 'globe' });
+  if (p.phone) links.push({ label: 'Telefono', sub: p.phone, href: `tel:${String(p.phone).replace(/[^\d+]/g, '')}`, ic: 'phone' });
+  if (p.email && /^\S+@\S+$/.test(p.email)) links.push({ label: 'Email', sub: p.email, href: `mailto:${p.email}`, ic: 'mail' });
+  const insta = safeUrl(p.instagram);
+  if (insta) links.push({ label: 'Instagram', sub: '@' + insta.replace(/\/$/, '').split('/').pop(), href: insta, ic: 'camera' });
   const src = safeUrl(p.source_url);
   if (src && src !== site) links.push({ label: 'Link salvato', sub: host(src), href: src, ic: 'link' });
   links.push({ label: 'Google Maps', sub: 'Apri il posto', href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}%20${p.lat},${p.lng}`, ic: 'pin' });
   if (isApple()) links.push({ label: 'Mappe di Apple', sub: 'Apri il posto', href: `https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(p.name)}`, ic: 'pin' });
   body += '<div class="section-label">Link</div><div class="card list-card">';
   for (const l of links) {
-    body += `<a class="list-line link-line" href="${esc(l.href)}" target="_blank" rel="noopener">
+    const ext = /^https?:/.test(l.href) ? ' target="_blank" rel="noopener"' : '';
+    body += `<a class="list-line link-line" href="${esc(l.href)}"${ext}>
       <span class="link-ic">${icon(l.ic, 16, 2.2)}</span>
       <span class="grow"><b>${esc(l.label)}</b><span class="dim"> · ${esc(l.sub)}</span></span>
       ${icon('next', 14, 2.4)}
     </a>`;
   }
   body += '</div>';
+
+  const hours = prettyHours(p.opening_hours);
+  if (hours.length) {
+    body += `<div class="section-label"><span class="grow">Orari</span><span class="note">da OpenStreetMap, da verificare</span></div>
+      <div class="card list-card">${hours.map((h) => `<div class="list-line">${esc(h)}</div>`).join('')}</div>`;
+  }
 
   if (p.notes || p.proposed_by) {
     body += '<div class="section-label">Note</div><div class="card notes">';
@@ -1151,7 +1167,10 @@ function openPlaceForm(place = null, preset = {}) {
     name: '', category_id: '', lat: null, lng: null, area: '', address: '', price: null,
     url: '', source_url: '', notes: '', proposed_by: S.me || '', guide_id: null,
     trip_id: null, day: null, photo_url: null, photo_credit: null, photo_source: null,
+    phone: '', email: '', instagram: '', menu_url: '', opening_hours: null,
     ...(place ? {
+      phone: place.phone || '', email: place.email || '', instagram: place.instagram || '',
+      menu_url: place.menu_url || '', opening_hours: place.opening_hours || null,
       name: place.name, category_id: place.category_id, lat: place.lat, lng: place.lng, area: place.area || '',
       address: place.address || '', price: place.price, url: place.url || '', source_url: place.source_url || '',
       notes: place.notes || '', proposed_by: place.proposed_by || '', guide_id: place.guide_id,
@@ -1172,7 +1191,10 @@ function openPlaceForm(place = null, preset = {}) {
         url: safeUrl(f.url) || null, source_url: f.source_url || null, notes: f.notes.trim() || null,
         proposed_by: f.proposed_by || null, guide_id: f.guide_id || null,
         trip_id: f.trip_id || null, day: f.trip_id && f.day ? Number(f.day) : null,
-        photo_url: f.photo_url || null, photo_credit: f.photo_credit || null, photo_source: f.photo_source || null
+        photo_url: f.photo_url || null, photo_credit: f.photo_credit || null, photo_source: f.photo_source || null,
+        phone: f.phone.trim() || null, email: f.email.trim() || null,
+        instagram: f.instagram.trim() ? (safeUrl(f.instagram.trim()) || `https://www.instagram.com/${f.instagram.trim().replace(/^@/, '')}/`) : null,
+        menu_url: safeUrl(f.menu_url.trim()) || null, opening_hours: f.opening_hours || null
       };
       const q = place ? sb.from('places').update(payload).eq('id', place.id).select().single()
         : sb.from('places').insert(payload).select().single();
@@ -1182,7 +1204,7 @@ function openPlaceForm(place = null, preset = {}) {
       toast(place ? 'Modifiche salvate' : 'Aggiunto alla mappa');
       await reload();
       go(`#/posto/${data.id}`);
-      if (!data.photo_url) autoPhoto(data).then((ok) => ok && reload());
+      if (!data.enriched_at || !data.photo_url) autoDetails(data).then((ok) => ok && reload());
     },
     mount(body, api) {
       body.innerHTML = `
@@ -1217,6 +1239,10 @@ function openPlaceForm(place = null, preset = {}) {
             <div class="group-line"><span>Prezzo</span><div class="segmented" id="pf-price"></div></div>
             <div class="group-line"><span>Proposto da</span><div class="segmented" id="pf-by"></div></div>
             <div class="group-line"><span>Sito</span><input id="pf-url" type="url" placeholder="https://" value="${esc(f.url)}"></div>
+            <div class="group-line"><span>Menù</span><input id="pf-menu" type="url" placeholder="https://" value="${esc(f.menu_url)}"></div>
+            <div class="group-line"><span>Telefono</span><input id="pf-phone" type="tel" placeholder="–" value="${esc(f.phone)}"></div>
+            <div class="group-line"><span>Email</span><input id="pf-email" type="email" placeholder="–" value="${esc(f.email)}"></div>
+            <div class="group-line"><span>Instagram</span><input id="pf-insta" type="text" autocapitalize="off" placeholder="@nome" value="${esc(f.instagram)}"></div>
             <div class="group-line"><span>Viaggio</span><select id="pf-trip" aria-label="Viaggio">
               <option value="">Nessuno</option>
               ${S.trips.map((t) => `<option value="${esc(t.id)}" ${f.trip_id === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
@@ -1473,6 +1499,10 @@ function openPlaceForm(place = null, preset = {}) {
 
       q('#pf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
       q('#pf-url').addEventListener('input', (e) => { f.url = e.target.value; });
+      q('#pf-menu').addEventListener('input', (e) => { f.menu_url = e.target.value; });
+      q('#pf-phone').addEventListener('input', (e) => { f.phone = e.target.value; });
+      q('#pf-email').addEventListener('input', (e) => { f.email = e.target.value; });
+      q('#pf-insta').addEventListener('input', (e) => { f.instagram = e.target.value; });
       q('#pf-notes').addEventListener('input', (e) => { f.notes = e.target.value; });
 
       renderLocated();
@@ -1540,12 +1570,33 @@ async function autoPhoto(place) {
   } catch { return false; }
 }
 
+// Dettagli (sito, contatti, orari, menù) poi foto. Compila solo i campi vuoti.
+async function autoDetails(place) {
+  let changed = false;
+  let current = { ...place };
+  if (!place.enriched_at) {
+    try {
+      const found = await enrichPlace(sb, place, FOOD.has(place.category_id));
+      const patch = { enriched_at: new Date().toISOString() };
+      const map = { website: 'url', phone: 'phone', email: 'email', opening_hours: 'opening_hours', menu_url: 'menu_url', instagram: 'instagram' };
+      for (const [k, col] of Object.entries(map)) if (found[k] && !place[col]) patch[col] = found[k];
+      const { error } = await sb.from('places').update(patch).eq('id', place.id);
+      if (!error) { changed = Object.keys(patch).length > 1; current = { ...current, ...patch }; }
+    } catch (e) { console.warn('dettagli', e); }
+  }
+  if (!current.photo_url && current.photo_source !== 'none') {
+    if (await autoPhoto(current)) changed = true;
+  }
+  return changed;
+}
+
 async function autoPhotosBackfill() {
   if (!S.editor || S.autoPhotosDone) return;
   S.autoPhotosDone = true;
   let changed = false;
-  for (const p of S.places.filter((x) => !x.photo_url && !x.photo_source).slice(0, 40)) {
-    if (await autoPhoto(p)) changed = true;
+  const todo = S.places.filter((x) => !x.enriched_at || (!x.photo_url && !x.photo_source)).slice(0, 30);
+  for (const p of todo) {
+    if (await autoDetails(p)) changed = true;
   }
   for (const t of S.trips.filter((x) => !x.cover_url)) {
     const found = await findTripCover(t);
