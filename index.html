@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F1F0EB">
+<meta name="description" content="I posti di Carlotta e Michele: ristoranti, cantine, negozi e viaggi da fare e già fatti.">
+<title>Carlotta e Michele</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<div id="app">
+  <div id="map" aria-label="Mappa dei posti" role="region"></div>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar-row">
+      <label class="search glass">
+        <span class="sr-only">Cerca</span>
+        <span class="search-ic" id="search-ic"></span>
+        <input id="search" type="search" placeholder="Cerca tra i nostri posti" autocomplete="off">
+      </label>
+      <button class="profile glass" id="profile" aria-label="Accedi"></button>
+    </div>
+    <div class="chips" id="chips" role="toolbar" aria-label="Filtri"></div>
+  </header>
+
+  <div class="map-tools glass" id="map-tools">
+    <button id="locate" aria-label="La mia posizione"></button>
+  </div>
+
+  <section class="sheet" id="sheet" aria-label="Elenco">
+    <div class="sheet-grab" id="sheet-grab">
+      <div class="handle" aria-hidden="true"></div>
+      <div class="sheet-head" id="sheet-head"></div>
+    </div>
+    <div class="sheet-scroll" id="sheet-body"></div>
+  </section>
+
+  <div class="picker" id="picker" hidden>
+    <div class="picker-pin" aria-hidden="true"></div>
+    <div class="picker-bar glass">
+      <span>Sposta la mappa sul punto giusto</span>
+      <div class="picker-actions">
+        <button class="btn btn-quiet" id="picker-cancel">Annulla</button>
+        <button class="btn btn-accent" id="picker-ok">Qui</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-root" id="modal-root"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+</body>
+</html>
