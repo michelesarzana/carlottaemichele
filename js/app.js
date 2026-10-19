@@ -1032,7 +1032,21 @@ function openPlaceForm(place = null, preset = {}) {
         const u = q('#pf-link').value.trim();
         if (!u) return;
         f.source_url = u;
-        const r = parseLink(u);
+        let r = parseLink(u);
+        if (r.isShort && r.lat == null && !r.name) {
+          q('#pf-read').disabled = true;
+          q('#pf-read').textContent = 'Apro…';
+          try {
+            const { data, error } = await sb.functions.invoke('resolve-link', { body: { url: u } });
+            if (error) throw error;
+            if (data?.url) r = { ...parseLink(data.url), isMap: true, isShort: true };
+          } catch (e) {
+            console.warn('resolve-link', e);
+          } finally {
+            q('#pf-read').disabled = false;
+            q('#pf-read').textContent = 'Leggi';
+          }
+        }
         if (r.name && !f.name.trim()) { f.name = r.name; q('#pf-name').value = r.name; }
         if (!r.isMap && !f.url && safeUrl(u)) { f.url = u; q('#pf-url').value = u; }
         if (r.lat != null) {
