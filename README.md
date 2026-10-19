@@ -28,6 +28,13 @@ Voti e recensioni sono pubblici. Le date delle visite stanno in `visit_dates`, l
    - Site URL: l'indirizzo del sito
    - Redirect URLs: lo stesso indirizzo
 
+4. SQL Editor › incolla `supabase/migrations/002_viaggi_foto.sql` › Run (viaggi, foto, spazio file).
+5. Edge Functions › `resolve-link` › incolla `supabase/functions/resolve-link/index.ts` › Deploy.
+
+## Foto
+
+Ogni posto ha una foto. Se non la caricate voi, il sito la cerca in automatico: immagine di anteprima del sito del posto, poi Wikipedia, poi Wikimedia Commons vicino alle coordinate. Le foto vostre vengono ridotte a 1600 px e caricate nel bucket pubblico `photos`.
+
 ## Guide AI
 
 Le guide si generano con Claude e finiscono nella tabella `guides` come bozza (`published = false`). Dal sito si pubblicano o si ritirano.

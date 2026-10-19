@@ -2,6 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js';
 import { icon, CATEGORY_ICONS } from './icons.js';
 import { Sheet } from './sheet.js';
+import { findPlacePhoto, findTripCover, uploadPhoto, pickFile } from './photos.js';
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' }
@@ -16,7 +17,11 @@ const S = {
   places: [],
   placeById: new Map(),
   guides: [],
+  trips: [],
+  tripById: new Map(),
+  tripDates: new Map(),
   dates: new Map(),
+  autoPhotosDone: false,
   editor: false,
   me: null,
   email: null,
@@ -91,11 +96,12 @@ async function refreshAuth() {
 }
 
 async function load() {
-  const [c, p, v, g] = await Promise.all([
+  const [c, p, v, g, t] = await Promise.all([
     sb.from('categories').select('*').order('sort'),
     sb.from('places').select('*'),
     sb.from('visits').select('id, seq, place_id, vote_c, vote_m, review, review_by').order('seq', { ascending: false }),
-    sb.from('guides').select('*').order('created_at', { ascending: false })
+    sb.from('guides').select('*').order('created_at', { ascending: false }),
+    sb.from('trips').select('*').order('created_at', { ascending: false })
   ]);
   const err = c.error || p.error || v.error || g.error;
   if (err) {
@@ -105,11 +111,15 @@ async function load() {
   S.categories = c.data;
   S.catById = new Map(c.data.map((x) => [x.id, x]));
   S.guides = g.data;
+  S.trips = t.error ? [] : t.data;
+  S.tripById = new Map(S.trips.map((x) => [x.id, x]));
 
   S.dates = new Map();
+  S.tripDates = new Map();
   if (S.editor) {
-    const d = await sb.from('visit_dates').select('*');
+    const [d, td] = await Promise.all([sb.from('visit_dates').select('*'), sb.from('trip_dates').select('*')]);
     if (!d.error) for (const r of d.data) S.dates.set(r.visit_id, r.visited_on);
+    if (!td.error) for (const r of td.data) S.tripDates.set(r.trip_id, r);
   }
 
   const byPlace = new Map();
@@ -237,6 +247,82 @@ function fitTo(points, maxZoom = 14) {
 }
 
 // ─────────────────────────────────────────────
+// Viaggi sulla mappa: un'area morbida attorno ai posti
+// ─────────────────────────────────────────────
+const TRIP_STATUS = { sogno: 'Sogno', programma: 'In programma', fatto: 'Fatto' };
+
+function tripPlaces(trip) { return S.places.filter((p) => p.trip_id === trip.id); }
+
+function circlePts(lng, lat, r, n = 14) {
+  const dLat = r / 111320;
+  const dLng = r / (111320 * Math.cos((lat * Math.PI) / 180));
+  return Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    return [lng + Math.cos(a) * dLng, lat + Math.sin(a) * dLat];
+  });
+}
+
+function hull(points) {
+  const pts = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  if (pts.length < 3) return pts;
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const lower = [];
+  for (const p of pts) { while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop(); lower.push(p); }
+  const upper = [];
+  for (const p of [...pts].reverse()) { while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop(); upper.push(p); }
+  return lower.slice(0, -1).concat(upper.slice(0, -1));
+}
+
+function tripArea(trip) {
+  const pts = tripPlaces(trip).map((p) => [p.lng, p.lat]);
+  let ring;
+  if (pts.length) {
+    // estensione in metri, per un margine proporzionato
+    const lats = pts.map((p) => p[1]);
+    const lngs = pts.map((p) => p[0]);
+    const lat0 = (Math.max(...lats) + Math.min(...lats)) / 2;
+    const ext = Math.max((Math.max(...lats) - Math.min(...lats)) * 111320, (Math.max(...lngs) - Math.min(...lngs)) * 111320 * Math.cos((lat0 * Math.PI) / 180));
+    const pad = Math.max(450, ext * 0.14);
+    ring = hull(pts.flatMap(([x, y]) => circlePts(x, y, pad)));
+  } else if (typeof trip.lat === 'number') {
+    ring = circlePts(trip.lng, trip.lat, 4000, 40);
+  } else return null;
+  ring.push(ring[0]);
+  return ring;
+}
+
+let tripLabels = [];
+function renderAreas() {
+  if (!map.isStyleLoaded()) return;
+  const sel = S.view.name === 'trip' ? S.view.id : null;
+  const features = [];
+  for (const m of tripLabels) m.remove();
+  tripLabels = [];
+  if (S.view.name !== 'guide') {
+    for (const t of S.trips) {
+      const ring = tripArea(t);
+      if (!ring) continue;
+      features.push({ type: 'Feature', properties: { id: t.id, sel: t.id === sel }, geometry: { type: 'Polygon', coordinates: [ring] } });
+      const top = ring.reduce((a, b) => (b[1] > a[1] ? b : a));
+      const n = tripPlaces(t).length;
+      const el = document.createElement('div');
+      const btn = document.createElement('button');
+      btn.className = 'trip-label' + (t.id === sel ? ' sel' : '');
+      btn.innerHTML = `<span class="trip-label-ic">${icon('plane', 12, 2.4)}</span>${esc(t.name)}${n ? ` · ${n} ${n === 1 ? 'posto' : 'posti'}` : ''}`;
+      btn.addEventListener('click', (e) => { e.stopPropagation(); go(`#/viaggio/${t.id}`); });
+      el.append(btn);
+      tripLabels.push(new maplibregl.Marker({ element: el, anchor: 'bottom', offset: [0, -4] }).setLngLat(top).addTo(map));
+    }
+  }
+  const data = { type: 'FeatureCollection', features };
+  const src = map.getSource('trips');
+  if (src) { src.setData(data); return; }
+  map.addSource('trips', { type: 'geojson', data });
+  map.addLayer({ id: 'trip-fill', type: 'fill', source: 'trips', paint: { 'fill-color': '#8E2C48', 'fill-opacity': ['case', ['get', 'sel'], 0.15, 0.07] } });
+  map.addLayer({ id: 'trip-line', type: 'line', source: 'trips', paint: { 'line-color': '#8E2C48', 'line-width': ['case', ['get', 'sel'], 2.5, 1.6], 'line-opacity': 0.75, 'line-dasharray': [2, 2] } });
+}
+
+// ─────────────────────────────────────────────
 // Barra in alto
 // ─────────────────────────────────────────────
 function renderTopbar() {
@@ -257,8 +343,10 @@ function renderChips() {
   const todo = S.places.filter((p) => !p.done).length;
   const done = S.places.length - todo;
   const st = S.filter.status;
+  const tripsOn = S.view.name === 'trips' || S.view.name === 'trip';
   let h = `
-    <button class="chip" data-status="all" aria-pressed="${st === 'all'}">Tutto</button>
+    <button class="chip" data-trips="1" aria-pressed="${tripsOn}">${icon('plane', 14, 2.2)}Viaggi${S.trips.length ? ' ' + S.trips.length : ''}</button>
+    <button class="chip" data-status="all" aria-pressed="${st === 'all' && !tripsOn}">Tutto</button>
     <button class="chip" data-status="todo" aria-pressed="${st === 'todo'}">Da fare ${todo}</button>
     <button class="chip" data-status="done" aria-pressed="${st === 'done'}">Fatti ${done}</button>
     <span class="chip-sep" aria-hidden="true"></span>`;
@@ -272,6 +360,10 @@ function renderChips() {
 $('chips').addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
+  if (b.dataset.trips) {
+    go(S.view.name === 'trips' ? '#/' : '#/viaggi');
+    return;
+  }
   if (b.dataset.status) S.filter.status = b.dataset.status;
   if (b.dataset.cat) {
     const id = b.dataset.cat;
@@ -337,6 +429,8 @@ function renderSheet() {
   let out;
   if (S.view.name === 'place') out = viewPlace();
   else if (S.view.name === 'guide') out = viewGuide();
+  else if (S.view.name === 'trips') out = viewTrips();
+  else if (S.view.name === 'trip') out = viewTrip();
   else out = viewList();
   head.innerHTML = out.head;
   body.innerHTML = out.body;
@@ -349,9 +443,10 @@ function placeRow(p) {
   const end = p.done
     ? (p.score != null ? `<span class="score-pill">${fmtScore(p.score)}</span>` : '')
     : (p.proposed_by ? `<span class="row-end">da ${esc(initial(p.proposed_by))}</span>` : '');
+  const ph = safeUrl(p.photo_url);
   return `
     <button class="row" data-act="open-place" data-id="${esc(p.id)}">
-      <span class="tile" style="--c:${safeColor(c.color)}">${icon(c.icon, 20, 2.1)}${p.done ? `<span class="tick">${icon('check', 9, 4)}</span>` : ''}</span>
+      <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}${p.done ? `<span class="tick">${icon('check', 9, 4)}</span>` : ''}</span>
       <span class="row-main"><span class="row-title">${esc(p.name)}</span><span class="row-sub">${sub}</span></span>
       ${end}
     </button>`;
@@ -460,7 +555,32 @@ function viewPlace() {
   if (site) acts.push(`<a class="action" href="${esc(site)}" target="_blank" rel="noopener">${icon('globe', 20)}Sito</a>`);
   acts.push(`<button class="action" data-act="share" data-id="${esc(p.id)}">${icon('share', 20)}Condividi</button>`);
 
-  let body = `<div class="actions" style="grid-template-columns:repeat(${acts.length},minmax(0,1fr))">${acts.join('')}</div>`;
+  let body = '';
+  const photo = safeUrl(p.photo_url);
+  if (photo || S.editor) {
+    body += `<figure class="photo">${photo
+      ? `<img src="${esc(photo)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
+      : `<span class="photo-empty" style="--c:${safeColor(c.color)}">${icon(c.icon, 34, 1.6)}</span>`}`;
+    if (S.editor) {
+      body += `<span class="photo-tools">
+        <button class="photo-btn" data-act="photo-upload" data-id="${esc(p.id)}" aria-label="Carica una foto vostra">${icon('camera', 16, 2.2)}</button>
+        <button class="photo-btn" data-act="photo-auto" data-id="${esc(p.id)}" aria-label="Cerca un'altra foto">${icon('refresh', 16, 2.2)}</button>
+      </span>`;
+    }
+    body += '</figure>';
+    if (p.photo_credit) body += `<p class="credit">${esc(p.photo_credit)}</p>`;
+  }
+  body += `<div class="actions" style="grid-template-columns:repeat(${acts.length},minmax(0,1fr))">${acts.join('')}</div>`;
+
+  const trip = p.trip_id ? S.tripById.get(p.trip_id) : null;
+  if (trip) {
+    body += `
+      <button class="row trip-row" data-act="open-trip" data-id="${esc(trip.id)}">
+        <span class="tile" style="--c:var(--accent)">${icon('plane', 20, 2.1)}</span>
+        <span class="row-main"><span class="row-sub">Parte del viaggio</span><span class="row-title">${esc(trip.name)}${p.day && trip.use_days ? ` · Giorno ${p.day}` : ''}</span></span>
+        ${icon('next', 16, 2.4)}
+      </button>`;
+  }
 
   if (p.done && p.last) {
     body += `
@@ -500,6 +620,23 @@ function viewPlace() {
       body += '</div>';
     }
   }
+
+  const links = [];
+  const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+  if (site) links.push({ label: 'Sito', sub: host(site), href: site, ic: 'globe' });
+  const src = safeUrl(p.source_url);
+  if (src && src !== site) links.push({ label: 'Link salvato', sub: host(src), href: src, ic: 'link' });
+  links.push({ label: 'Google Maps', sub: 'Apri il posto', href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}%20${p.lat},${p.lng}`, ic: 'pin' });
+  if (isApple()) links.push({ label: 'Mappe di Apple', sub: 'Apri il posto', href: `https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(p.name)}`, ic: 'pin' });
+  body += '<div class="section-label">Link</div><div class="card list-card">';
+  for (const l of links) {
+    body += `<a class="list-line link-line" href="${esc(l.href)}" target="_blank" rel="noopener">
+      <span class="link-ic">${icon(l.ic, 16, 2.2)}</span>
+      <span class="grow"><b>${esc(l.label)}</b><span class="dim"> · ${esc(l.sub)}</span></span>
+      ${icon('next', 14, 2.4)}
+    </a>`;
+  }
+  body += '</div>';
 
   if (p.notes || p.proposed_by) {
     body += '<div class="section-label">Note</div><div class="card notes">';
@@ -578,6 +715,131 @@ function viewGuide() {
   return { head, body };
 }
 
+// Viaggi
+function tripMeta(t) {
+  const n = tripPlaces(t).length;
+  const days = t.use_days ? new Set(tripPlaces(t).map((p) => p.day).filter(Boolean)).size : 0;
+  return [t.destination ? t.destination.split(',').slice(-1)[0].trim() : '', n ? `${n} ${n === 1 ? 'posto' : 'posti'}` : 'nessun posto', days ? `${days} ${days === 1 ? 'giorno' : 'giorni'}` : '']
+    .filter(Boolean).join(' · ');
+}
+function tripScore(t) {
+  const v = [t.vote_c, t.vote_m].filter((x) => x != null);
+  return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+}
+function fmtRange(d) {
+  if (!d || (!d.start_on && !d.end_on)) return '';
+  const f = (x) => new Date(x + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  if (d.start_on && d.end_on && d.start_on !== d.end_on) return `${f(d.start_on)} – ${f(d.end_on)}`;
+  return f(d.start_on || d.end_on);
+}
+function cover(url, cls = '') {
+  const u = safeUrl(url);
+  return u ? `<img class="${cls}" src="${esc(u)}" alt="" loading="lazy" decoding="async">` : `<span class="${cls} cover-empty">${icon('plane', 28, 1.6)}</span>`;
+}
+
+function viewTrips() {
+  const n = S.trips.length;
+  const head = `
+    <div class="head-row">
+      <div>
+        <div class="eyebrow">I nostri viaggi</div>
+        <h1 class="title">${n} ${n === 1 ? 'viaggio' : 'viaggi'}</h1>
+      </div>
+      ${S.editor ? `<button class="icon-btn" data-act="add-trip" aria-label="Nuovo viaggio">${icon('plus', 18, 2.6)}</button>` : ''}
+    </div>`;
+  if (!n) {
+    return { head, body: `<div class="empty"><b>Ancora nessun viaggio</b>${S.editor ? 'Tocca + per crearne uno: sogno, in programma o già fatto.' : ''}</div>` };
+  }
+  const order = { programma: 0, sogno: 1, fatto: 2 };
+  const list = [...S.trips].sort((a, b) => order[a.status] - order[b.status]);
+  let body = '<div class="trip-grid">';
+  for (const t of list) {
+    const sc = tripScore(t);
+    const badge = t.status === 'fatto' ? `Fatto${sc != null ? ' · ' + fmtScore(sc) : ''}` : TRIP_STATUS[t.status];
+    body += `
+      <button class="trip-card" data-act="open-trip" data-id="${esc(t.id)}">
+        <span class="trip-cover">${cover(t.cover_url)}<span class="trip-badge ${t.status}">${esc(badge)}</span></span>
+        <span class="trip-info"><b>${esc(t.name)}</b><span>${esc(tripMeta(t))}</span></span>
+      </button>`;
+  }
+  body += '</div>';
+  return { head, body };
+}
+
+function viewTrip() {
+  const t = S.tripById.get(S.view.id);
+  if (!t) {
+    return {
+      head: `<div class="head-row"><h1 class="title">Viaggio non trovato</h1><button class="icon-btn quiet" data-act="close-trip" aria-label="Chiudi">${icon('x', 14, 3)}</button></div>`,
+      body: '<div class="empty">Forse è stato eliminato.</div>'
+    };
+  }
+  const head = `
+    <div class="trip-hero">
+      ${cover(t.cover_url, 'trip-hero-img')}
+      <span class="trip-hero-shade"></span>
+      <button class="icon-btn quiet trip-hero-close" data-act="close-trip" aria-label="Chiudi">${icon('x', 14, 3)}</button>
+      <span class="trip-hero-text">
+        <span class="trip-hero-meta">${esc(TRIP_STATUS[t.status])} · ${esc(tripMeta(t))}</span>
+        <span class="trip-hero-title">${esc(t.name)}</span>
+      </span>
+    </div>`;
+
+  let body = '';
+  if (t.cover_credit) body += `<p class="credit">${esc(t.cover_credit)}</p>`;
+  if (S.editor) {
+    const range = fmtRange(S.tripDates.get(t.id));
+    if (range) body += `<p class="meta" style="margin:8px 4px 0;display:flex;gap:4px;align-items:center">${icon('lock', 12, 2.4)}${esc(range)}</p>`;
+  }
+  if (t.status === 'fatto' && (t.vote_c || t.vote_m || t.review)) {
+    const sc = tripScore(t);
+    body += `
+      <div class="card votes" style="margin-top:12px">
+        <div class="votes-score"><b>${sc != null ? fmtScore(sc) : '–'}</b><span>su 4</span></div>
+        <div class="votes-people">
+          <div class="person"><span class="av av-c">C</span><span class="person-name">Carlotta</span>${dots(t.vote_c)}</div>
+          <div class="person"><span class="av av-m">M</span><span class="person-name">Michele</span>${dots(t.vote_m)}</div>
+        </div>
+      </div>`;
+    if (t.review) body += `<p class="review" style="margin:14px 4px 0">${esc(t.review)}</p>`;
+  }
+
+  const places = tripPlaces(t);
+  const tab = t.use_days ? (S.view.tab || 'giorni') : 'posti';
+  if (t.use_days) {
+    body += `<div class="segmented" style="margin:16px 0 4px">
+      <button data-act="trip-tab" data-tab="giorni" aria-pressed="${tab === 'giorni'}">Giorni</button>
+      <button data-act="trip-tab" data-tab="posti" aria-pressed="${tab === 'posti'}">Posti</button>
+    </div>`;
+  }
+  if (!places.length) {
+    body += `<div class="empty">Nessun posto ancora.${S.editor ? '<br>Aggiungine uno qui sotto.' : ''}</div>`;
+  } else if (tab === 'giorni') {
+    const byDay = new Map();
+    for (const p of places) {
+      const k = p.day || 0;
+      if (!byDay.has(k)) byDay.set(k, []);
+      byDay.get(k).push(p);
+    }
+    const keys = [...byDay.keys()].sort((a, b) => (a || 999) - (b || 999));
+    for (const k of keys) {
+      body += `<div class="section-label">${k ? `Giorno ${k}` : 'Senza giorno'}</div><div class="rows">${byDay.get(k).sort((a, b) => a.name.localeCompare(b.name)).map(placeRow).join('')}</div>`;
+    }
+  } else {
+    body += `<div class="rows" style="margin-top:8px">${places.sort((a, b) => a.name.localeCompare(b.name)).map(placeRow).join('')}</div>`;
+  }
+
+  if (S.editor) {
+    body += `
+      <button class="btn btn-quiet btn-block" style="margin-top:16px" data-act="add-place-trip" data-id="${esc(t.id)}">${icon('plus', 16, 2.6)}Aggiungi un posto al viaggio</button>
+      <div class="editor-tools">
+        <button class="btn btn-quiet" data-act="edit-trip" data-id="${esc(t.id)}">${icon('edit', 16)}Modifica</button>
+        <button class="btn btn-danger" data-act="delete-trip" data-id="${esc(t.id)}">${icon('trash', 16)}Elimina</button>
+      </div>`;
+  }
+  return { head, body };
+}
+
 // Azioni nel pannello
 $('sheet').addEventListener('click', async (e) => {
   const t = e.target.closest('[data-act]');
@@ -588,6 +850,47 @@ $('sheet').addEventListener('click', async (e) => {
     case 'open-place': go(`#/posto/${id}`); break;
     case 'open-guide': go(`#/guida/${t.dataset.slug}`); break;
     case 'close': go('#/'); break;
+    case 'open-trip': go(`#/viaggio/${id}`); break;
+    case 'close-trip': go('#/viaggi'); break;
+    case 'trip-tab': S.view.tab = t.dataset.tab; renderSheet(); break;
+    case 'add-trip': openTripForm(); break;
+    case 'edit-trip': openTripForm(S.tripById.get(id)); break;
+    case 'add-place-trip': openPlaceForm(null, { trip_id: id }); break;
+    case 'delete-trip': {
+      const tr = S.tripById.get(id);
+      if (!tr || !confirm(`Eliminare il viaggio "${tr.name}"? I posti restano sulla mappa.`)) return;
+      const { error } = await sb.from('trips').delete().eq('id', id);
+      if (error) return fail(error, 'Non riesco a eliminare');
+      toast('Viaggio eliminato');
+      await reload();
+      go('#/viaggi');
+      break;
+    }
+    case 'photo-upload': {
+      const p = S.placeById.get(id);
+      const file = await pickFile();
+      if (!file || !p) return;
+      toast('Carico la foto…');
+      try {
+        const url = await uploadPhoto(sb, file, 'places');
+        const { error } = await sb.from('places').update({ photo_url: url, photo_credit: null, photo_source: 'own' }).eq('id', id);
+        if (error) throw error;
+        toast('Foto aggiornata');
+        await reload();
+      } catch (err) { fail(err, 'Non riesco a caricare la foto'); }
+      break;
+    }
+    case 'photo-auto': {
+      const p = S.placeById.get(id);
+      if (!p) return;
+      toast('Cerco una foto…');
+      const found = await findPlacePhoto(sb, p);
+      if (!found) return toast('Nessuna foto trovata: caricane una tua');
+      const { error } = await sb.from('places').update({ photo_url: found.url, photo_credit: found.credit, photo_source: 'auto' }).eq('id', id);
+      if (error) return fail(error);
+      await reload();
+      break;
+    }
     case 'add-place': openPlaceForm(); break;
     case 'edit-place': openPlaceForm(S.placeById.get(id)); break;
     case 'new-visit': openVisitForm(S.placeById.get(id)); break;
@@ -782,12 +1085,14 @@ function openAsk() {
 function areaOf(a = {}) {
   return a.village || a.town || a.city || a.hamlet || a.suburb || a.municipality || a.county || '';
 }
-async function nominatimSearch(q) {
+async function nominatimSearch(q, nearby = true) {
   let vb = '';
-  try {
-    const b = map.getBounds();
-    vb = `&viewbox=${b.getWest()},${b.getNorth()},${b.getEast()},${b.getSouth()}`;
-  } catch { /* niente */ }
+  if (nearby) {
+    try {
+      const b = map.getBounds();
+      vb = `&viewbox=${b.getWest()},${b.getNorth()},${b.getEast()},${b.getSouth()}`;
+    } catch { /* niente */ }
+  }
   const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&accept-language=it&q=${encodeURIComponent(q)}${vb}`);
   if (!r.ok) throw new Error('ricerca non disponibile');
   return (await r.json()).map((x) => ({
@@ -847,10 +1152,13 @@ function openPlaceForm(place = null, preset = {}) {
   const f = {
     name: '', category_id: '', lat: null, lng: null, area: '', address: '', price: null,
     url: '', source_url: '', notes: '', proposed_by: S.me || '', guide_id: null,
+    trip_id: null, day: null, photo_url: null, photo_credit: null, photo_source: null,
     ...(place ? {
       name: place.name, category_id: place.category_id, lat: place.lat, lng: place.lng, area: place.area || '',
       address: place.address || '', price: place.price, url: place.url || '', source_url: place.source_url || '',
-      notes: place.notes || '', proposed_by: place.proposed_by || '', guide_id: place.guide_id
+      notes: place.notes || '', proposed_by: place.proposed_by || '', guide_id: place.guide_id,
+      trip_id: place.trip_id || null, day: place.day || null,
+      photo_url: place.photo_url || null, photo_credit: place.photo_credit || null, photo_source: place.photo_source || null
     } : {}),
     ...preset
   };
@@ -864,7 +1172,9 @@ function openPlaceForm(place = null, preset = {}) {
         name: f.name.trim(), category_id: f.category_id, lat: f.lat, lng: f.lng,
         area: f.area || null, address: f.address || null, price: f.price || null,
         url: safeUrl(f.url) || null, source_url: f.source_url || null, notes: f.notes.trim() || null,
-        proposed_by: f.proposed_by || null, guide_id: f.guide_id || null
+        proposed_by: f.proposed_by || null, guide_id: f.guide_id || null,
+        trip_id: f.trip_id || null, day: f.trip_id && f.day ? Number(f.day) : null,
+        photo_url: f.photo_url || null, photo_credit: f.photo_credit || null, photo_source: f.photo_source || null
       };
       const q = place ? sb.from('places').update(payload).eq('id', place.id).select().single()
         : sb.from('places').insert(payload).select().single();
@@ -874,6 +1184,7 @@ function openPlaceForm(place = null, preset = {}) {
       toast(place ? 'Modifiche salvate' : 'Aggiunto alla mappa');
       await reload();
       go(`#/posto/${data.id}`);
+      if (!data.photo_url) autoPhoto(data).then((ok) => ok && reload());
     },
     mount(body, api) {
       body.innerHTML = `
@@ -908,7 +1219,17 @@ function openPlaceForm(place = null, preset = {}) {
             <div class="group-line"><span>Prezzo</span><div class="segmented" id="pf-price"></div></div>
             <div class="group-line"><span>Proposto da</span><div class="segmented" id="pf-by"></div></div>
             <div class="group-line"><span>Sito</span><input id="pf-url" type="url" placeholder="https://" value="${esc(f.url)}"></div>
+            <div class="group-line"><span>Viaggio</span><select id="pf-trip" aria-label="Viaggio">
+              <option value="">Nessuno</option>
+              ${S.trips.map((t) => `<option value="${esc(t.id)}" ${f.trip_id === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
+            </select></div>
+            <div class="group-line" id="pf-day-line"><span>Giorno</span><input id="pf-day" type="number" min="1" max="60" inputmode="numeric" placeholder="–" value="${f.day || ''}" style="max-width:80px"></div>
           </div>
+        </div>
+        <div>
+          <span class="field-label">Foto</span>
+          <div id="pf-photo"></div>
+          <div class="field-hint">Se non ne scegliete una, la cerco io dopo il salvataggio: sito del posto, Wikipedia o foto libere scattate lì vicino.</div>
         </div>
         <div>
           <label class="field-label" for="pf-notes">Note</label>
@@ -916,7 +1237,11 @@ function openPlaceForm(place = null, preset = {}) {
         </div>`;
 
       const q = (s) => body.querySelector(s);
-      const validate = () => api.setSaveEnabled(!!(f.name.trim() && f.category_id && f.lat != null && f.lng != null));
+      const validate = () => {
+        api.setSaveEnabled(!!(f.name.trim() && f.category_id && f.lat != null && f.lng != null));
+        const b = q('#pf-ph-auto');
+        if (b) b.disabled = f.lat == null;
+      };
 
       const renderLocated = () => {
         const el = q('#pf-located');
@@ -1070,12 +1395,252 @@ function openPlaceForm(place = null, preset = {}) {
       q('#pf-link').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); readLink(); } });
       q('#pf-link').addEventListener('paste', () => setTimeout(readLink, 50));
 
+      const dayLine = () => {
+        const tr = S.tripById.get(f.trip_id);
+        q('#pf-day-line').hidden = !(tr && tr.use_days);
+      };
+      q('#pf-trip').addEventListener('change', (e) => { f.trip_id = e.target.value || null; dayLine(); });
+      q('#pf-day').addEventListener('input', (e) => { f.day = e.target.value ? Number(e.target.value) : null; });
+      dayLine();
+
+      const renderPhoto = (busy = '') => {
+        const el = q('#pf-photo');
+        const u = safeUrl(f.photo_url);
+        el.innerHTML = `
+          <div class="photo-pick">
+            ${u ? `<img src="${esc(u)}" alt="">` : `<span class="photo-pick-empty">${icon('image', 26, 1.6)}</span>`}
+            <div class="photo-pick-actions">
+              <button class="btn btn-quiet" id="pf-ph-up">${icon('camera', 16, 2.2)}Carica</button>
+              <button class="btn btn-quiet" id="pf-ph-auto" ${f.lat == null ? 'disabled' : ''}>${icon('refresh', 16, 2.2)}Trova</button>
+              ${u ? `<button class="btn btn-quiet" id="pf-ph-rm" aria-label="Togli la foto">${icon('trash', 16)}</button>` : ''}
+            </div>
+            ${busy ? `<span class="field-hint">${esc(busy)}</span>` : f.photo_credit ? `<span class="field-hint">${esc(f.photo_credit)}</span>` : ''}
+          </div>`;
+        q('#pf-ph-up').addEventListener('click', async () => {
+          const file = await pickFile();
+          if (!file) return;
+          renderPhoto('Carico…');
+          try {
+            f.photo_url = await uploadPhoto(sb, file, 'places');
+            f.photo_credit = null; f.photo_source = 'own';
+          } catch (e) { fail(e, 'Non riesco a caricare la foto'); }
+          renderPhoto();
+        });
+        q('#pf-ph-auto').addEventListener('click', async () => {
+          renderPhoto('Cerco…');
+          const found = await findPlacePhoto(sb, { name: f.name, lat: f.lat, lng: f.lng, url: safeUrl(f.url) });
+          if (found) { f.photo_url = found.url; f.photo_credit = found.credit; f.photo_source = 'auto'; renderPhoto(); }
+          else renderPhoto('Nessuna foto trovata: caricane una tua');
+        });
+        q('#pf-ph-rm')?.addEventListener('click', () => { f.photo_url = null; f.photo_credit = null; f.photo_source = null; renderPhoto(); });
+      };
+      renderPhoto();
+
       q('#pf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
       q('#pf-url').addEventListener('input', (e) => { f.url = e.target.value; });
       q('#pf-notes').addEventListener('input', (e) => { f.notes = e.target.value; });
 
       renderLocated();
       renderCats();
+      validate();
+    }
+  });
+}
+
+// Foto automatiche: per i posti appena creati e, una volta, per quelli senza foto
+async function autoPhoto(place) {
+  try {
+    const found = await findPlacePhoto(sb, place);
+    const patch = found
+      ? { photo_url: found.url, photo_credit: found.credit, photo_source: 'auto' }
+      : { photo_source: 'none' };
+    const { error } = await sb.from('places').update(patch).eq('id', place.id);
+    return !error && !!found;
+  } catch { return false; }
+}
+
+async function autoPhotosBackfill() {
+  if (!S.editor || S.autoPhotosDone) return;
+  S.autoPhotosDone = true;
+  let changed = false;
+  for (const p of S.places.filter((x) => !x.photo_url && !x.photo_source).slice(0, 40)) {
+    if (await autoPhoto(p)) changed = true;
+  }
+  for (const t of S.trips.filter((x) => !x.cover_url)) {
+    const found = await findTripCover(t);
+    if (found) {
+      const { error } = await sb.from('trips').update({ cover_url: found.url, cover_credit: found.credit }).eq('id', t.id);
+      if (!error) changed = true;
+    }
+  }
+  if (changed) await reload();
+}
+
+// Nuovo viaggio / modifica
+function openTripForm(trip = null) {
+  const dates = trip ? S.tripDates.get(trip.id) || {} : {};
+  const f = {
+    name: trip?.name || '', destination: trip?.destination || '', lat: trip?.lat ?? null, lng: trip?.lng ?? null,
+    status: trip?.status || 'sogno', use_days: trip?.use_days ?? false,
+    cover_url: trip?.cover_url || null, cover_credit: trip?.cover_credit || null,
+    vote_c: trip?.vote_c ?? null, vote_m: trip?.vote_m ?? null, review: trip?.review || '',
+    start_on: dates.start_on || '', end_on: dates.end_on || ''
+  };
+  openModal({
+    title: trip ? 'Modifica viaggio' : 'Nuovo viaggio',
+    rightLabel: 'Salva',
+    async onSave(api) {
+      const payload = {
+        name: f.name.trim(), destination: f.destination || null, lat: f.lat, lng: f.lng, status: f.status,
+        use_days: f.use_days, cover_url: f.cover_url, cover_credit: f.cover_credit,
+        vote_c: f.status === 'fatto' ? f.vote_c : null, vote_m: f.status === 'fatto' ? f.vote_m : null,
+        review: f.status === 'fatto' ? (f.review.trim() || null) : null
+      };
+      const q = trip ? sb.from('trips').update(payload).eq('id', trip.id).select().single()
+        : sb.from('trips').insert(payload).select().single();
+      const { data, error } = await q;
+      if (error) return fail(error, 'Non riesco a salvare');
+      if (f.start_on || f.end_on || trip) {
+        const d = await sb.from('trip_dates').upsert({ trip_id: data.id, start_on: f.start_on || null, end_on: f.end_on || null });
+        if (d.error) fail(d.error, 'Viaggio salvato, ma senza date');
+      }
+      api.close();
+      toast(trip ? 'Modifiche salvate' : 'Viaggio creato');
+      await reload();
+      go(`#/viaggio/${data.id}`);
+    },
+    mount(body, api) {
+      body.innerHTML = `
+        <div id="tf-cover"></div>
+        <div>
+          <span class="field-label">Viaggio</span>
+          <div class="group">
+            <div class="group-line"><input class="left" id="tf-name" placeholder="Nome, es. Lisbona" value="${esc(f.name)}" aria-label="Nome del viaggio"></div>
+          </div>
+        </div>
+        <div>
+          <label class="field-label" for="tf-q">Meta</label>
+          <div class="inline-input">
+            <input id="tf-q" type="search" placeholder="Città o regione" value="${esc(f.destination)}">
+            <button class="btn btn-quiet" id="tf-search">Cerca</button>
+          </div>
+          <div id="tf-results"></div>
+          <div class="field-hint" id="tf-dest">${f.lat != null ? `${icon('check', 12, 3)} ${esc(f.destination)}` : 'Serve per l’area sulla mappa finché non ci sono posti.'}</div>
+        </div>
+        <div>
+          <span class="field-label">Stato</span>
+          <div class="segmented" id="tf-status"></div>
+        </div>
+        <div class="group">
+          <div class="group-line"><span>Dal</span><span class="meta" style="display:inline-flex;gap:4px;align-items:center">${icon('lock', 12, 2.4)}solo voi</span><input id="tf-start" type="date" value="${esc(f.start_on)}" style="max-width:none"></div>
+          <div class="group-line"><span>Al</span><input id="tf-end" type="date" value="${esc(f.end_on)}" style="max-width:none"></div>
+          <label class="group-line"><span>Organizza per giorni</span><input type="checkbox" class="switch" id="tf-days" ${f.use_days ? 'checked' : ''}></label>
+        </div>
+        <div id="tf-done"></div>`;
+      const q = (s) => body.querySelector(s);
+      const validate = () => api.setSaveEnabled(!!f.name.trim());
+
+      const renderCover = (busy = '') => {
+        const u = safeUrl(f.cover_url);
+        q('#tf-cover').innerHTML = `
+          <div class="photo-pick cover-pick">
+            ${u ? `<img src="${esc(u)}" alt="">` : `<span class="photo-pick-empty">${icon('image', 30, 1.6)}<span>Copertina</span></span>`}
+            <div class="photo-pick-actions">
+              <button class="btn btn-quiet" id="tf-up">${icon('camera', 16, 2.2)}Carica</button>
+              <button class="btn btn-quiet" id="tf-auto">${icon('refresh', 16, 2.2)}Da Wikipedia</button>
+            </div>
+            ${busy ? `<span class="field-hint">${esc(busy)}</span>` : f.cover_credit ? `<span class="field-hint">${esc(f.cover_credit)}</span>` : ''}
+          </div>`;
+        q('#tf-up').addEventListener('click', async () => {
+          const file = await pickFile();
+          if (!file) return;
+          renderCover('Carico…');
+          try { f.cover_url = await uploadPhoto(sb, file, 'trips'); f.cover_credit = null; }
+          catch (e) { fail(e, 'Non riesco a caricare la foto'); }
+          renderCover();
+        });
+        q('#tf-auto').addEventListener('click', () => suggestCover(true));
+      };
+      const suggestCover = async (force) => {
+        if (!force && f.cover_url) return;
+        if (!f.destination && !f.name) return toast('Scrivi prima il nome o la meta');
+        renderCover('Cerco…');
+        const found = await findTripCover({ name: f.name, destination: f.destination, lat: f.lat, lng: f.lng });
+        if (found) { f.cover_url = found.url; f.cover_credit = found.credit; renderCover(); }
+        else renderCover('Nessuna foto trovata: caricane una tua');
+      };
+
+      const statusEl = q('#tf-status');
+      const drawStatus = () => {
+        statusEl.innerHTML = Object.entries(TRIP_STATUS).map(([k, l]) => `<button data-v="${k}" aria-pressed="${f.status === k}">${l}</button>`).join('');
+      };
+      statusEl.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-v]');
+        if (!b) return;
+        f.status = b.dataset.v;
+        drawStatus(); renderDone();
+      });
+
+      const renderDone = () => {
+        const el = q('#tf-done');
+        if (f.status !== 'fatto') { el.innerHTML = ''; return; }
+        const row = (key, who, cls) => `
+          <div class="vote-row">
+            <span class="av ${cls}" style="width:28px;height:28px">${who[0]}</span>
+            <span class="vote-who"><b>${who}</b><span>${f[key] ? VOTE_LABELS[f[key] - 1] : 'Tocca per votare'}</span></span>
+            <span class="vote-dots">${[1, 2, 3, 4].map((n) =>
+              `<button class="vote-dot ${f[key] && n <= f[key] ? 'on' : ''}" data-k="${key}" data-n="${n}" aria-label="${who}: ${n} su 4" aria-pressed="${f[key] === n}"><i></i></button>`
+            ).join('')}</span>
+          </div>`;
+        el.innerHTML = `
+          <span class="field-label">Com'è andata</span>
+          <div class="group" id="tf-votes">${row('vote_c', 'Carlotta', 'av-c')}${row('vote_m', 'Michele', 'av-m')}</div>
+          <div class="group" style="margin-top:12px"><textarea id="tf-review" placeholder="Recensione del viaggio, facoltativa e pubblica">${esc(f.review)}</textarea></div>`;
+        q('#tf-votes').addEventListener('click', (e) => {
+          const b = e.target.closest('[data-k]');
+          if (!b) return;
+          const n = Number(b.dataset.n);
+          f[b.dataset.k] = f[b.dataset.k] === n ? null : n;
+          renderDone();
+        });
+        q('#tf-review').addEventListener('input', (e) => { f.review = e.target.value; });
+      };
+
+      const renderResults = (list) => {
+        const el = q('#tf-results');
+        if (!list) { el.innerHTML = ''; return; }
+        if (!list.length) { el.innerHTML = '<div class="field-hint">Nessun risultato.</div>'; return; }
+        el.innerHTML = `<div class="results">${list.map((r, i) =>
+          `<button class="result" data-i="${i}"><b>${esc(r.name)}</b><span>${esc(r.address.split(',').slice(1, 4).join(','))}</span></button>`
+        ).join('')}</div>`;
+        el.querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => {
+          const r = list[Number(b.dataset.i)];
+          f.lat = r.lat; f.lng = r.lng;
+          f.destination = [r.name, r.address.split(',').slice(-1)[0].trim()].filter((x, i, a) => x && a.indexOf(x) === i).join(', ');
+          q('#tf-q').value = f.destination;
+          if (!f.name.trim()) { f.name = r.name; q('#tf-name').value = r.name; validate(); }
+          q('#tf-dest').innerHTML = `${icon('check', 12, 3)} ${esc(f.destination)}`;
+          renderResults(null);
+          suggestCover(false);
+        }));
+      };
+      const doSearch = async () => {
+        const text = q('#tf-q').value.trim();
+        if (!text) return;
+        q('#tf-results').innerHTML = '<div class="field-hint">Cerco…</div>';
+        try { renderResults(await nominatimSearch(text, false)); } catch (e) { renderResults(null); fail(e, 'Ricerca non riuscita'); }
+      };
+      q('#tf-search').addEventListener('click', doSearch);
+      q('#tf-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+
+      q('#tf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
+      q('#tf-start').addEventListener('input', (e) => { f.start_on = e.target.value; });
+      q('#tf-end').addEventListener('input', (e) => { f.end_on = e.target.value; });
+      q('#tf-days').addEventListener('change', (e) => { f.use_days = e.target.checked; });
+
+      renderCover();
+      drawStatus();
+      renderDone();
       validate();
     }
   });
@@ -1168,13 +1733,17 @@ function route() {
   let m;
   if ((m = h.match(/^#\/posto\/([\w-]+)/))) S.view = { name: 'place', id: m[1] };
   else if ((m = h.match(/^#\/guida\/([\w-]+)/))) S.view = { name: 'guide', slug: m[1] };
+  else if ((m = h.match(/^#\/viaggio\/([\w-]+)/))) S.view = { name: 'trip', id: m[1] };
+  else if (/^#\/viaggi/.test(h)) S.view = { name: 'trips' };
   else S.view = { name: 'list' };
 
   const key = JSON.stringify(S.view);
   const changed = key !== S.lastViewKey;
   S.lastViewKey = key;
 
+  renderChips();
   renderMarkers();
+  renderAreas();
   renderSheet();
   if (!changed) return;
   $('sheet-body').scrollTop = 0;
@@ -1186,6 +1755,12 @@ function route() {
       S.sheetVisible = sheet.visibleHeight();
       map.flyTo({ center: [p.lng, p.lat], zoom: Math.max(map.getZoom(), 13), padding: mapPadding(), duration: 650 });
     }
+  } else if (S.view.name === 'trip' || S.view.name === 'trips') {
+    if (sheet.enabled && sheet.detent === 'small') sheet.snap('medium');
+    S.sheetVisible = sheet.visibleHeight();
+    const list = S.view.name === 'trip' ? [S.tripById.get(S.view.id)].filter(Boolean) : S.trips;
+    const pts = list.flatMap((t) => tripArea(t) || []);
+    fitTo(pts, 13);
   } else if (S.view.name === 'guide') {
     if (sheet.enabled) sheet.snap('medium');
     S.sheetVisible = sheet.visibleHeight();
@@ -1201,6 +1776,7 @@ async function reload() {
   renderTopbar();
   renderChips();
   renderMarkers();
+  renderAreas();
   renderSheet();
 }
 
@@ -1212,6 +1788,7 @@ sb.auth.onAuthStateChange((event) => {
     await refreshAuth();
     await reload();
     if (event === 'SIGNED_IN' && S.me) toast(`Ciao ${S.me}`);
+    autoPhotosBackfill();
     if (/access_token|error_description/.test(location.hash)) history.replaceState(null, '', location.pathname);
   }, 0);
 });
@@ -1236,6 +1813,7 @@ sb.auth.onAuthStateChange((event) => {
       S.sheetVisible = sheet.visibleHeight();
       fitTo(S.places.map((p) => [p.lng, p.lat]), 13);
     }
+    autoPhotosBackfill();
   };
   if (map.loaded()) start(); else map.once('load', start);
 })();
