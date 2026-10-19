@@ -46,7 +46,7 @@ async function fromWikipedia(place) {
     });
     const j = await getJson(`${WIKI}?${q}`);
     const pages = Object.values(j?.query?.pages || {});
-    const hit = pages.find((p) => p.thumbnail && similar(place.name, p.title));
+    const hit = pages.find((p) => p.thumbnail && similar(place.name, p.title) && !BAD_FILE.test(p.thumbnail.source));
     if (!hit) return null;
     return { url: hit.thumbnail.source, credit: `Foto: Wikipedia, voce "${hit.title}"` };
   } catch { return null; }
@@ -62,7 +62,7 @@ async function fromCommons(lat, lng, radius = 150) {
     const j = await getJson(`${COMMONS}?${q}`);
     const pages = Object.values(j?.query?.pages || {})
       .map((p) => ({ p, ii: p.imageinfo?.[0] }))
-      .filter(({ ii }) => ii && /jpe?g/.test(ii.mime) && ii.width >= 800 && ii.width >= ii.height * 0.9)
+      .filter(({ p, ii }) => ii && /jpe?g/.test(ii.mime) && ii.width >= 800 && ii.width >= ii.height * 0.9 && !BAD_FILE.test(p.title))
       .sort((a, b) => (a.p.index ?? 0) - (b.p.index ?? 0));
     const best = pages[0];
     if (!best) return null;
@@ -73,6 +73,102 @@ async function fromCommons(lat, lng, radius = 150) {
   } catch { return null; }
 }
 
+// ─────────────────────────────────────────────
+// Selezione di candidati, per scegliere a mano
+// ─────────────────────────────────────────────
+const BAD_FILE = /(\.svg|\.gif|\.tiff?|stemma|coat[_ ]of[_ ]arms|escudo|wappen|blason|bandiera|flag|bandera|map|mappa|mapa|karte|locator|location|logo|icon|sign|diagram|plan\b|pianta|panorama.*\.png)/i;
+
+async function commonsInfo(titles) {
+  if (!titles.length) return [];
+  const q = new URLSearchParams({
+    action: 'query', titles: titles.slice(0, 40).join('|'), prop: 'imageinfo',
+    iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1200', format: 'json', origin: '*'
+  });
+  const j = await getJson(`${COMMONS}?${q}`);
+  const byTitle = new Map(Object.values(j?.query?.pages || {}).map((p) => [p.title, p]));
+  return titles.map((t) => byTitle.get(t)).filter(Boolean).map(toCandidate).filter(Boolean);
+}
+
+function toCandidate(p) {
+  const ii = p.imageinfo?.[0];
+  if (!ii || !/jpe?g|webp/.test(ii.mime) || ii.width < 640 || BAD_FILE.test(p.title)) return null;
+  const meta = ii.extmetadata || {};
+  const artist = stripHtml(meta.Artist?.value) || 'autore su Wikimedia Commons';
+  const lic = stripHtml(meta.LicenseShortName?.value);
+  return {
+    url: ii.thumburl || ii.url,
+    thumb: (ii.thumburl || ii.url).replace(/\/\d+px-/, '/400px-'),
+    credit: `Foto: ${artist}${lic ? `, ${lic}` : ''}, Wikimedia Commons`,
+    key: p.title
+  };
+}
+
+async function wikiMediaTitles(title) {
+  try {
+    const q = new URLSearchParams({ action: 'query', titles: title, prop: 'images', imlimit: '50', redirects: '1', format: 'json', origin: '*' });
+    const j = await getJson(`${WIKI}?${q}`);
+    const page = Object.values(j?.query?.pages || {})[0];
+    // Su it.wikipedia i file si chiamano "File:…" come su Commons
+    return (page?.images || []).map((i) => i.title).filter((t) => t && !BAD_FILE.test(t));
+  } catch { return []; }
+}
+
+async function wikiTitleNear(place) {
+  try {
+    const q = new URLSearchParams({ action: 'query', list: 'geosearch', gscoord: `${place.lat}|${place.lng}`, gsradius: '400', gslimit: '15', format: 'json', origin: '*' });
+    const j = await getJson(`${WIKI}?${q}`);
+    return (j?.query?.geosearch || []).find((p) => similar(place.name, p.title))?.title || null;
+  } catch { return null; }
+}
+
+async function commonsNearTitles(lat, lng, radius) {
+  try {
+    const q = new URLSearchParams({ action: 'query', list: 'geosearch', gsnamespace: '6', gscoord: `${lat}|${lng}`, gsradius: String(radius), gslimit: '30', format: 'json', origin: '*' });
+    const j = await getJson(`${COMMONS}?${q}`);
+    return (j?.query?.geosearch || []).map((p) => p.title);
+  } catch { return []; }
+}
+
+async function commonsSearchTitles(text) {
+  try {
+    const q = new URLSearchParams({ action: 'query', list: 'search', srsearch: `${text} filetype:bitmap`, srnamespace: '6', srlimit: '20', format: 'json', origin: '*' });
+    const j = await getJson(`${COMMONS}?${q}`);
+    return (j?.query?.search || []).map((p) => p.title);
+  } catch { return []; }
+}
+
+function uniq(list) {
+  const seen = new Set();
+  return list.filter((c) => c && !seen.has(c.url) && seen.add(c.url));
+}
+
+// Fino a ~12 foto tra cui scegliere per un posto
+export async function placeCandidates(sb, place) {
+  const out = [];
+  const site = await fromWebsite(sb, place.url);
+  if (site) out.push({ ...site, thumb: site.url, key: 'site' });
+  const [wikiTitle, near] = await Promise.all([wikiTitleNear(place), commonsNearTitles(place.lat, place.lng, 200)]);
+  const wikiFiles = wikiTitle ? await wikiMediaTitles(wikiTitle) : [];
+  const titles = [...new Set([...wikiFiles, ...near])];
+  try { out.push(...await commonsInfo(titles)); } catch { /* niente */ }
+  if (out.length < 6) {
+    try { out.push(...await commonsInfo(await commonsNearTitles(place.lat, place.lng, 800))); } catch { /* niente */ }
+  }
+  return uniq(out).slice(0, 12);
+}
+
+// Fino a ~12 foto tra cui scegliere per un viaggio
+export async function tripCandidates(trip) {
+  const name = (trip.destination?.split(',')[0] || trip.name || '').trim();
+  const [wikiFiles, search] = await Promise.all([name ? wikiMediaTitles(name) : [], name ? commonsSearchTitles(name) : []]);
+  let out = [];
+  try { out = await commonsInfo([...new Set([...wikiFiles, ...search])]); } catch { /* niente */ }
+  if (out.length < 6 && typeof trip.lat === 'number') {
+    try { out.push(...await commonsInfo(await commonsNearTitles(trip.lat, trip.lng, 3000))); } catch { /* niente */ }
+  }
+  return uniq(out).slice(0, 12);
+}
+
 export async function findPlacePhoto(sb, place) {
   return (await fromWebsite(sb, place.url))
     || (await fromWikipedia(place))
@@ -80,22 +176,9 @@ export async function findPlacePhoto(sb, place) {
     || (await fromCommons(place.lat, place.lng, 600));
 }
 
-// Copertina di un viaggio: la voce Wikipedia della meta
+// Copertina di un viaggio: la prima foto vera (niente stemmi, bandiere, mappe)
 export async function findTripCover(trip) {
-  const names = [trip.destination?.split(',')[0], trip.name].filter(Boolean);
-  for (const name of names) {
-    try {
-      const j = await getJson(`https://it.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name.trim())}`);
-      const img = j?.originalimage?.source || j?.thumbnail?.source;
-      if (img && j.type !== 'disambiguation') {
-        // Le immagini originali possono essere enormi: chiedi una versione da 1600 px
-        const sized = j.thumbnail?.source ? j.thumbnail.source.replace(/\/\d+px-/, '/1600px-') : img;
-        return { url: sized, credit: `Foto: Wikipedia, voce "${j.title}"` };
-      }
-    } catch { /* prova il prossimo */ }
-  }
-  if (typeof trip.lat === 'number') return fromCommons(trip.lat, trip.lng, 2000);
-  return null;
+  return (await tripCandidates(trip))[0] || null;
 }
 
 // Ridimensiona e carica una foto vostra

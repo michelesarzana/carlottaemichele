@@ -2,7 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js';
 import { icon, CATEGORY_ICONS } from './icons.js';
 import { Sheet } from './sheet.js';
-import { findPlacePhoto, findTripCover, uploadPhoto, pickFile } from './photos.js';
+import { findPlacePhoto, findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js';
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' }
@@ -564,7 +564,7 @@ function viewPlace() {
     if (S.editor) {
       body += `<span class="photo-tools">
         <button class="photo-btn" data-act="photo-upload" data-id="${esc(p.id)}" aria-label="Carica una foto vostra">${icon('camera', 16, 2.2)}</button>
-        <button class="photo-btn" data-act="photo-auto" data-id="${esc(p.id)}" aria-label="Cerca un'altra foto">${icon('refresh', 16, 2.2)}</button>
+        <button class="photo-btn" data-act="photo-auto" data-id="${esc(p.id)}" aria-label="Scegli un'altra foto">${icon('image', 16, 2.2)}</button>
       </span>`;
     }
     body += '</figure>';
@@ -882,13 +882,7 @@ $('sheet').addEventListener('click', async (e) => {
     }
     case 'photo-auto': {
       const p = S.placeById.get(id);
-      if (!p) return;
-      toast('Cerco una foto…');
-      const found = await findPlacePhoto(sb, p);
-      if (!found) return toast('Nessuna foto trovata: caricane una tua');
-      const { error } = await sb.from('places').update({ photo_url: found.url, photo_credit: found.credit, photo_source: 'auto' }).eq('id', id);
-      if (error) return fail(error);
-      await reload();
+      if (p) openPhotoChooser(p);
       break;
     }
     case 'add-place': openPlaceForm(); break;
@@ -1411,10 +1405,11 @@ function openPlaceForm(place = null, preset = {}) {
             ${u ? `<img src="${esc(u)}" alt="">` : `<span class="photo-pick-empty">${icon('image', 26, 1.6)}</span>`}
             <div class="photo-pick-actions">
               <button class="btn btn-quiet" id="pf-ph-up">${icon('camera', 16, 2.2)}Carica</button>
-              <button class="btn btn-quiet" id="pf-ph-auto" ${f.lat == null ? 'disabled' : ''}>${icon('refresh', 16, 2.2)}Trova</button>
+              <button class="btn btn-quiet" id="pf-ph-auto" ${f.lat == null ? 'disabled' : ''}>${icon('image', 16, 2.2)}Scegli</button>
               ${u ? `<button class="btn btn-quiet" id="pf-ph-rm" aria-label="Togli la foto">${icon('trash', 16)}</button>` : ''}
             </div>
             ${busy ? `<span class="field-hint">${esc(busy)}</span>` : f.photo_credit ? `<span class="field-hint">${esc(f.photo_credit)}</span>` : ''}
+            <div id="pf-chooser"></div>
           </div>`;
         q('#pf-ph-up').addEventListener('click', async () => {
           const file = await pickFile();
@@ -1426,11 +1421,15 @@ function openPlaceForm(place = null, preset = {}) {
           } catch (e) { fail(e, 'Non riesco a caricare la foto'); }
           renderPhoto();
         });
-        q('#pf-ph-auto').addEventListener('click', async () => {
-          renderPhoto('Cerco…');
-          const found = await findPlacePhoto(sb, { name: f.name, lat: f.lat, lng: f.lng, url: safeUrl(f.url) });
-          if (found) { f.photo_url = found.url; f.photo_credit = found.credit; f.photo_source = 'auto'; renderPhoto(); }
-          else renderPhoto('Nessuna foto trovata: caricane una tua');
+        q('#pf-ph-auto').addEventListener('click', () => {
+          showChooser(q('#pf-chooser'), () => placeCandidates(sb, { name: f.name, lat: f.lat, lng: f.lng, url: safeUrl(f.url) }), (c) => {
+            f.photo_url = c.url; f.photo_credit = c.credit; f.photo_source = 'auto';
+            const img = q('.photo-pick img');
+            if (img) img.src = c.url;
+            else renderPhoto();
+            const hint = q('.photo-pick > .field-hint');
+            if (hint) hint.textContent = c.credit;
+          });
         });
         q('#pf-ph-rm')?.addEventListener('click', () => { f.photo_url = null; f.photo_credit = null; f.photo_source = null; renderPhoto(); });
       };
@@ -1443,6 +1442,52 @@ function openPlaceForm(place = null, preset = {}) {
       renderLocated();
       renderCats();
       validate();
+    }
+  });
+}
+
+// Griglia di foto tra cui scegliere
+async function showChooser(el, load, onPick) {
+  el.innerHTML = '<div class="chooser-state">Cerco le foto…</div>';
+  let list = [];
+  try { list = await load(); } catch (e) { console.warn(e); }
+  if (!list.length) {
+    el.innerHTML = '<div class="chooser-state">Nessuna foto trovata. Caricane una tua.</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="chooser" role="listbox" aria-label="Scegli una foto">
+      ${list.map((c, i) => `<button class="chooser-item" data-i="${i}" role="option" aria-label="Foto ${i + 1}"><img src="${esc(safeUrl(c.thumb) || '')}" alt="" loading="lazy" decoding="async"></button>`).join('')}
+    </div>
+    <div class="field-hint">Tocca una foto per sceglierla.</div>`;
+  el.querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => {
+    el.querySelectorAll('.chooser-item').forEach((x) => x.removeAttribute('aria-selected'));
+    b.setAttribute('aria-selected', 'true');
+    onPick(list[Number(b.dataset.i)]);
+  }));
+}
+
+function openPhotoChooser(place) {
+  openModal({
+    title: 'Scegli la foto',
+    mount(body, api) {
+      body.innerHTML = `<div id="pc-grid"></div><button class="btn btn-quiet btn-block" id="pc-up">${icon('camera', 16, 2.2)}Carica una foto vostra</button>`;
+      const save = async (patch) => {
+        const { error } = await sb.from('places').update(patch).eq('id', place.id);
+        if (error) return fail(error, 'Non riesco a salvare la foto');
+        api.close();
+        toast('Foto aggiornata');
+        await reload();
+      };
+      showChooser(body.querySelector('#pc-grid'), () => placeCandidates(sb, place),
+        (c) => save({ photo_url: c.url, photo_credit: c.credit, photo_source: 'auto' }));
+      body.querySelector('#pc-up').addEventListener('click', async () => {
+        const file = await pickFile();
+        if (!file) return;
+        toast('Carico la foto…');
+        try { save({ photo_url: await uploadPhoto(sb, file, 'places'), photo_credit: null, photo_source: 'own' }); }
+        catch (e) { fail(e, 'Non riesco a caricare la foto'); }
+      });
     }
   });
 }
@@ -1547,9 +1592,10 @@ function openTripForm(trip = null) {
             ${u ? `<img src="${esc(u)}" alt="">` : `<span class="photo-pick-empty">${icon('image', 30, 1.6)}<span>Copertina</span></span>`}
             <div class="photo-pick-actions">
               <button class="btn btn-quiet" id="tf-up">${icon('camera', 16, 2.2)}Carica</button>
-              <button class="btn btn-quiet" id="tf-auto">${icon('refresh', 16, 2.2)}Da Wikipedia</button>
+              <button class="btn btn-quiet" id="tf-auto">${icon('image', 16, 2.2)}Scegli</button>
             </div>
             ${busy ? `<span class="field-hint">${esc(busy)}</span>` : f.cover_credit ? `<span class="field-hint">${esc(f.cover_credit)}</span>` : ''}
+            <div id="tf-chooser"></div>
           </div>`;
         q('#tf-up').addEventListener('click', async () => {
           const file = await pickFile();
@@ -1559,15 +1605,22 @@ function openTripForm(trip = null) {
           catch (e) { fail(e, 'Non riesco a caricare la foto'); }
           renderCover();
         });
-        q('#tf-auto').addEventListener('click', () => suggestCover(true));
+        q('#tf-auto').addEventListener('click', () => suggestCover());
       };
-      const suggestCover = async (force) => {
-        if (!force && f.cover_url) return;
+      const suggestCover = () => {
         if (!f.destination && !f.name) return toast('Scrivi prima il nome o la meta');
-        renderCover('Cerco…');
-        const found = await findTripCover({ name: f.name, destination: f.destination, lat: f.lat, lng: f.lng });
-        if (found) { f.cover_url = found.url; f.cover_credit = found.credit; renderCover(); }
-        else renderCover('Nessuna foto trovata: caricane una tua');
+        showChooser(q('#tf-chooser'), () => tripCandidates({ name: f.name, destination: f.destination, lat: f.lat, lng: f.lng }), (c) => {
+          f.cover_url = c.url; f.cover_credit = c.credit;
+          const img = q('.cover-pick img');
+          if (img) img.src = c.url;
+          else {
+            const ph = q('.cover-pick .photo-pick-empty');
+            if (ph) ph.outerHTML = `<img src="${esc(c.url)}" alt="">`;
+          }
+          const hint = q('.cover-pick > .field-hint');
+          if (hint) hint.textContent = c.credit;
+          else q('.cover-pick .photo-pick-actions').insertAdjacentHTML('afterend', `<span class="field-hint">${esc(c.credit)}</span>`);
+        });
       };
 
       const statusEl = q('#tf-status');
@@ -1621,7 +1674,7 @@ function openTripForm(trip = null) {
           if (!f.name.trim()) { f.name = r.name; q('#tf-name').value = r.name; validate(); }
           q('#tf-dest').innerHTML = `${icon('check', 12, 3)} ${esc(f.destination)}`;
           renderResults(null);
-          suggestCover(false);
+          suggestCover();
         }));
       };
       const doSearch = async () => {
