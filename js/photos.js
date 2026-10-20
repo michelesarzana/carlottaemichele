@@ -80,7 +80,7 @@ async function fromCommons(lat, lng, radius = 150) {
 // ─────────────────────────────────────────────
 // Selezione di candidati, per scegliere a mano
 // ─────────────────────────────────────────────
-const BAD_FILE = /(\.svg|\.gif|\.tiff?|stemma|coat[_ ]of[_ ]arms|escudo|wappen|blason|bandiera|flag|bandera|map|mappa|mapa|karte|locator|location|logo|icon|sign|diagram|plan\b|pianta|panorama.*\.png)/i;
+const BAD_FILE = /(\bISS\d|iss0\d\d|view[_ ]of[_ ]earth|from[_ ]space|satellite|sentinel|landsat|astronaut|nasa|\.svg|\.gif|\.tiff?|stemma|coat[_ ]of[_ ]arms|escudo|wappen|blason|bandiera|flag|bandera|map|mappa|mapa|karte|locator|location|logo|icon|sign|diagram|plan\b|pianta|panorama.*\.png)/i;
 
 async function commonsInfo(titles) {
   if (!titles.length) return [];
