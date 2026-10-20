@@ -27,14 +27,18 @@ async function getJson(url) {
   return r.json();
 }
 
-// 1. Immagine di anteprima del sito del posto (serve la funzione su Supabase)
-async function fromWebsite(sb, url) {
-  if (!url) return null;
+// 1. Foto pubblicate sul sito del posto (serve la funzione su Supabase)
+async function websiteImages(sb, url) {
+  if (!url) return [];
   try {
-    const { data, error } = await sb.functions.invoke('resolve-link', { body: { url, mode: 'og' } });
-    if (error || !data?.image) return null;
-    return { url: data.image, credit: `Foto: ${data.site || 'sito del posto'}` };
-  } catch { return null; }
+    const { data, error } = await sb.functions.invoke('resolve-link', { body: { url, mode: 'menu' } });
+    if (error || !data?.images?.length) return [];
+    const credit = `Foto: ${data.site || 'sito del posto'}`;
+    return data.images.map((u) => ({ url: u, thumb: u, credit, key: u }));
+  } catch { return []; }
+}
+async function fromWebsite(sb, url) {
+  return (await websiteImages(sb, url))[0] || null;
 }
 
 // 2. Voce di Wikipedia vicina con lo stesso nome
@@ -144,9 +148,7 @@ function uniq(list) {
 
 // Fino a ~12 foto tra cui scegliere per un posto
 export async function placeCandidates(sb, place) {
-  const out = [];
-  const site = await fromWebsite(sb, place.url);
-  if (site) out.push({ ...site, thumb: site.url, key: 'site' });
+  const out = [...await websiteImages(sb, place.url)];
   const [wikiTitle, near] = await Promise.all([wikiTitleNear(place), commonsNearTitles(place.lat, place.lng, 200)]);
   const wikiFiles = wikiTitle ? await wikiMediaTitles(wikiTitle) : [];
   const titles = [...new Set([...wikiFiles, ...near])];
@@ -154,7 +156,7 @@ export async function placeCandidates(sb, place) {
   if (out.length < 6) {
     try { out.push(...await commonsInfo(await commonsNearTitles(place.lat, place.lng, 800))); } catch { /* niente */ }
   }
-  return uniq(out).slice(0, 12);
+  return uniq(out).slice(0, 18);
 }
 
 // Fino a ~12 foto tra cui scegliere per un viaggio

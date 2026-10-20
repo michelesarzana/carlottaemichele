@@ -347,9 +347,11 @@ function renderChips() {
   const done = S.places.length - todo;
   const st = S.filter.status;
   const tripsOn = S.view.name === 'trips' || S.view.name === 'trip';
+  const guidesOn = S.view.name === 'guides' || S.view.name === 'guide';
   let h = `
     <button class="chip" data-trips="1" aria-pressed="${tripsOn}">${icon('plane', 14, 2.2)}Viaggi${S.trips.length ? ' ' + S.trips.length : ''}</button>
-    <button class="chip" data-status="all" aria-pressed="${st === 'all' && !tripsOn}">Tutto</button>
+    ${S.guides.length ? `<button class="chip" data-guides="1" aria-pressed="${S.view.name === 'guides' || S.view.name === 'guide'}">${icon('sparkle', 14, 2)}Guide ${S.guides.length}</button>` : ''}
+    <button class="chip" data-status="all" aria-pressed="${st === 'all' && !tripsOn && !guidesOn}">Tutto</button>
     <button class="chip" data-status="todo" aria-pressed="${st === 'todo'}">Da fare ${todo}</button>
     <button class="chip" data-status="done" aria-pressed="${st === 'done'}">Fatti ${done}</button>
     <span class="chip-sep" aria-hidden="true"></span>`;
@@ -365,6 +367,10 @@ $('chips').addEventListener('click', (e) => {
   if (!b) return;
   if (b.dataset.trips) {
     go(S.view.name === 'trips' ? '#/' : '#/viaggi');
+    return;
+  }
+  if (b.dataset.guides) {
+    go(S.view.name === 'guides' ? '#/' : '#/guide');
     return;
   }
   if (b.dataset.status) S.filter.status = b.dataset.status;
@@ -433,6 +439,7 @@ function renderSheet() {
   if (S.view.name === 'place') out = viewPlace();
   else if (S.view.name === 'guide') out = viewGuide();
   else if (S.view.name === 'trips') out = viewTrips();
+  else if (S.view.name === 'guides') out = viewGuides();
   else if (S.view.name === 'trip') out = viewTrip();
   else out = viewList();
   head.innerHTML = out.head;
@@ -728,6 +735,35 @@ function viewGuide() {
   body += '</div>';
   const when = new Date(g.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   body += `<p class="disclaimer">Guida generata con l'AI il ${esc(when)}${g.prompt ? ` dalla richiesta "${esc(g.prompt)}"` : ''}. Non è curata da noi: controllate orari e aperture prima di andare.</p>`;
+  return { head, body };
+}
+
+// Guide
+function viewGuides() {
+  const n = S.guides.length;
+  const head = `
+    <div class="head-row">
+      <div>
+        <div class="eyebrow">Ricerche fatte con Claude</div>
+        <h1 class="title">${n} ${n === 1 ? 'guida' : 'guide'}</h1>
+      </div>
+      ${S.editor ? `<button class="icon-btn" data-act="ask" aria-label="Chiedi una guida">${icon('plus', 18, 2.6)}</button>` : ''}
+    </div>`;
+  let body = '<div class="rows">';
+  for (const g of S.guides) {
+    const items = g.items || [];
+    const ok = items.filter((i) => i.verified).length;
+    body += `
+      <button class="row" data-act="open-guide" data-slug="${esc(g.slug)}">
+        <span class="tile" style="--c:var(--accent)">${icon('sparkle', 20, 1.8)}</span>
+        <span class="row-main"><span class="row-title">${esc(g.title)}</span><span class="row-sub">${items.length} posti · ${ok} verificati</span></span>
+        ${g.published ? '' : '<span class="badge draft">Bozza</span>'}
+      </button>`;
+  }
+  body += '</div>';
+  if (S.editor && S.guides.some((g) => !g.published)) {
+    body += '<p class="foot">Le bozze le vedete solo voi due. Aprite una guida e premete Pubblica per renderla visibile a tutti.</p>';
+  }
   return { head, body };
 }
 
@@ -1875,6 +1911,7 @@ function route() {
   else if ((m = h.match(/^#\/guida\/([\w-]+)/))) S.view = { name: 'guide', slug: m[1] };
   else if ((m = h.match(/^#\/viaggio\/([\w-]+)/))) S.view = { name: 'trip', id: m[1] };
   else if (/^#\/viaggi/.test(h)) S.view = { name: 'trips' };
+  else if (/^#\/guide$/.test(h)) S.view = { name: 'guides' };
   else S.view = { name: 'list' };
 
   const key = JSON.stringify(S.view);

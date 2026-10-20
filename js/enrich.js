@@ -68,15 +68,27 @@ export async function findMenu(sb, website) {
   } catch { return null; }
 }
 
+// Contatti, menù e immagine letti dal sito del posto
+export async function siteDetails(sb, website) {
+  if (!website) return null;
+  try {
+    const { data, error } = await sb.functions.invoke('resolve-link', { body: { url: website, mode: 'menu' } });
+    return error ? null : data;
+  } catch { return null; }
+}
+
 // Tutto insieme: compila solo i campi vuoti
 export async function enrichPlace(sb, place, categoryIsFood) {
   const out = {};
   const osm = await osmDetails(place).catch(() => null);
   if (osm) for (const [k, v] of Object.entries(osm)) if (v) out[k] = v;
   const site = place.url || out.website;
-  if (categoryIsFood && !place.menu_url && !out.menu_url && site) {
-    const menu = await findMenu(sb, site);
-    if (menu) out.menu_url = menu;
+  const s = await siteDetails(sb, site);
+  if (s) {
+    if (s.phone && !out.phone) out.phone = s.phone;
+    if (s.email && !out.email) out.email = s.email;
+    if (s.instagram && !out.instagram) out.instagram = instaUrl(s.instagram);
+    if (categoryIsFood && s.menu && !out.menu_url) out.menu_url = s.menu;
   }
   return out;
 }
