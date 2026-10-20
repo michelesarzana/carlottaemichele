@@ -1,0 +1,103 @@
+[
+  {
+    "stato": {
+      "migrations": [
+        "002_viaggi_foto.sql",
+        "003_contatti.sql",
+        "004_guida_osterie_valpolicella.sql"
+      ],
+      "guides": [
+        {
+          "slug": "osterie-valpolicella",
+          "title": "Osterie della Valpolicella",
+          "published": false,
+          "items": 9
+        }
+      ],
+      "places": [
+        {
+          "id": "50016eef-f70a-4127-9575-863cbac48928",
+          "name": "Res-Albert Chalet",
+          "category": "dormire",
+          "area": "San Giacomo Filippo",
+          "address": "Strada per Lagunc, San Giacomo Filippo, Comunità montana della Valchiavenna, Sondrio, Lombardia, 23020, Italia",
+          "lat": 46.3344572,
+          "lng": 9.3856143,
+          "url": null,
+          "phone": null,
+          "email": null,
+          "instagram": null,
+          "menu_url": null,
+          "opening_hours": null,
+          "photo": true,
+          "photo_source": "auto",
+          "enriched_at": "2026-10-20T15:27:16.51+00:00",
+          "source_url": "https://www.google.com/maps/place/Res-Albert+Chalet,+Loc.+Presalbert,+23020+San+Giacomo+Filippo+SO,+Italy/@46.3344572,9.3856143,17z/data=!4m6!3m5!1s0x478467f7efffd3c5:0xdc8ad1315eb435c9!8m2!3d46.3344572!4d9.3856143!16s%2Fg%2F11j65rh55_?g_ep=Eg1tbF8yMDI2MTAxM18wIJvbDyoASAJQAg%3D%3D"
+        },
+        {
+          "id": "194e9f7c-cedc-490a-be83-9467dedcef63",
+          "name": "Borgo Incantato Spoleto",
+          "category": "dormire",
+          "area": "Spoleto",
+          "address": "Spoleto, Perugia, Umbria, 06049, Italia",
+          "lat": 42.7004664,
+          "lng": 12.7025694,
+          "url": null,
+          "phone": null,
+          "email": null,
+          "instagram": null,
+          "menu_url": null,
+          "opening_hours": null,
+          "photo": true,
+          "photo_source": "auto",
+          "enriched_at": "2026-10-20T15:26:06.319+00:00",
+          "source_url": "https://www.google.com/maps/place/Enchanted+Hamlet,+Frazione+Pompagnano,+06049+Spoleto+PG,+Italy/@42.7004664,12.7025694,17z/data=!4m6!3m5!1s0x132ef3c6c76b015d:0x46cfe3876a1bd753!8m2!3d42.7004664!4d12.7025694!16s%2Fg%2F11q1pbrlkg?g_ep=Eg1tbF8yMDI2MTAxM18wIJvbDyoASAJQAg%3D%3D"
+        },
+        {
+          "id": "f328be9e-2781-4c6f-aaa3-42906969a661",
+          "name": "Borgo Vescine",
+          "category": "dormire",
+          "area": "Radda in Chianti",
+          "address": "Strada Regionale di Val d'Elsa, Colle Petroso, Radda in Chianti, Siena, Toscana, 53011, Italia",
+          "lat": 43.4854395,
+          "lng": 11.3290964,
+          "url": "https://www.vescine.it/",
+          "phone": null,
+          "email": null,
+          "instagram": null,
+          "menu_url": null,
+          "opening_hours": null,
+          "photo": true,
+          "photo_source": "auto",
+          "enriched_at": "2026-10-20T15:28:04.569+00:00",
+          "source_url": "https://www.google.com/maps/place/Borgo+Vescine,+Localit%C3%A0+Vescine,+53017+Radda+in+Chianti+SI/@43.4854395,11.3290964,16z/data=!4m6!3m5!1s0x132a34d857b071a1:0xdae0c7c93db5b50!8m2!3d43.4854395!4d11.3290964!16s%2Fg%2F1tcyngjm?g_ep=Eg1tbF8yMDI2MTAxM18wIJvbDyoASAJQAg%3D%3D"
+        },
+        {
+          "id": "ae688362-2eee-47d8-a3f5-721714c88ef0",
+          "name": "Trattoria Tina",
+          "category": "ristoranti",
+          "area": "Milano",
+          "address": "Via Altaguardia, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+          "lat": 45.4502387,
+          "lng": 9.1996247,
+          "url": "https://www.trattoriatina.it/",
+          "phone": null,
+          "email": null,
+          "instagram": null,
+          "menu_url": null,
+          "opening_hours": null,
+          "photo": false,
+          "photo_source": "none",
+          "enriched_at": "2026-10-20T15:27:17.084+00:00",
+          "source_url": "https://maps.app.goo.gl/4yEfTPUik21GDzfB9?g_st=ic"
+        }
+      ],
+      "trips": [
+        {
+          "name": "Madrid",
+          "cover": true
+        }
+      ]
+    }
+  }
+]
