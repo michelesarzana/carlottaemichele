@@ -1,8 +1,7 @@
-"""Verifica i candidati di una guida su OpenStreetMap.
+"""Verifica i candidati di una guida su OpenStreetMap (Nominatim).
 
-Per ogni file supabase/guides/*.candidates.json scrive *.resolved.json con:
-- le corrispondenze trovate su Overpass (nome simile nell'area della Valpolicella allargata)
-- il risultato di Nominatim per l'indirizzo
+supabase/guides/<slug>.candidates.json → <slug>.resolved.json
+Formato: lista di {name, query} oppure {"bbox": [sud, ovest, nord, est], "items": [...]}.
 """
 import glob
 import json
@@ -11,70 +10,39 @@ import urllib.parse
 import urllib.request
 
 UA = {"User-Agent": "carlottaemichele.it geocoder (github action)"}
-BBOX = (45.40, 10.70, 45.68, 11.10)  # sud, ovest, nord, est
 
 
-def get(url, data=None):
-    req = urllib.request.Request(url, data=data, headers=UA)
-    with urllib.request.urlopen(req, timeout=120) as r:
-        return json.loads(r.read().decode())
-
-
-def overpass(key):
-    safe = key.replace('"', "")
-    q = f'[out:json][timeout:90];nwr["name"~"{safe}",i]({BBOX[0]},{BBOX[1]},{BBOX[2]},{BBOX[3]});out tags center;'
-    for ep in ("https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"):
-        try:
-            j = get(ep, ("data=" + urllib.parse.quote(q)).encode())
-            out = []
-            for e in j.get("elements", []):
-                t = e.get("tags", {})
-                if not any(k in t for k in ("amenity", "shop", "tourism", "craft")):
-                    continue
-                out.append({
-                    "name": t.get("name"),
-                    "lat": e.get("lat") or e.get("center", {}).get("lat"),
-                    "lng": e.get("lon") or e.get("center", {}).get("lon"),
-                    "amenity": t.get("amenity") or t.get("shop") or t.get("tourism"),
-                    "addr": " ".join(filter(None, [t.get("addr:street"), t.get("addr:housenumber"), t.get("addr:city")])),
-                    "website": t.get("website") or t.get("contact:website"),
-                    "phone": t.get("phone") or t.get("contact:phone"),
-                    "opening_hours": t.get("opening_hours"),
-                })
-            return out
-        except Exception as ex:  # noqa: BLE001
-            last = str(ex)
-    return [{"error": last}]
-
-
-def nominatim(address):
-    q = urllib.parse.urlencode({"q": address, "format": "jsonv2", "limit": 2, "addressdetails": 1})
+def nominatim(q, bbox=None):
+    params = {"q": q, "format": "jsonv2", "limit": 3, "addressdetails": 1, "extratags": 1, "accept-language": "it"}
+    if bbox:
+        s, w, n, e = bbox
+        params.update({"viewbox": f"{w},{n},{e},{s}", "bounded": 1})
+    req = urllib.request.Request("https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode(params), headers=UA)
     try:
-        return [{"display": x["display_name"], "lat": float(x["lat"]), "lng": float(x["lon"]), "type": x.get("type")}
-                for x in get("https://nominatim.openstreetmap.org/search?" + q)]
+        with urllib.request.urlopen(req, timeout=30) as r:
+            res = json.loads(r.read().decode())
     except Exception as ex:  # noqa: BLE001
         return [{"error": str(ex)}]
+    out = []
+    for x in res:
+        t = x.get("extratags") or {}
+        out.append({
+            "name": x.get("name"), "display": x.get("display_name"), "lat": float(x["lat"]), "lng": float(x["lon"]),
+            "type": f'{x.get("category")}/{x.get("type")}',
+            "website": t.get("website") or t.get("contact:website"), "phone": t.get("phone") or t.get("contact:phone"),
+            "opening_hours": t.get("opening_hours"),
+        })
+    return out
 
 
 for path in glob.glob("supabase/guides/*.candidates.json"):
-    items = json.load(open(path))
-    # Una sola richiesta Overpass per tutti i candidati, con qualche tentativo
-    pattern = "|".join(it["key"] for it in items)
-    allosm = [{"error": "nessun tentativo"}]
-    for attempt in range(4):
-        allosm = overpass(pattern)
-        if not (allosm and "error" in allosm[0]):
-            break
-        time.sleep(10)
+    out = path.replace(".candidates.json", ".resolved.json")
+    data = json.load(open(path))
+    bbox, items = (data.get("bbox"), data["items"]) if isinstance(data, dict) else (None, data)
     result = []
     for it in items:
-        k = it["key"].lower()
-        osm = [o for o in allosm if "error" in o or (o.get("name") and k in o["name"].lower())]
-        nom = nominatim(it["address"])
-        if not nom or "error" in nom[0]:
-            nom = nominatim(it["name"] + ", " + it["address"])
+        hits = nominatim(it.get("query") or it["name"], bbox)
         time.sleep(1.2)
-        result.append({"name": it["name"], "osm": osm, "nominatim": nom})
-    out = path.replace(".candidates.json", ".resolved.json")
+        result.append({"name": it["name"], "nominatim": hits})
     json.dump(result, open(out, "w"), ensure_ascii=False, indent=1)
     print("scritto", out)
