@@ -765,6 +765,7 @@ function viewGuide() {
         <span class="badge ${g.published ? '' : 'draft'}">${icon('sparkle', 13, 2)}Guida AI${g.published ? '' : ' · Bozza, visibile solo a voi'}</span>
         <h1 class="title title-xl">${esc(g.title)}</h1>
       </div>
+      ${g.published ? `<button class="icon-btn quiet" data-act="share-guide" aria-label="Condividi la guida">${icon('share', 15, 2.4)}</button>` : ''}
       <button class="icon-btn quiet" data-act="close" aria-label="Chiudi">${icon('x', 14, 3)}</button>
     </div>`;
 
@@ -896,6 +897,7 @@ function viewTrip() {
     <div class="trip-hero">
       ${cover(t.cover_url, 'trip-hero-img')}
       <span class="trip-hero-shade"></span>
+      <button class="icon-btn quiet trip-hero-share" data-act="share-trip" data-id="${esc(t.id)}" aria-label="Condividi il viaggio">${icon('share', 15, 2.4)}</button>
       <button class="icon-btn quiet trip-hero-close" data-act="close-trip" aria-label="Chiudi">${icon('x', 14, 3)}</button>
       <span class="trip-hero-text">
         <span class="trip-hero-meta">${esc(TRIP_STATUS[t.status])} · ${esc(tripMeta(t))}</span>
@@ -970,6 +972,16 @@ $('sheet').addEventListener('click', async (e) => {
     case 'close': go('#/'); break;
     case 'open-trip': go(`#/viaggio/${id}`); break;
     case 'close-trip': go('#/viaggi'); break;
+    case 'share-trip': {
+      const tr = S.tripById.get(id);
+      if (tr) shareLink(tr.name, `#/viaggio/${tr.id}`, `${tr.name}: i posti di Carlotta e Michele`);
+      break;
+    }
+    case 'share-guide': {
+      const g = currentGuide();
+      if (g) shareLink(g.title, `#/guida/${g.slug}`);
+      break;
+    }
     case 'trip-tab': S.view.tab = t.dataset.tab; renderSheet(); break;
     case 'add-trip': openTripForm(); break;
     case 'edit-trip': openTripForm(S.tripById.get(id)); break;
@@ -1057,13 +1069,16 @@ $('sheet').addEventListener('click', async (e) => {
   }
 });
 
-async function sharePlace(p) {
-  if (!p) return;
-  const url = `${location.origin}${location.pathname}#/posto/${p.id}`;
+async function shareLink(title, path, text) {
+  const url = `${location.origin}${location.pathname}${path}`;
   try {
-    if (navigator.share) await navigator.share({ title: p.name, url });
+    if (navigator.share) await navigator.share({ title, text, url });
     else { await navigator.clipboard.writeText(url); toast('Link copiato'); }
   } catch { /* annullato */ }
+}
+async function sharePlace(p) {
+  if (!p) return;
+  shareLink(p.name, `#/posto/${p.id}`);
 }
 
 // ─────────────────────────────────────────────
