@@ -10,7 +10,9 @@
         "007_foto_trattoria_tina.sql",
         "008_foto_il_ruscello.sql",
         "009_dettagli_dal_server.sql",
-        "010_categorie_secondarie.sql"
+        "010_categorie_secondarie.sql",
+        "011_ricerca_dettagli_di_nuovo.sql",
+        "012_ricerca_dettagli_rilancio.sql"
       ],
       "cron": [
         {
@@ -25,35 +27,71 @@
         {
           "status": 200,
           "err": null,
+          "body": "{\"google\":false,\"done\":[{\"name\":\"Gran Vía\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
+          "at": "2026-10-25T10:15:44.461787+00:00"
+        },
+        {
+          "status": 200,
+          "err": null,
+          "body": "{\"google\":false,\"done\":[{\"name\":\"El Retiro Park\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
+          "at": "2026-10-25T10:15:06.763313+00:00"
+        },
+        {
+          "status": 200,
+          "err": null,
+          "body": "{\"google\":false,\"done\":[{\"name\":\"El Retiro Park\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
+          "at": "2026-10-25T10:15:06.763313+00:00"
+        },
+        {
+          "status": 200,
+          "err": null,
+          "body": "{\"google\":false,\"done\":[{\"name\":\"Museo Nacional del Prado\",\"filled\":[],\"from\":[],\"ok\":true}]}",
+          "at": "2026-10-25T10:14:27.537816+00:00"
+        },
+        {
+          "status": 200,
+          "err": null,
           "body": "{\"google\":false,\"done\":[{\"name\":\"Trattoria dei Cacciatori\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
           "at": "2026-10-25T10:09:56.941745+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":false,\"done\":[{\"name\":\"Osteria il Gran Burrone\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
-          "at": "2026-10-25T10:07:43.670873+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":false,\"done\":[{\"name\":\"Bottega Sicula\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
-          "at": "2026-10-25T10:05:53.172107+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":false,\"done\":[{\"name\":\"Primo Naso Vineria\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
-          "at": "2026-10-25T10:05:30.781285+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":false,\"done\":[{\"name\":\"Ristorante La Pobbia 1850\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
-          "at": "2026-10-25T10:04:18.678694+00:00"
         }
       ],
       "posti": [
+        {
+          "name": "Gran Vía",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
+        },
+        {
+          "name": "El Retiro Park",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Madrid-MetroRetiroExterior.j",
+          "credit": "Foto: Wikipedia, voce \"Retiro (metropolitana di Madrid)\"",
+          "src": "auto",
+          "enriched": null
+        },
+        {
+          "name": "Museo Nacional del Prado",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": "2026-10-25T10:20:53.768+00:00"
+        },
         {
           "name": "Trattoria dei Cacciatori",
           "url": null,
@@ -64,7 +102,7 @@
           "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Peschiera_Borromeo_-_Ci",
           "credit": "Foto: Ysogo, CC BY-SA 4.0, Wikimedia Commons",
           "src": "auto",
-          "enriched": "2026-10-25T10:10:21.757+00:00"
+          "enriched": "2026-10-25T10:21:34.807+00:00"
         },
         {
           "name": "Osteria il Gran Burrone",
@@ -73,10 +111,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_",
-          "credit": "Foto: Ziko van Dijk, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:08:08.603+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Bottega Sicula",
@@ -85,10 +123,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_",
-          "credit": "Foto: Ziko van Dijk, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:06:17.098+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Primo Naso Vineria",
@@ -97,10 +135,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Milano_quartiere_Ortica.JPG?",
-          "credit": "Foto: Arbalete, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:05:52.278+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Ristorante La Pobbia 1850",
@@ -109,10 +147,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Double_Tree_Hotel_in_Vi",
-          "credit": "Foto: Maurovez, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:04:42.203+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Un Sacco Bello",
@@ -121,10 +159,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Palazzo_Trissino_dVdO.J",
-          "credit": "Foto: Marco Moro, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:03:32.828+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "La Rue",
@@ -133,10 +171,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://upload.wikimedia.org/wikipedia/commons/6/62/Paolo_Monti_-_Serie_fotograf",
-          "credit": "Foto: Paolo Monti, CC BY-SA 4.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:03:08.732+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Farmhouse Alle Baite Branzi",
@@ -145,10 +183,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/20220814-gemelli_212-24",
-          "credit": "Foto: Amadvance, CC BY-SA 4.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T10:01:37.483+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Baita Del Càin",
@@ -159,8 +197,8 @@
           "insta": null,
           "photo": null,
           "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:01:07.672+00:00"
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Revivre Village",
@@ -171,8 +209,8 @@
           "insta": null,
           "photo": null,
           "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T09:57:18.794+00:00"
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Arctic TreeHouse Hotel",
@@ -181,10 +219,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Forest_at_Syv%C3%A4senv",
-          "credit": "Foto: Leonhard Lenz, CC0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-25T09:55:35.337+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         },
         {
           "name": "Ristorante Il Ruscello 十二馔",
@@ -196,7 +234,7 @@
           "photo": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jp",
           "credit": "Foto: Cooking with the Hamster (cookingwiththehamster.com)",
           "src": "auto",
-          "enriched": "2026-10-25T08:00:23.015+00:00"
+          "enriched": null
         },
         {
           "name": "Trattoria Tina",
@@ -241,10 +279,10 @@
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Daloo_-_panoramio.jpg/1",
-          "credit": "Foto: Schölla Schwarz, CC BY 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-10-20T15:27:16.51+00:00"
+          "photo": null,
+          "credit": null,
+          "src": null,
+          "enriched": null
         }
       ]
     }

@@ -15,9 +15,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Daloo_-_panoramio.jpg/1280px-Daloo_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-20T15:27:16.51+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://www.google.com/maps/place/Res-Albert+Chalet,+Loc.+Presalbert,+23020+San+Giacomo+Filippo+SO,+Italy/@46.3344572,9.3856143,17z/data=!4m6!3m5!1s0x478467f7efffd3c5:0xdc8ad1315eb435c9!8m2!3d46.3344572!4d9.3856143!16s%2Fg%2F11j65rh55_?g_ep=Eg1tbF8yMDI2MTAxM18wIJvbDyoASAJQAg%3D%3D"
       },
       {
@@ -93,7 +93,7 @@
         "hours": null,
         "photo": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jpeg/mjEvnqkBKguklpqx/img_1857-eFNgJmy1lUGKQCJy.jpg",
         "photo_source": "auto",
-        "enriched_at": "2026-10-25T08:00:23.015+00:00",
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/9YvYefFgMyXmtJs37?g_st=ic"
       },
       {
@@ -110,9 +110,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Forest_at_Syv%C3%A4senvaara_Rovaniemi_2022-09-15_40.jpg/1280px-Forest_at_Syv%C3%A4senvaara_Rovaniemi_2022-09-15_40.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T09:55:35.337+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/jzGGA5qgi9MWjZ4D9?g_st=ic"
       },
       {
@@ -130,8 +130,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": "none",
-        "enriched_at": "2026-10-25T09:57:18.794+00:00",
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/MxGNxxy6ZZ59b1oi8?g_st=ic"
       },
       {
@@ -149,8 +149,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": "none",
-        "enriched_at": "2026-10-25T10:01:07.672+00:00",
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/LkVYhaevLymvStzw5?g_st=ic"
       },
       {
@@ -169,9 +169,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/20220814-gemelli_212-249.jpg/1280px-20220814-gemelli_212-249.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:01:37.483+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/7Dzo1932Ug66q4w17?g_st=ic"
       },
       {
@@ -188,9 +188,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://upload.wikimedia.org/wikipedia/commons/6/62/Paolo_Monti_-_Serie_fotografica_%28Milano%2C_1970%29_-_BEIC_6332569.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:03:08.732+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/1kBiARwKhT3zCefz7?g_st=ic"
       },
       {
@@ -207,9 +207,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Palazzo_Trissino_dVdO.JPG/1280px-Palazzo_Trissino_dVdO.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:03:32.828+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/kpTM6bgKqhuApwQx8?g_st=ic"
       },
       {
@@ -226,9 +226,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Double_Tree_Hotel_in_Via_Ludovico_di_Breme_N%C2%B0_77.JPG/1280px-Double_Tree_Hotel_in_Via_Ludovico_di_Breme_N%C2%B0_77.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:04:42.203+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/uQxDs6ExiXkYZ3Ji7?g_st=ic"
       },
       {
@@ -245,9 +245,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Milano_quartiere_Ortica.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:05:52.278+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/Azbzh1tSXrP7Zn7o6?g_st=ic"
       },
       {
@@ -264,9 +264,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_01.JPG/1280px-2013-04_wm_conf_milano_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:06:17.098+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/xHTxtXJWaHT4TYAF6?g_st=ic"
       },
       {
@@ -283,9 +283,9 @@
         "insta": null,
         "menu": null,
         "hours": null,
-        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_01.JPG/1280px-2013-04_wm_conf_milano_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:08:08.603+00:00",
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
         "source_url": "https://maps.app.goo.gl/RuSRzDfbaN3JYyiq5?g_st=ic"
       },
       {
@@ -304,8 +304,67 @@
         "hours": null,
         "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Peschiera_Borromeo_-_Cimitero_di_San_Bovio_-_2025-09-13_10-38-03_001.jpg/1280px-Peschiera_Borromeo_-_Cimitero_di_San_Bovio_-_2025-09-13_10-38-03_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
         "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:10:21.757+00:00",
+        "enriched_at": "2026-10-25T10:21:34.807+00:00",
         "source_url": "https://maps.app.goo.gl/msro7jiGaET87S149?g_st=ic"
+      },
+      {
+        "id": "1fa4e4f7-56ea-4eba-a4a3-478e3213e00e",
+        "name": "Museo Nacional del Prado",
+        "cat": "posti",
+        "extra": [
+          "esperienze"
+        ],
+        "area": "Madrid",
+        "lat": 40.4204626,
+        "lng": -3.6864269,
+        "url": null,
+        "phone": null,
+        "email": null,
+        "insta": null,
+        "menu": null,
+        "hours": null,
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": "2026-10-25T10:20:53.768+00:00",
+        "source_url": "https://maps.app.goo.gl/6Ldj1i1xsx5GidtC6?g_st=ic"
+      },
+      {
+        "id": "40152f15-645a-4f5d-bd1f-9383a18ed52d",
+        "name": "El Retiro Park",
+        "cat": "posti",
+        "extra": [],
+        "area": "Madrid",
+        "lat": 40.4204626,
+        "lng": -3.6864269,
+        "url": null,
+        "phone": null,
+        "email": null,
+        "insta": null,
+        "menu": null,
+        "hours": null,
+        "photo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Madrid-MetroRetiroExterior.jpg?utm_source=it.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+        "photo_source": "auto",
+        "enriched_at": null,
+        "source_url": "https://maps.app.goo.gl/Vpi21MHtQqiBPNPs5?g_st=ic"
+      },
+      {
+        "id": "a5a96cfb-54a5-43ba-aa81-9553b8658044",
+        "name": "Gran Vía",
+        "cat": "negozi",
+        "extra": [],
+        "area": "Madrid",
+        "lat": 40.4176527,
+        "lng": -3.7079547,
+        "url": null,
+        "phone": null,
+        "email": null,
+        "insta": null,
+        "menu": null,
+        "hours": null,
+        "photo": null,
+        "photo_source": null,
+        "enriched_at": null,
+        "source_url": "https://maps.app.goo.gl/iveQpw9cN7wJsPbR7?g_st=ic"
       }
     ]
   }
