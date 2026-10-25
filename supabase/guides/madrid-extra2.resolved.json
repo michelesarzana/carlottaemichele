@@ -1,0 +1,162 @@
+[
+ {
+  "name": "Plaza de Zocodover, Toledo",
+  "nominatim": [
+   {
+    "name": "Plaza de Zocodover",
+    "display": "Plaza de Zocodover, Santa Bárbara, Toledo, Castiglia-La Mancia, Spagna",
+    "lat": 39.859476,
+    "lng": -4.0214207,
+    "type": "place/square",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Plaza de Zocodover",
+    "display": "Plaza de Zocodover, Santa Bárbara, Toledo, Castiglia-La Mancia, 45002, Spagna",
+    "lat": 39.8596926,
+    "lng": -4.021463,
+    "type": "highway/living_street",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Plaza de Zocodover",
+    "display": "Plaza de Zocodover, Santa Bárbara, Toledo, Castiglia-La Mancia, 45002, Spagna",
+    "lat": 39.85966,
+    "lng": -4.0211048,
+    "type": "highway/tertiary",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Acueducto de Segovia",
+  "nominatim": [
+   {
+    "name": "Acueducto de Segovia",
+    "display": "Acueducto de Segovia, Calle Dámaso Alonso, Sexmo de Segovia, Nueva Segovia, Comunidad de Ciudad y Tierra de Segovia, Segovia, Castiglia e León, 40006, Spagna",
+    "lat": 40.943613,
+    "lng": -4.1093039,
+    "type": "historic/aqueduct",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Mesón de Cándido",
+  "nominatim": [
+   {
+    "name": "Mesón de Cándido",
+    "display": "Mesón de Cándido, Plaza del Azoguejo, Santa Columba, Sexmo de Segovia, La Albuera, Comunidad de Ciudad y Tierra de Segovia, Segovia, Castiglia e León, 40001, Spagna",
+    "lat": 40.9476582,
+    "lng": -4.1178861,
+    "type": "amenity/restaurant",
+    "website": "https://mesondecandido.es/",
+    "phone": "+34 921 425 911",
+    "opening_hours": "Mo-Su 13:00-16:30, 20:00-23:00"
+   }
+  ]
+ },
+ {
+  "name": "Casa Hernanz",
+  "nominatim": [
+   {
+    "name": "Casa Hernanz",
+    "display": "Casa Hernanz, 18, Calle de Toledo, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4142151,
+    "lng": -3.7076742,
+    "type": "shop/shoes",
+    "website": "https://casahernanz.es/",
+    "phone": "+34 913 66 54 50",
+    "opening_hours": "Mo-Fr 09:30-13:30, 16:30-20:00; Sa 10:00-14:00"
+   }
+  ]
+ },
+ {
+  "name": "Casa de Diego",
+  "nominatim": [
+   {
+    "name": "Casa de Diego",
+    "display": "Casa de Diego, 12, Plaza de la Puerta del Sol, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4172316,
+    "lng": -3.7031514,
+    "type": "shop/fashion_accessories",
+    "website": "https://www.casadediego.es/",
+    "phone": "+34 915 226 643",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Café Central",
+  "nominatim": [
+   {
+    "name": "Ateneo Científico, Literario y Artístico de Madrid",
+    "display": "Ateneo Científico, Literario y Artístico de Madrid, 21, Calle del Prado, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4151962,
+    "lng": -3.6982321,
+    "type": "amenity/arts_centre",
+    "website": "https://www.ateneodemadrid.com/",
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Ateneo Científico, Literario y Artístico de Madrid",
+    "display": "Ateneo Científico, Literario y Artístico de Madrid, 19, Calle del Prado, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4151304,
+    "lng": -3.6983042,
+    "type": "amenity/arts_centre",
+    "website": "https://www.ateneodemadrid.com/",
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Escuela de Esgrima Ateneo de Madrid - bdll",
+    "display": "Escuela de Esgrima Ateneo de Madrid - bdll, Calle del Prado, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4151004,
+    "lng": -3.6983629,
+    "type": "leisure/pitch",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Sala Equis",
+  "nominatim": [
+   {
+    "name": "Sala Equis",
+    "display": "Sala Equis, 4, Calle del Duque de Alba, Lavapiés, Embajadores, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
+    "lat": 40.4119892,
+    "lng": -3.7057283,
+    "type": "amenity/cinema",
+    "website": "https://salaequis.es/",
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Estadio Santiago Bernabéu",
+  "nominatim": [
+   {
+    "name": "Bernabéu",
+    "display": "Bernabéu, Acceso Parking, Hispanoamérica, Chamartín, Madrid, Comunidad de Madrid, 28020, Spagna",
+    "lat": 40.4530437,
+    "lng": -3.688197,
+    "type": "leisure/stadium",
+    "website": "https://bernabeu.realmadrid.com/",
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ }
+]
