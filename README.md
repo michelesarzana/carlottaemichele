@@ -30,9 +30,15 @@ Voti e recensioni sono pubblici. Le date delle visite stanno in `visit_dates`, l
 
 4. Il resto lo fa GitHub: il flusso `.github/workflows/supabase.yml` applica gli script in `supabase/migrations` e pubblica le funzioni. Serve il segreto `SUPABASE_ACCESS_TOKEN` (Supabase › Account › Access Tokens) nelle impostazioni della repo.
 
-## Foto
+## Dettagli e foto automatici
 
-Ogni posto ha una foto. Se non la caricate voi, il sito la cerca in automatico: immagine di anteprima del sito del posto, poi Wikipedia, poi Wikimedia Commons vicino alle coordinate. Le foto vostre vengono ridotte a 1600 px e caricate nel bucket pubblico `photos`.
+Ogni posto nuovo si compila da solo, sul server: sito, telefono, email, Instagram, orari, menù e foto.
+Il database chiama la funzione `enrich-places` appena il posto è salvato, e la richiama ogni 15 minuti per quelli rimasti indietro. Funziona anche se chiudete l'app subito dopo aver salvato. Compila solo i campi vuoti.
+
+Fonti: OpenStreetMap, il sito del posto, Wikipedia e Wikimedia Commons per la foto.
+Facoltativo: con il segreto `GOOGLE_PLACES_KEY` su Supabase (Edge Functions › Secrets) usa anche Google Places, che ha telefono, orari e foto di quasi tutti i locali. La foto di Google viene copiata nel bucket `photos`.
+
+Le foto vostre vengono ridotte a 1600 px e caricate nel bucket pubblico `photos`. Dalla scheda potete sempre sceglierne un'altra.
 
 ## Guide AI
 

@@ -2,8 +2,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js';
 import { icon, CATEGORY_ICONS } from './icons.js';
 import { Sheet } from './sheet.js';
-import { findPlacePhoto, findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js';
-import { enrichPlace, prettyHours } from './enrich.js';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js';
+import { prettyHours } from './enrich.js';
 
 const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 
@@ -1240,7 +1240,7 @@ function openPlaceForm(place = null, preset = {}) {
       toast(place ? 'Modifiche salvate' : 'Aggiunto alla mappa');
       await reload();
       go(`#/posto/${data.id}`);
-      if (!data.enriched_at || !data.photo_url) autoDetails(data).then((ok) => ok && reload());
+      if (!data.enriched_at || !data.photo_url) watchDetails(data.id);
     },
     mount(body, api) {
       body.innerHTML = `
@@ -1594,46 +1594,24 @@ function openPhotoChooser(place) {
   });
 }
 
-// Foto automatiche: per i posti appena creati e, una volta, per quelli senza foto
-async function autoPhoto(place) {
-  try {
-    const found = await findPlacePhoto(sb, place);
-    const patch = found
-      ? { photo_url: found.url, photo_credit: found.credit, photo_source: 'auto' }
-      : { photo_source: 'none' };
-    const { error } = await sb.from('places').update(patch).eq('id', place.id);
-    return !error && !!found;
-  } catch { return false; }
+// Dettagli e foto dei posti li compila il server (funzione enrich-places), chiamato
+// dal database appena il posto è salvato. Qui aspettiamo che finisca e ridisegniamo.
+function watchDetails(id) {
+  let tries = 0;
+  const check = async () => {
+    tries++;
+    const { data } = await sb.from('places').select('enriched_at,photo_url,photo_source').eq('id', id).maybeSingle();
+    if (data?.enriched_at && (data.photo_url || data.photo_source)) return reload();
+    if (tries < 10) setTimeout(check, 5000);
+  };
+  setTimeout(check, 4000);
 }
 
-// Dettagli (sito, contatti, orari, menù) poi foto. Compila solo i campi vuoti.
-async function autoDetails(place) {
-  let changed = false;
-  let current = { ...place };
-  if (!place.enriched_at) {
-    try {
-      const found = await enrichPlace(sb, place, FOOD.has(place.category_id));
-      const patch = { enriched_at: new Date().toISOString() };
-      const map = { website: 'url', phone: 'phone', email: 'email', opening_hours: 'opening_hours', menu_url: 'menu_url', instagram: 'instagram' };
-      for (const [k, col] of Object.entries(map)) if (found[k] && !place[col]) patch[col] = found[k];
-      const { error } = await sb.from('places').update(patch).eq('id', place.id);
-      if (!error) { changed = Object.keys(patch).length > 1; current = { ...current, ...patch }; }
-    } catch (e) { console.warn('dettagli', e); }
-  }
-  if (!current.photo_url && current.photo_source !== 'none') {
-    if (await autoPhoto(current)) changed = true;
-  }
-  return changed;
-}
-
-async function autoPhotosBackfill() {
+// Copertine dei viaggi senza foto: una volta per sessione
+async function tripCoversBackfill() {
   if (!S.editor || S.autoPhotosDone) return;
   S.autoPhotosDone = true;
   let changed = false;
-  const todo = S.places.filter((x) => !x.enriched_at || (!x.photo_url && !x.photo_source)).slice(0, 30);
-  for (const p of todo) {
-    if (await autoDetails(p)) changed = true;
-  }
   for (const t of S.trips.filter((x) => !x.cover_url)) {
     const found = await findTripCover(t);
     if (found) {
@@ -1965,7 +1943,7 @@ sb.auth.onAuthStateChange((event) => {
     await refreshAuth();
     await reload();
     if (event === 'SIGNED_IN' && S.me) toast(`Ciao ${S.me}`);
-    autoPhotosBackfill();
+    tripCoversBackfill();
     if (/access_token|error_description/.test(location.hash)) history.replaceState(null, '', location.pathname);
   }, 0);
 });
@@ -1990,7 +1968,7 @@ sb.auth.onAuthStateChange((event) => {
       S.sheetVisible = sheet.visibleHeight();
       fitTo(S.places.map((p) => [p.lng, p.lat]), 13);
     }
-    autoPhotosBackfill();
+    tripCoversBackfill();
   };
   if (map.loaded()) start(); else map.once('load', start);
 })();
