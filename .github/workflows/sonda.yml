@@ -2,11 +2,15 @@ name: Sonda
 on:
   push:
     branches: [sonda]
+permissions:
+  contents: write
 jobs:
   s:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
+          exec > sonda.txt 2>&1
           UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
           final=$(curl -sS -L -o /dev/null -w '%{url_effective}' -A "$UA" -H 'Cookie: CONSENT=YES+cb; SOCS=CAI' "https://maps.app.goo.gl/9YvYefFgMyXmtJs37")
           echo "FINAL $final"
@@ -20,3 +24,6 @@ jobs:
           echo "--- ruscello"; grep -oiE '.{0,150}Ruscello.{0,250}' page.html | head -6
           echo "--- preview"; grep -oE '/maps/preview/place[^"]{0,400}' page.html | head -3
           echo "--- img"; grep -oE 'https://lh[0-9]\.googleusercontent\.com/[^"\\ ]{10,200}' page.html | head -5
+      - run: |
+          git config user.name gh; git config user.email gh@users.noreply.github.com
+          git add sonda.txt; git commit -m risultati; git push
