@@ -1602,7 +1602,7 @@ async function showChooser(el, load, onPick) {
   }
   el.innerHTML = `
     <div class="chooser" role="listbox" aria-label="Scegli una foto">
-      ${list.map((c, i) => `<button class="chooser-item" data-i="${i}" role="option" aria-label="Foto ${i + 1}"><img src="${esc(safeUrl(c.thumb) || '')}" alt="" loading="lazy" decoding="async"></button>`).join('')}
+      ${list.map((c, i) => `<button class="chooser-item" data-i="${i}" data-full="${esc(safeUrl(c.url) || '')}" role="option" aria-label="Foto ${i + 1}"><img src="${esc(safeUrl(c.thumb) || '')}" alt="" loading="lazy" decoding="async" onerror="if(!this.dataset.retry&&this.parentNode.dataset.full){this.dataset.retry=1;this.src=this.parentNode.dataset.full}else{this.parentNode.remove()}"></button>`).join('')}
     </div>
     <div class="field-hint">Tocca una foto per sceglierla.</div>`;
   el.querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => {

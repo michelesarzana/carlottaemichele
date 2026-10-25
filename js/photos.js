@@ -61,7 +61,7 @@ async function fromCommons(lat, lng, radius = 150) {
   try {
     const q = new URLSearchParams({
       action: 'query', generator: 'geosearch', ggsnamespace: '6', ggscoord: `${lat}|${lng}`, ggsradius: String(radius), ggslimit: '20',
-      prop: 'imageinfo', iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1200', format: 'json', origin: '*'
+      prop: 'imageinfo', iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1280', format: 'json', origin: '*'
     });
     const j = await getJson(`${COMMONS}?${q}`);
     const pages = Object.values(j?.query?.pages || {})
@@ -86,7 +86,7 @@ async function commonsInfo(titles) {
   if (!titles.length) return [];
   const q = new URLSearchParams({
     action: 'query', titles: titles.slice(0, 40).join('|'), prop: 'imageinfo',
-    iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1200', format: 'json', origin: '*'
+    iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1280', format: 'json', origin: '*'
   });
   const j = await getJson(`${COMMONS}?${q}`);
   const byTitle = new Map(Object.values(j?.query?.pages || {}).map((p) => [p.title, p]));
@@ -101,7 +101,7 @@ function toCandidate(p) {
   const lic = stripHtml(meta.LicenseShortName?.value);
   return {
     url: ii.thumburl || ii.url,
-    thumb: (ii.thumburl || ii.url).replace(/\/\d+px-/, '/400px-'),
+    thumb: (ii.thumburl || ii.url).replace(/\/\d+px-/, '/330px-'),
     credit: `Foto: ${artist}${lic ? `, ${lic}` : ''}, Wikimedia Commons`,
     key: p.title
   };

@@ -56,7 +56,7 @@ function db(path: string, init: RequestInit = {}) {
 function norm(s: string) {
   return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 }
-const STOP = new Set(['di', 'del', 'della', 'dei', 'delle', 'da', 'la', 'il', 'lo', 'le', 'i', 'gli', 'e', 'al', 'alla', 'ai', 'the', 'de', 'do', 'osteria', 'trattoria', 'ristorante', 'bar', 'caffe', 'cantina', 'hotel', 'museo']);
+const STOP = new Set(['di', 'del', 'della', 'dei', 'delle', 'da', 'la', 'il', 'lo', 'le', 'i', 'gli', 'e', 'al', 'alla', 'alle', 'ai', 'the', 'de', 'do', 'osteria', 'trattoria', 'ristorante', 'bar', 'caffe', 'cantina', 'hotel', 'museo', 'agriturismo', 'farmhouse', 'albergo', 'rifugio', 'locanda', 'pizzeria', 'enoteca', 'vineria', 'village', 'chalet']);
 function similar(a: string, b: string) {
   const ta = norm(a).split(' ').filter((w) => w.length > 2 && !STOP.has(w));
   const tb = new Set(norm(b).split(' '));
@@ -161,15 +161,21 @@ async function googlePhoto(place: Place, photo: any): Promise<Photo | null> {
 // ─── 2. OpenStreetMap ──────────────────────────────────────
 
 async function osm(place: Place) {
-  const q = `[out:json][timeout:15];nwr(around:150,${place.lat},${place.lng})["name"];out tags center 60;`;
-  let j: any = null;
-  for (const ep of ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter']) {
-    j = await getJson(ep, { method: 'POST', body: 'data=' + encodeURIComponent(q), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, 20000);
-    if (j) break;
+  // Nominatim: stessa banca dati di OpenStreetMap, molto più stabile di Overpass dai server cloud.
+  // Cerca il nome in un riquadro di circa 2 km attorno al posto, con i tag extra (sito, telefono, orari…).
+  const names = [place.name, cleanName(place.name)].filter((n, i, a) => n && a.indexOf(n) === i);
+  const dLat = 0.012, dLng = 0.018;
+  const viewbox = `${place.lng - dLng},${place.lat + dLat},${place.lng + dLng},${place.lat - dLat}`;
+  let els: any[] = [];
+  for (const q of names) {
+    const params = new URLSearchParams({ q, format: 'jsonv2', extratags: '1', limit: '5', bounded: '1', viewbox, 'accept-language': 'it' });
+    const j = await getJson(`https://nominatim.openstreetmap.org/search?${params}`, {}, 10000);
+    await new Promise((r) => setTimeout(r, 1100)); // regola di Nominatim: una richiesta al secondo
+    els = (j || [])
+      .map((e: any) => ({ tags: { ...(e.extratags || {}), name: e.name }, lat: Number(e.lat), lng: Number(e.lon) }))
+      .filter((e: any) => e.tags.name && (similar(place.name, e.tags.name) || similar(e.tags.name, place.name)));
+    if (els.length) break;
   }
-  const els = (j?.elements || [])
-    .map((e: any) => ({ tags: e.tags || {}, lat: e.lat ?? e.center?.lat, lng: e.lon ?? e.center?.lon }))
-    .filter((e: any) => e.tags.name && similar(place.name, e.tags.name));
   if (!els.length) return null;
   els.sort((a: any, b: any) => dist(place, a) - dist(place, b));
   const t = els[0].tags;
@@ -182,6 +188,11 @@ async function osm(place: Place) {
     menu_url: cleanUrl(pick('website:menu', 'menu:url', 'contact:menu', 'menu')),
     instagram: instaUrl(pick('contact:instagram', 'instagram'))
   };
+}
+
+// Nome senza parole di tipo, per una seconda ricerca ("Farmhouse Alle Baite Branzi" → "Alle Baite Branzi")
+function cleanName(n: string) {
+  return String(n || '').replace(/\b(farmhouse|agriturismo|ristorante|trattoria|osteria|hotel|albergo|b&b|bed and breakfast|rifugio|locanda|pizzeria|enoteca|vineria|bar|caff[eè])\b/gi, ' ').replace(/[^\p{L}\p{N}' ]+/gu, ' ').replace(/\s+/g, ' ').trim();
 }
 
 // ─── 3. il sito del posto ──────────────────────────────────
@@ -262,15 +273,15 @@ async function wikipedia(place: Place): Promise<Photo | null> {
   return hit ? { url: hit.thumbnail.source, credit: `Foto: Wikipedia, voce "${hit.title}"` } : null;
 }
 
-async function commons(lat: number, lng: number, radius: number): Promise<Photo | null> {
+async function commons(lat: number, lng: number, radius: number, name?: string): Promise<Photo | null> {
   const q = new URLSearchParams({
     action: 'query', generator: 'geosearch', ggsnamespace: '6', ggscoord: `${lat}|${lng}`, ggsradius: String(radius), ggslimit: '20',
-    prop: 'imageinfo', iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1200', format: 'json'
+    prop: 'imageinfo', iiprop: 'url|size|mime|extmetadata', iiurlwidth: '1280', format: 'json'
   });
   const j = await getJson(`https://commons.wikimedia.org/w/api.php?${q}`);
   const best = Object.values<any>(j?.query?.pages || {})
     .map((p) => ({ p, ii: p.imageinfo?.[0] }))
-    .filter(({ p, ii }) => ii && /jpe?g/.test(ii.mime) && ii.width >= 800 && ii.width >= ii.height * 0.9 && !BAD_FILE.test(p.title))
+    .filter(({ p, ii }) => ii && /jpe?g/.test(ii.mime) && ii.width >= 800 && ii.width >= ii.height * 0.9 && !BAD_FILE.test(p.title) && (!name || similar(name, p.title.replace(/^File:|\.[a-z]+$/gi, ''))))
     .sort((a, b) => (a.p.index ?? 0) - (b.p.index ?? 0))[0];
   if (!best) return null;
   const meta = best.ii.extmetadata || {};
@@ -321,8 +332,8 @@ async function enrich(place: Place) {
     const photo = s?.photo
       || (g?.photo ? await googlePhoto(place, g.photo).catch(() => null) : null)
       || await wikipedia(place).catch(() => null)
-      || await commons(place.lat, place.lng, 150).catch(() => null)
-      || await commons(place.lat, place.lng, 600).catch(() => null);
+      || await commons(place.lat, place.lng, 150, place.name).catch(() => null)
+      || await commons(place.lat, place.lng, 600, place.name).catch(() => null);
     if (photo) Object.assign(patch, { photo_url: photo.url, photo_credit: photo.credit, photo_source: 'auto' });
     else patch.photo_source = 'none';
   }
