@@ -5,7 +5,9 @@
         "002_viaggi_foto.sql",
         "003_contatti.sql",
         "004_guida_osterie_valpolicella.sql",
-        "005_dettagli_posti.sql"
+        "005_dettagli_posti.sql",
+        "006_foto_borgo_incantato.sql",
+        "007_foto_trattoria_tina.sql"
       ],
       "guides": [
         {
@@ -33,8 +35,8 @@
           "instagram": "https://www.instagram.com/borgoincantatospoleto/",
           "menu_url": "https://www.ilborgoincantato.com/ristorante-en",
           "opening_hours": null,
-          "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/ISS043-E-130725_-_View_of_Earth.jpg/1280px-ISS043-E-130725_-_View_of_Earth.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-          "photo_credit": "Foto: Earth Science and Remote Sensing Unit, Lyndon B. Johnson Space Center, Public domain, Wikimedia Commons"
+          "photo_url": "https://www.ilborgoincantato.com/wp-content/uploads/2023/11/borgo-incantato-vista-drone.webp",
+          "photo_credit": "Foto: ilborgoincantato.com"
         },
         {
           "name": "Borgo Vescine",
@@ -55,6 +57,17 @@
           "instagram": "https://www.instagram.com/trattoriatinamilano/",
           "menu_url": "https://www.scattidigusto.it/wp-content/uploads/2026/08/trattoria-tina-milano-menu-1280x1600.jpg",
           "opening_hours": "Tu-Sa 19:30-22:30; Su,Mo off",
+          "photo_url": "https://www.scattidigusto.it/wp-content/uploads/2026/08/trattoria-tina-milano-ravioli-erbette-sezione.jpg",
+          "photo_credit": "Foto: Scatti di Gusto (scattidigusto.it)"
+        },
+        {
+          "name": "Ristorante Il Ruscello 十二馔",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "instagram": null,
+          "menu_url": null,
+          "opening_hours": null,
           "photo_url": null,
           "photo_credit": null
         }

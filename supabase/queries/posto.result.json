@@ -1,0 +1,25 @@
+[
+  {
+    "posto": {
+      "id": "66384d09-e67a-4960-a835-56f6fa60a9ef",
+      "name": "Ristorante Il Ruscello 十二馔",
+      "category_id": "ristoranti",
+      "lat": 45.4830466,
+      "lng": 9.1984219,
+      "area": "Milano",
+      "address": "Leon d'Oro, 3, Via Adda, Centrale, Municipio 2, Milano, Rodano, Milano, Lombardia, 20124, Italia",
+      "url": null,
+      "source_url": "https://maps.app.goo.gl/9YvYefFgMyXmtJs37?g_st=ic",
+      "phone": null,
+      "email": null,
+      "instagram": null,
+      "menu_url": null,
+      "opening_hours": null,
+      "photo_url": null,
+      "photo_source": null,
+      "photo_credit": null,
+      "enriched_at": null,
+      "created_at": "2026-10-25T06:41:08.498483+00:00"
+    }
+  }
+]
