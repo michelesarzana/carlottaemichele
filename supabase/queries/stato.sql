@@ -4,3 +4,4 @@ select json_agg(json_build_object(
   'photo', photo_url, 'photo_source', photo_source, 'enriched_at', enriched_at, 'source_url', source_url
 ) order by created_at) as places from public.places;
 -- 2026-10-25T10:21:28
+-- 2026-10-25T10:28:03
