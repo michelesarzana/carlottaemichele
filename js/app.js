@@ -158,9 +158,39 @@ function filtered() {
 // ─────────────────────────────────────────────
 // Mappa
 // ─────────────────────────────────────────────
+// Livelli della mappa
+function rasterStyle(layers) {
+  const sources = {};
+  const out = [];
+  layers.forEach((l, i) => {
+    sources['r' + i] = { type: 'raster', tiles: l.tiles, tileSize: 256, maxzoom: l.maxzoom, attribution: l.attribution };
+    out.push({ id: 'r' + i, type: 'raster', source: 'r' + i });
+  });
+  return { version: 8, sources, layers: out };
+}
+const LAYERS = {
+  mappa: { label: 'Mappa', hint: 'Chiara, essenziale', swatch: '#F1F0EB', style: MAP_STYLE, tint: true },
+  dettagliata: { label: 'Dettagliata', hint: 'Strade, negozi, edifici', swatch: '#E8E2D2', style: 'https://tiles.openfreemap.org/styles/liberty' },
+  satellite: {
+    label: 'Satellite', hint: 'Foto aeree con nomi', swatch: '#4C5B3F',
+    style: rasterStyle([
+      { tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], maxzoom: 19, attribution: 'Foto aeree © Esri, Maxar, Earthstar Geographics' },
+      { tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'], maxzoom: 19, attribution: 'Nomi © Esri' }
+    ])
+  },
+  sentieri: {
+    label: 'Sentieri', hint: 'Topografica, curve di livello', swatch: '#D9E3C8',
+    style: rasterStyle([
+      { tiles: ['a', 'b', 'c'].map((x) => `https://${x}.tile.opentopomap.org/{z}/{x}/{y}.png`), maxzoom: 17, attribution: 'Mappa © OpenTopoMap (CC-BY-SA), dati © OpenStreetMap' }
+    ])
+  }
+};
+S.layer = 'mappa';
+try { const l = localStorage.getItem('cem-layer'); if (LAYERS[l]) S.layer = l; } catch { /* niente */ }
+
 const map = new maplibregl.Map({
   container: 'map',
-  style: MAP_STYLE,
+  style: LAYERS[S.layer].style,
   center: DEFAULT_VIEW.center,
   zoom: DEFAULT_VIEW.zoom,
   attributionControl: { compact: true },
@@ -170,6 +200,9 @@ const map = new maplibregl.Map({
 map.touchZoomRotate.disableRotation();
 
 map.on('style.load', () => {
+  // Le aree dei viaggi vanno ridisegnate a ogni cambio di livello
+  setTimeout(() => renderAreas(), 0);
+  if (!LAYERS[S.layer].tint) return;
   // Tinta la mappa sui colori del design
   for (const layer of map.getStyle().layers) {
     try {
@@ -332,6 +365,7 @@ function renderAreas() {
 function renderTopbar() {
   $('search-ic').innerHTML = icon('search', 18, 2.2);
   $('locate').innerHTML = icon('locate', 19, 2.2);
+  $('layers').innerHTML = icon('layers', 20, 2);
   const prof = $('profile');
   if (S.editor && S.me) {
     const cls = S.me === 'Carlotta' ? 'av-c' : 'av-m';
@@ -399,6 +433,36 @@ $('search').addEventListener('input', (e) => {
 });
 
 $('profile').addEventListener('click', () => (S.email ? openProfile() : openLogin()));
+
+function setLayer(key) {
+  if (!LAYERS[key] || key === S.layer) return;
+  S.layer = key;
+  try { localStorage.setItem('cem-layer', key); } catch { /* niente */ }
+  map.setStyle(LAYERS[key].style, { diff: false });
+}
+
+$('layers').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const pop = $('layers-pop');
+  if (!pop.hidden) { pop.hidden = true; return; }
+  pop.innerHTML = Object.entries(LAYERS).map(([k, l]) => `
+    <button class="layer-opt" data-layer="${k}" aria-pressed="${S.layer === k}">
+      <span class="layer-swatch" style="background:${l.swatch}"></span>
+      <span class="layer-text"><b>${esc(l.label)}</b><span>${esc(l.hint)}</span></span>
+      ${S.layer === k ? icon('check', 16, 2.6) : ''}
+    </button>`).join('');
+  pop.hidden = false;
+});
+$('layers-pop').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-layer]');
+  if (!b) return;
+  setLayer(b.dataset.layer);
+  $('layers-pop').hidden = true;
+});
+document.addEventListener('click', (e) => {
+  const pop = $('layers-pop');
+  if (!pop.hidden && !pop.contains(e.target)) pop.hidden = true;
+});
 
 let youMarker = null;
 $('locate').addEventListener('click', () => {
@@ -1096,11 +1160,103 @@ function openProfile() {
     mount(body, api) {
       body.innerHTML = `
         <p class="login-note">${S.editor ? `Sei dentro come <b>${esc(S.me)}</b>. Puoi aggiungere posti, visite e guide.` : `Sei dentro come ${esc(S.email)}, ma questo account non può modificare.`}</p>
+        ${S.editor ? `<button class="btn btn-quiet btn-block" id="manage-cats">${icon('edit', 16)}Categorie</button>` : ''}
         <button class="btn btn-quiet btn-block" id="logout">Esci</button>`;
+      body.querySelector('#manage-cats')?.addEventListener('click', () => openCategories());
       body.querySelector('#logout').addEventListener('click', async () => {
         await sb.auth.signOut();
         api.close();
       });
+    }
+  });
+}
+
+// Gestione categorie: nome, colore, icona; elimina quelle non usate
+function openCategories() {
+  let open = null;
+  let draft = null;
+  openModal({
+    title: 'Categorie',
+    mount(body) {
+      const used = (id) => S.places.filter((p) => placeCats(p).includes(id)).length;
+      const editor = () => `
+        <div class="group cat-edit">
+          <div class="group-line"><input class="left" id="ce-name" value="${esc(draft.name)}" placeholder="Nome categoria" aria-label="Nome categoria"></div>
+          <div class="swatches" id="ce-colors">${PALETTE.map((c) => `<button class="swatch" data-c="${c}" style="--c:${c}" aria-label="Colore ${c}" aria-pressed="${draft.color.toLowerCase() === c.toLowerCase()}"></button>`).join('')}</div>
+          <div class="icon-opts" id="ce-icons">${CATEGORY_ICONS.map((n) => `<button class="icon-opt" data-i="${n}" aria-label="Icona ${n}" aria-pressed="${draft.icon === n}">${icon(n, 18)}</button>`).join('')}</div>
+          <div class="group-line" style="gap:8px">
+            ${draft.id ? (used(draft.id)
+              ? `<span class="meta" style="flex:1">Usata da ${used(draft.id)} ${used(draft.id) === 1 ? 'posto' : 'posti'}</span>`
+              : `<button class="btn btn-danger" id="ce-del" style="height:36px">${icon('trash', 15)}Elimina</button><span style="flex:1"></span>`) : '<span style="flex:1"></span>'}
+            <button class="btn btn-quiet" id="ce-cancel" style="height:36px">Annulla</button>
+            <button class="btn btn-accent" id="ce-save" style="height:36px">Salva</button>
+          </div>
+        </div>`;
+      const render = () => {
+        body.innerHTML = `
+          <p class="login-note">Il nome è l'etichetta che vedete nei filtri e nelle schede. Colore e icona valgono per i pin della categoria principale.</p>
+          <div class="group" style="padding:0">${S.categories.map((c) => `
+            <button class="cat-row" data-id="${esc(c.id)}">
+              <span class="tile" style="--c:${safeColor(c.color)};width:36px;height:36px;border-radius:10px">${icon(c.icon, 18, 2.1)}</span>
+              <span class="grow"><b>${esc(c.name)}</b><span class="meta">${used(c.id)} ${used(c.id) === 1 ? 'posto' : 'posti'}</span></span>
+              ${icon('edit', 16)}
+            </button>
+            ${open === c.id ? editor() : ''}`).join('')}
+          </div>
+          ${open === '__new' ? editor() : `<button class="btn btn-quiet btn-block" id="ce-new">${icon('plus', 16, 2.6)}Nuova categoria</button>`}`;
+        bind();
+      };
+      const bind = () => {
+        body.querySelectorAll('.cat-row').forEach((b) => b.addEventListener('click', () => {
+          const c = S.catById.get(b.dataset.id);
+          open = open === c.id ? null : c.id;
+          draft = { ...c };
+          render();
+        }));
+        body.querySelector('#ce-new')?.addEventListener('click', () => {
+          open = '__new';
+          draft = { id: null, name: '', color: PALETTE[8], icon: 'pin' };
+          render();
+          body.querySelector('#ce-name')?.focus();
+        });
+        if (!draft || !open) return;
+        body.querySelector('#ce-name').addEventListener('input', (e) => { draft.name = e.target.value; });
+        body.querySelector('#ce-colors').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { draft.color = b.dataset.c; render(); } });
+        body.querySelector('#ce-icons').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) { draft.icon = b.dataset.i; render(); } });
+        body.querySelector('#ce-cancel').addEventListener('click', () => { open = null; draft = null; render(); });
+        body.querySelector('#ce-del')?.addEventListener('click', async () => {
+          if (!confirm(`Eliminare la categoria "${draft.name}"?`)) return;
+          const { error } = await sb.from('categories').delete().eq('id', draft.id);
+          if (error) return fail(error, 'Non riesco a eliminare');
+          S.categories = S.categories.filter((x) => x.id !== draft.id);
+          S.catById.delete(draft.id);
+          S.filter.cats.delete(draft.id);
+          open = null; draft = null;
+          toast('Categoria eliminata');
+          afterChange();
+        });
+        body.querySelector('#ce-save').addEventListener('click', async () => {
+          const name = draft.name.trim();
+          if (!name) return toast('Dai un nome alla categoria');
+          if (draft.id) {
+            const patch = { name, color: draft.color, icon: draft.icon };
+            const { error } = await sb.from('categories').update(patch).eq('id', draft.id);
+            if (error) return fail(error, 'Non riesco a salvare');
+            Object.assign(S.catById.get(draft.id), patch);
+          } else {
+            const row = { id: slugify(name), name, color: draft.color, icon: draft.icon, sort: 100 + S.categories.length * 10 };
+            const { error } = await sb.from('categories').insert(row);
+            if (error) return fail(error, 'Non riesco a creare la categoria');
+            S.categories.push(row);
+            S.catById.set(row.id, row);
+          }
+          open = null; draft = null;
+          toast('Categoria salvata');
+          afterChange();
+        });
+      };
+      const afterChange = () => { render(); renderChips(); renderMarkers(); renderSheet(); };
+      render();
     }
   });
 }
