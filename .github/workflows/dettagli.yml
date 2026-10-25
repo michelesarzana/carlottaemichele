@@ -4,6 +4,9 @@ name: Dettagli posti
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'
+  push:
+    branches: [main]
+    paths: ['.github/scripts/osm_details.py']
   workflow_dispatch:
 
 concurrency: dettagli

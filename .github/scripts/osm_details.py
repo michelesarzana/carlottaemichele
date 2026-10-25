@@ -108,3 +108,4 @@ for i in range(0, len(ids), 6):
             print("  salvato:", d)
     except Exception as ex:  # noqa: BLE001
         print("  funzione errore", ex)
+# avvio: 2026-10-25T10:26:17
