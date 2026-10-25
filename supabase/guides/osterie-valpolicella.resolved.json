@@ -1,485 +1,147 @@
 [
  {
   "name": "Enoteca della Valpolicella",
-  "osm": [
+  "nominatim": [
    {
     "name": "Enoteca della Valpolicella",
+    "display": "Enoteca della Valpolicella, 45, Via Osan, Vaio, Fumane, Verona, Veneto, 37022, Italia",
     "lat": 45.5407008,
     "lng": 10.891441,
-    "amenity": "restaurant",
-    "addr": "Via Osan 45 Fumane",
+    "type": "amenity/restaurant",
     "website": "https://www.enotecadellavalpolicella.it/",
     "phone": "+390456839146",
     "opening_hours": null
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Fumane, Verona, Veneto, 37022, Italia",
-    "lat": 45.5810074,
-    "lng": 10.8840946,
-    "type": "administrative"
-   },
-   {
-    "display": "Fumane, Verona, Veneto, 37022, Italia",
-    "lat": 45.5429525,
-    "lng": 10.8839737,
-    "type": "village"
    }
   ]
  },
  {
   "name": "Trattoria Dalla Rosa Alda",
-  "osm": [
+  "nominatim": [
    {
     "name": "Trattoria dalla Rosa Alda",
+    "display": "Trattoria dalla Rosa Alda, Piazza della Pieve, San Giorgio di Valpolicella, Gargagnago, Sant'Ambrogio di Valpolicella, Verona, Veneto, 37015, Italia",
     "lat": 45.5344463,
     "lng": 10.8496394,
-    "amenity": "restaurant",
-    "addr": "",
+    "type": "amenity/restaurant",
     "website": null,
     "phone": null,
     "opening_hours": null
    }
-  ],
-  "nominatim": []
+  ]
  },
  {
   "name": "Trattoria alla Ruota",
-  "osm": [
-   {
-    "name": "La Ruota dell'Usato",
-    "lat": 45.4168617,
-    "lng": 10.9494209,
-    "amenity": "second_hand",
-    "addr": "Via Villafranca 100 Verona",
-    "website": null,
-    "phone": null,
-    "opening_hours": "Mo 16:00-19:30; Tu-Sa 09:30-12:30,16:00-19:30"
-   },
+  "nominatim": [
    {
     "name": "Trattoria alla Ruota",
+    "display": "Trattoria alla Ruota, Via Proale, Provale, Prun, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
     "lat": 45.5696827,
     "lng": 10.9568263,
-    "amenity": "restaurant",
-    "addr": "",
+    "type": "amenity/restaurant",
     "website": null,
     "phone": null,
     "opening_hours": null
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Via Proale, Provale, Fane, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5670111,
-    "lng": 10.9604363,
-    "type": "secondary"
    }
   ]
  },
  {
   "name": "Trattoria Caprini",
-  "osm": [
-   {
-    "name": "Trattoria Caprini",
-    "lat": 45.5606062,
-    "lng": 10.9418261,
-    "amenity": "restaurant",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Laboratorio Caprini",
-    "lat": 45.5606283,
-    "lng": 10.9418477,
-    "amenity": "bakery",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   }
-  ],
   "nominatim": [
    {
-    "display": "Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5605323,
-    "lng": 10.9418661,
-    "type": "village"
-   },
-   {
-    "display": "Torbe, Via Galdè, Ca del Gallo, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5603428,
-    "lng": 10.9418745,
-    "type": "bus_stop"
+    "name": "Trattoria Caprini",
+    "display": "Trattoria Caprini, Via Paolo Zanotti, Ca del Gallo, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
+    "lat": 45.5606062,
+    "lng": 10.9418261,
+    "type": "amenity/restaurant",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ]
  },
  {
   "name": "Osteria Dalla Bice",
-  "osm": [
-   {
-    "name": "Trattoria dalla Bice",
-    "lat": 45.5596471,
-    "lng": 10.9383957,
-    "amenity": "restaurant",
-    "addr": "Via Bottega 2",
-    "website": "https://www.dallabice.it/",
-    "phone": "+39 045 7500720",
-    "opening_hours": null
-   },
-   {
-    "name": "Marco Bicego",
-    "lat": 45.4427069,
-    "lng": 10.9950562,
-    "amenity": "jewelry",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Via Bottega, Ca del Gallo, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5602054,
-    "lng": 10.9393483,
-    "type": "residential"
-   },
-   {
-    "display": "Via Bottega, Torbe, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5594211,
-    "lng": 10.9383205,
-    "type": "residential"
-   }
-  ]
+  "nominatim": []
  },
  {
   "name": "Antica Trattoria da Bepi",
-  "osm": [],
-  "nominatim": [
-   {
-    "display": "Via Valpolicella, Canzago, Marano di Valpolicella, Verona, Veneto, 37020, Italia",
-    "lat": 45.5560348,
-    "lng": 10.9155538,
-    "type": "secondary"
-   }
-  ]
+  "nominatim": []
  },
  {
   "name": "Antica Osteria della Valpolicella",
-  "osm": [
-   {
-    "name": "Antica Osteria",
-    "lat": 45.5698696,
-    "lng": 10.7464036,
-    "amenity": "restaurant",
-    "addr": "",
-    "website": "http://www.anticaosteria.eu/",
-    "phone": "+39 045 6200320; +39 340 3723606",
-    "opening_hours": null
-   },
-   {
-    "name": "Antica Osteria Molinari",
-    "lat": 45.4671468,
-    "lng": 10.7205722,
-    "amenity": "restaurant",
-    "addr": "Via Porto 1 Pacengo",
-    "website": null,
-    "phone": "+39 045 759 0163",
-    "opening_hours": null
-   },
-   {
-    "name": "Antica Osteria della Valpolicella",
-    "lat": 45.5655749,
-    "lng": 10.9141253,
-    "amenity": "restaurant",
-    "addr": "Via Monti Lessini 33 San Rocco",
-    "website": "https://www.anticaosteriavalpolicella.it/",
-    "phone": "+39 045 775 5010",
-    "opening_hours": "We-Fr 19:30-22:00; Sa-Su 12:00-14:30, 19:30-22:00"
-   }
-  ],
   "nominatim": [
    {
+    "name": "Antica Osteria della Valpolicella",
     "display": "Antica Osteria della Valpolicella, 33, Via Monti Lessini, Carazzole, San Rocco, Marano di Valpolicella, Verona, Veneto, 37020, Italia",
     "lat": 45.5655749,
     "lng": 10.9141253,
-    "type": "restaurant"
+    "type": "amenity/restaurant",
+    "website": "https://www.anticaosteriavalpolicella.it/",
+    "phone": "+39 045 775 5010",
+    "opening_hours": "We-Fr 19:30-22:00; Sa-Su 12:00-14:30, 19:30-22:00"
    }
   ]
  },
  {
   "name": "La Locanda dal Nane",
-  "osm": [
-   {
-    "name": "Osteria dal Nane",
-    "lat": 45.4964091,
-    "lng": 10.8182619,
-    "amenity": "restaurant",
-    "addr": "Località Pol 55 Pastrengo",
-    "website": "https://www.dalnane1921.com/",
-    "phone": "+39 045 7170771",
-    "opening_hours": "We-Mo 12:00-14:00,19:00-22:00"
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Via Chiesa, Ossan, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
-    "lat": 45.5166015,
-    "lng": 10.8807716,
-    "type": "residential"
-   },
-   {
-    "display": "Via Chiesa, Contine, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
-    "lat": 45.5145486,
-    "lng": 10.8768179,
-    "type": "residential"
-   }
-  ]
+  "nominatim": []
  },
  {
   "name": "Groto de Corgnan",
-  "osm": [
+  "nominatim": [
    {
     "name": "Ristorante Groto De Corgnan",
+    "display": "Ristorante Groto De Corgnan, 41, Via Corgnan, Gargagnago, Sant'Ambrogio di Valpolicella, Verona, Veneto, 37015, Italia",
     "lat": 45.5242628,
     "lng": 10.8412561,
-    "amenity": "restaurant",
-    "addr": "Via Corgnan 41 Sant'Ambrogio di Valpolicella",
+    "type": "amenity/restaurant",
     "website": "https://www.grotodecorgnan.it/",
     "phone": null,
     "opening_hours": "Tu-Sa 20:00-23:30"
-   },
-   {
-    "name": "Bottega de Corgnan",
-    "lat": 45.524159,
-    "lng": 10.8408792,
-    "amenity": "restaurant",
-    "addr": "Via Corgnan 12 Sant'Ambrogio di Valpolicella",
-    "website": "https://bottegadecorgnan.com",
-    "phone": "+39 045 6862272",
-    "opening_hours": null
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Corrubbio di Negarine, San Pietro in Cariano, Verona, Veneto, 37029, Italia",
-    "lat": 45.4880843,
-    "lng": 10.9028367,
-    "type": "village"
    }
   ]
  },
  {
   "name": "Trattoria da Andrea",
-  "osm": [
-   {
-    "name": "Zenti Andrea",
-    "lat": 45.4943574,
-    "lng": 10.9407312,
-    "amenity": "fuel",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Andrea Cesta Parrucchiere",
-    "lat": 45.4443924,
-    "lng": 10.955339,
-    "amenity": "hairdresser",
-    "addr": "Via Gracco Spaziani 17 Verona",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Andrea Armani",
-    "lat": 45.4306557,
-    "lng": 11.0593899,
-    "amenity": "bicycle",
-    "addr": "Via Pietro Sgulmero 22a Verona",
-    "website": "http://www.cicliandrearmani.it/",
-    "phone": "+39 045 975688",
-    "opening_hours": null
-   },
-   {
-    "name": "Acconciature Uomo Andrea",
-    "lat": 45.4375966,
-    "lng": 10.9733876,
-    "amenity": "hairdresser",
-    "addr": "Via Baldassare Longhena 11a Verona",
-    "website": null,
-    "phone": "+39 328 4873116",
-    "opening_hours": "Tu, We, Fr 08:00-12:30,14:00-19:00 \"preferibilmente su appuntamento\"; Sa 08:00-17:00 \"preferibilmente su appuntamento\"; Th 08:00-12:30,14:00-19:00 \"solo su appuntamento\"; Mo off"
-   },
-   {
-    "name": "Dottor Andrea Compri",
-    "lat": 45.4364107,
-    "lng": 10.9814894,
-    "amenity": "dentist",
-    "addr": "",
-    "website": "https://www.studiocompri.com/",
-    "phone": "+39 045 8342825",
-    "opening_hours": "Tu-Fr 10:00-19:30"
-   },
-   {
-    "name": "Andrea Concato",
-    "lat": 45.4399392,
-    "lng": 10.9941108,
-    "amenity": "jewelry",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Andrea",
-    "lat": 45.5734899,
-    "lng": 10.710876,
-    "amenity": "hairdresser",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "chiesa di Sant'Andrea",
-    "lat": 45.5229861,
-    "lng": 11.0410151,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Chiesa di sant'andrea",
-    "lat": 45.4074675,
-    "lng": 10.835199,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Sant'Andrea Apostolo",
-    "lat": 45.4024652,
-    "lng": 11.0152063,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Chiesa di Sant'Andrea",
-    "lat": 45.6796514,
-    "lng": 10.8931852,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Tomelini Andrea Falegnameria",
-    "lat": 45.5596599,
-    "lng": 10.9977343,
-    "amenity": null,
-    "addr": "Via Domenico da Lugo 52 Grezzana",
-    "website": "https://www.tomeliniserramenti.it/",
-    "phone": "+393487642963",
-    "opening_hours": null
-   },
-   {
-    "name": "Chiesa di Sant'Andrea",
-    "lat": 45.5536002,
-    "lng": 10.7666695,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Chiesa di Sant'Andrea Apostolo",
-    "lat": 45.4599193,
-    "lng": 10.7859052,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   },
-   {
-    "name": "Chiesa di Sant'Andrea",
-    "lat": 45.4080808,
-    "lng": 10.841919,
-    "amenity": "place_of_worship",
-    "addr": "",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   }
-  ],
   "nominatim": [
    {
-    "display": "Piazza Roma, Vigolo, Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5309035,
-    "lng": 10.9370511,
-    "type": "tertiary"
+    "name": "Trattoria Da Andrea",
+    "display": "Trattoria Da Andrea, Via Vittorio Emanuele Orlando, Monserrato, Borgo, Borgo-Sanzio, Catania, Sicilia, 95127, Italia",
+    "lat": 37.5191561,
+    "lng": 15.0926305,
+    "type": "amenity/restaurant",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Trattoria da Andrea",
+    "display": "Trattoria da Andrea, Via Trieste, Doberdò del Lago, Gorizia, Friuli-Venezia Giulia, 34070, Italia",
+    "lat": 45.8434749,
+    "lng": 13.539915,
+    "type": "amenity/restaurant",
+    "website": null,
+    "phone": "+39 0481 78320",
+    "opening_hours": "Tu,We off"
+   },
+   {
+    "name": "Trattoria da Andrea",
+    "display": "Trattoria da Andrea, Via Tumia, Villapriolo, Villarosa, Enna, Sicilia, 94028, Italia",
+    "lat": 37.6293058,
+    "lng": 14.1932319,
+    "type": "amenity/restaurant",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
    }
   ]
  },
  {
   "name": "Alla Coà",
-  "osm": [],
-  "nominatim": [
-   {
-    "display": "Pescantina, Verona, Veneto, 37026, Italia",
-    "lat": 45.4904974,
-    "lng": 10.8562597,
-    "type": "administrative"
-   },
-   {
-    "display": "Pescantina, Verona, Veneto, 37026, Italia",
-    "lat": 45.4833716,
-    "lng": 10.8691009,
-    "type": "town"
-   }
-  ]
+  "nominatim": []
  },
  {
   "name": "Trattoria alla Porchetta",
-  "osm": [
-   {
-    "name": "Macelleria alla porchetta",
-    "lat": 45.5287469,
-    "lng": 10.9505501,
-    "amenity": "butcher",
-    "addr": "Via San Peretto 18 Negrar",
-    "website": null,
-    "phone": null,
-    "opening_hours": null
-   }
-  ],
-  "nominatim": [
-   {
-    "display": "Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5394575,
-    "lng": 10.9521505,
-    "type": "administrative"
-   },
-   {
-    "display": "Negrar di Valpolicella, Verona, Veneto, 37024, Italia",
-    "lat": 45.5296706,
-    "lng": 10.9400217,
-    "type": "town"
-   }
-  ]
+  "nominatim": []
  }
 ]

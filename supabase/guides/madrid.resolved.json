@@ -1,0 +1,349 @@
+[
+ {
+  "name": "Palacio Real",
+  "nominatim": [
+   {
+    "name": "Palazzo reale di Madrid",
+    "display": "Palazzo reale di Madrid, Plaza de la Armería, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4167403,
+    "lng": -3.7136222,
+    "type": "tourism/museum",
+    "website": "https://www.patrimonionacional.es/real-sitio/palacio-real-de-madrid",
+    "phone": "+34 91 454 87 00",
+    "opening_hours": "Oct-Mar: 10:00-18:00; Apr-Sep: 10:00-20:00"
+   }
+  ]
+ },
+ {
+  "name": "Templo de Debod",
+  "nominatim": [
+   {
+    "name": "Templo de Debod",
+    "display": "Templo de Debod, Calle Profesor Martín Almagro Basch, Casa de Campo, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4240689,
+    "lng": -3.7176131,
+    "type": "tourism/museum",
+    "website": null,
+    "phone": null,
+    "opening_hours": "PH,Tu-Su 10:00-19:00; Mo off; Jan 01,06,May 01,Dec 24,25,31: off"
+   },
+   {
+    "name": "Templo de Debod",
+    "display": "Templo de Debod, 1, Calle de Ferraz, Casa de Campo, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4240372,
+    "lng": -3.7177252,
+    "type": "tourism/museum",
+    "website": null,
+    "phone": "+34 913667415",
+    "opening_hours": "Oct-Mar: Tu-Fr 09:45-13:45,16:15-18:15; Oct-Mar: Sa,Su,PH 09:30-20:00; Apr-Sep: Tu-Fr 10:00-14:00,18:00-20:00; Apr-Sep: Sa,Su,PH 09:30-20:00; Mo off; Jan 01,06,May 01,Dec 25: off"
+   },
+   {
+    "name": "Templo de Debod",
+    "display": "Templo de Debod, Vereda de Sor Juana Inés de la Cruz, Casa de Campo, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4241612,
+    "lng": -3.7170977,
+    "type": "building/yes",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Museo Reina Sofía",
+  "nominatim": [
+   {
+    "name": "Museo Nacional Centro de Arte Reina Sofía",
+    "display": "Museo Nacional Centro de Arte Reina Sofía, 52, Calle de Santa Isabel, Embajadores, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
+    "lat": 40.4080495,
+    "lng": -3.6944216,
+    "type": "amenity/arts_centre",
+    "website": "https://www.museoreinasofia.es/",
+    "phone": "+34 917741000",
+    "opening_hours": "Mo 10:00-21:00; We-Sa 10:00-21:00; Su 10:00-19:00"
+   }
+  ]
+ },
+ {
+  "name": "Museo Thyssen-Bornemisza",
+  "nominatim": [
+   {
+    "name": "Museo Thyssen-Bornemisza",
+    "display": "Museo Thyssen-Bornemisza, 8, Paseo del Prado, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4162159,
+    "lng": -3.6949317,
+    "type": "tourism/museum",
+    "website": "https://www.museothyssen.org/",
+    "phone": "+34 902760511",
+    "opening_hours": "Tu-Su 10:00-19:00; Mo 12:00-16:00"
+   }
+  ]
+ },
+ {
+  "name": "Plaza Mayor",
+  "nominatim": [
+   {
+    "name": "Plaza Mayor",
+    "display": "Plaza Mayor, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
+    "lat": 40.4153949,
+    "lng": -3.7069974,
+    "type": "place/square",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Plaza Mayor",
+    "display": "Plaza Mayor, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4152692,
+    "lng": -3.7073626,
+    "type": "highway/footway",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Museo Sorolla",
+  "nominatim": [
+   {
+    "name": "Museo Sorolla",
+    "display": "Museo Sorolla, 37, Paseo del General Martínez Campos, Almagro, Chamberí, Madrid, Comunidad de Madrid, 28010, Spagna",
+    "lat": 40.4353934,
+    "lng": -3.692512,
+    "type": "tourism/museum",
+    "website": "http://museosorolla.mcu.es/",
+    "phone": null,
+    "opening_hours": "Mo off; Tu-Sa 09:30-20:00; Su 10:00-15:00; Jan 01,06,May 01,Dec 24,25,31 off"
+   },
+   {
+    "name": "Museo Sorolla",
+    "display": "Museo Sorolla, Paseo del General Martínez Campos, Almagro, Chamberí, Madrid, Comunidad de Madrid, 28010, Spagna",
+    "lat": 40.435195,
+    "lng": -3.6926085,
+    "type": "highway/bus_stop",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Real Jardín Botánico",
+  "nominatim": [
+   {
+    "name": "Real Jardín Botánico",
+    "display": "Real Jardín Botánico, Plaza de Murillo, Jerónimos, Retiro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4123656,
+    "lng": -3.6921452,
+    "type": "information/board",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Andén 0, estación de Chamberí",
+  "nominatim": [
+   {
+    "name": "Andén 0 - Nave de Motores de Pacífico",
+    "display": "Andén 0 - Nave de Motores de Pacífico, 49, Calle de Valderribas, Pacífico, Retiro, Madrid, Comunidad de Madrid, 28007, Spagna",
+    "lat": 40.4041746,
+    "lng": -3.674039,
+    "type": "tourism/museum",
+    "website": "https://museosmetromadrid.es/nave-de-motores_0/",
+    "phone": null,
+    "opening_hours": "Fr 16:00-22:00; Sa 10:00-14:00; 16:00-20:00; Su 10:00-14:00"
+   }
+  ]
+ },
+ {
+  "name": "El Rastro",
+  "nominatim": []
+ },
+ {
+  "name": "Corral de la Morería",
+  "nominatim": [
+   {
+    "name": "Corral de la Morería",
+    "display": "Corral de la Morería, 17, Calle de la Morería, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4127418,
+    "lng": -3.7141548,
+    "type": "amenity/music_venue",
+    "website": "https://www.corraldelamoreria.com",
+    "phone": "+34 913658446",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Casa Lucio",
+  "nominatim": [
+   {
+    "name": "Casa Lucio",
+    "display": "Casa Lucio, 35, Calle de la Cava Baja, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4120917,
+    "lng": -3.7096742,
+    "type": "amenity/restaurant",
+    "website": "http://casalucio.es/",
+    "phone": "+34 913653252",
+    "opening_hours": "Mo-Su 13:00-16:00, 20:30-24:00"
+   }
+  ]
+ },
+ {
+  "name": "Sobrino de Botín",
+  "nominatim": []
+ },
+ {
+  "name": "Posada de la Villa",
+  "nominatim": [
+   {
+    "name": "Posada de la Villa",
+    "display": "Posada de la Villa, 9, Calle de la Cava Baja, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4130547,
+    "lng": -3.7084475,
+    "type": "amenity/restaurant",
+    "website": "https://posadadelavilla.com/",
+    "phone": "+34913661860",
+    "opening_hours": "Mo-Sa 13:00-16:00,20:00-24:00; Su 13:00-16:00"
+   }
+  ]
+ },
+ {
+  "name": "Malacatín",
+  "nominatim": [
+   {
+    "name": "Malacatín",
+    "display": "Malacatín, 5, Calle de la Ruda, Embajadores, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4103182,
+    "lng": -3.7076364,
+    "type": "amenity/restaurant",
+    "website": "https://www.malacatin.com/",
+    "phone": "+34913655241",
+    "opening_hours": "We-Sa 11:00-00:30; Su-Tu 11:00-17:30"
+   }
+  ]
+ },
+ {
+  "name": "Juana la Loca",
+  "nominatim": []
+ },
+ {
+  "name": "Mercado de San Miguel",
+  "nominatim": [
+   {
+    "name": "Mercado de San Miguel",
+    "display": "Mercado de San Miguel, Plaza de San Miguel, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4153741,
+    "lng": -3.7090151,
+    "type": "amenity/marketplace",
+    "website": null,
+    "phone": null,
+    "opening_hours": "Mo-Th 10:00-24:00; Fr,Sa 10:00-01:00; Su 10:00-24:00"
+   }
+  ]
+ },
+ {
+  "name": "Chocolatería San Ginés",
+  "nominatim": [
+   {
+    "name": "Chocolatería San Ginés",
+    "display": "Chocolatería San Ginés, 5, Pasadizo de San Ginés, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4167707,
+    "lng": -3.706803,
+    "type": "amenity/cafe",
+    "website": "https://chocolateriasangines.com/",
+    "phone": "+34913656546",
+    "opening_hours": "Mo-Su 08:00-23:30"
+   },
+   {
+    "name": "Chocolatería San Ginés",
+    "display": "Chocolatería San Ginés, Calle de Bordadores, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4168763,
+    "lng": -3.7074927,
+    "type": "amenity/cafe",
+    "website": "https://chocolateriasangines.com/",
+    "phone": "+34 913 65 65 46",
+    "opening_hours": null
+   },
+   {
+    "name": "Chocolatería San Ginés",
+    "display": "Chocolatería San Ginés, 81, Calle de López de Hoyos, Ciudad Jardín, Chamartín, Madrid, Comunidad de Madrid, 28002, Spagna",
+    "lat": 40.4443346,
+    "lng": -3.6741501,
+    "type": "shop/chocolate",
+    "website": "https://chocolateriasangines.com/",
+    "phone": "+34 91 365 65 46",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "La Casa del Abuelo",
+  "nominatim": [
+   {
+    "name": "La Casa del Abuelo",
+    "display": "La Casa del Abuelo, 12, Calle de la Victoria, Sol, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
+    "lat": 40.4157405,
+    "lng": -3.7017617,
+    "type": "amenity/restaurant",
+    "website": "http://lacasadelabuelo.es/",
+    "phone": "+34 91 521 2319",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Azotea del Círculo de Bellas Artes",
+  "nominatim": [
+   {
+    "name": "Círculo de Bellas Artes",
+    "display": "Círculo de Bellas Artes, 42, Calle de Alcalá, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4182071,
+    "lng": -3.6965142,
+    "type": "amenity/arts_centre",
+    "website": "https://www.circulobellasartes.com/",
+    "phone": "+34 913 60 54 00",
+    "opening_hours": null
+   },
+   {
+    "name": "Círculo de Bellas Artes",
+    "display": "Círculo de Bellas Artes, Gran Vía, Barrio de las Letras, Justicia, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "lat": 40.4189859,
+    "lng": -3.6960868,
+    "type": "highway/bus_stop",
+    "website": "https://www.crtm.es/widgets/#/stop/6_5135",
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Círculo de Bellas Artes",
+    "display": "Círculo de Bellas Artes, Calle de Alcalá, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "lat": 40.4187215,
+    "lng": -3.6960818,
+    "type": "highway/bus_stop",
+    "website": "https://www.crtm.es/widgets/#/stop/6_90",
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Mercado de San Antón",
+  "nominatim": [
+   {
+    "name": "Mercado de San Antón",
+    "display": "Mercado de San Antón, 24, Calle de Augusto Figueroa, Chueca, Justicia, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "lat": 40.4219408,
+    "lng": -3.6975833,
+    "type": "amenity/marketplace",
+    "website": "https://www.mercadosananton.com/",
+    "phone": null,
+    "opening_hours": "Mo-Su 10:00-00:00"
+   }
+  ]
+ }
+]
