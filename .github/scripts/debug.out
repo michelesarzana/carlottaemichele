@@ -1,12 +1,17 @@
 ### La Rue
-https://overpass-api.de/api/interpreter -> HTTP 000, elementi: 
-https://overpass.kumi.systems/api/interpreter -> HTTP 000, elementi: 
+nominatim HTTP 200 0.166526s
+  La Rue | amenity/restaurant | web=https://larueofficiel.com/ | tel= | ore=
 ### Bottega Sicula
-https://overpass-api.de/api/interpreter -> HTTP 000, elementi: 
-https://overpass.kumi.systems/api/interpreter -> HTTP 000, elementi: 
+nominatim HTTP 200 0.140315s
+  Bottega Sicula | amenity/restaurant | web=https://bottegasiculamilano.it/ | tel= | ore=
 ### Alle Baite
-https://overpass-api.de/api/interpreter -> HTTP 000, elementi: 
-https://overpass.kumi.systems/api/interpreter -> HTTP 000, elementi: 
-### Revivre
-https://overpass-api.de/api/interpreter -> HTTP 000, elementi: 
-https://overpass.kumi.systems/api/interpreter -> HTTP 000, elementi: 
+nominatim HTTP 200 0.575557s
+  Agriturismo alle Baite | amenity/restaurant | web=https://www.agriturismoallebaite.com/ | tel=+39 338 2113930 | ore=
+### Revivre Village
+nominatim HTTP 200 0.509681s
+### Primo Naso
+nominatim HTTP 200 0.665390s
+https://overpass.private.coffee/api/interpreter HTTP 000 20.001061s elementi: 
+https://maps.mail.ru/osm/tools/overpass/api/interpreter HTTP 504 1.175526s elementi: 
+https://overpass.osm.jp/api/interpreter HTTP 000 0.591979s elementi: 
+https://overpass-api.de/api/interpreter HTTP 000 20.000375s elementi: 
