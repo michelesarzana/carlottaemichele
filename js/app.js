@@ -67,6 +67,7 @@ function slugify(s) {
 }
 function initial(name) { return name ? name[0].toUpperCase() + '.' : ''; }
 function isApple() { return /iPhone|iPad|Macintosh/.test(navigator.userAgent); }
+function placeCats(p) { return [p.category_id, ...(p.extra_categories || [])].filter(Boolean); }
 function cat(id) { return S.catById.get(id) || { id, name: 'Altro', color: '#5F6B7A', icon: 'pin' }; }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
 
@@ -149,8 +150,8 @@ function filtered() {
   const q = norm(S.filter.q);
   return S.places.filter((p) =>
     (S.filter.status === 'all' || (S.filter.status === 'done') === p.done) &&
-    (!S.filter.cats.size || S.filter.cats.has(p.category_id)) &&
-    (!q || norm(`${p.name} ${p.area || ''} ${p.notes || ''} ${cat(p.category_id).name}`).includes(q))
+    (!S.filter.cats.size || placeCats(p).some((c) => S.filter.cats.has(c))) &&
+    (!q || norm(`${p.name} ${p.area || ''} ${p.notes || ''} ${placeCats(p).map((c) => cat(c).name).join(' ')}`).includes(q))
   );
 }
 
@@ -456,7 +457,7 @@ function placeRow(p) {
   const ph = safeUrl(p.photo_url);
   return `
     <button class="row" data-act="open-place" data-id="${esc(p.id)}">
-      <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}${p.done ? `<span class="tick">${icon('check', 9, 4)}</span>` : ''}</span>
+      <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}</span>
       <span class="row-main"><span class="row-title">${esc(p.name)}</span><span class="row-sub">${sub}</span></span>
       ${end}
     </button>`;
@@ -555,6 +556,7 @@ function viewPlace() {
       <div style="min-width:0">
         <h1 class="title title-xl">${esc(p.name)}</h1>
         <div class="meta" style="margin-top:4px">${meta}</div>
+        ${(p.extra_categories || []).length ? `<div class="cat-tags">${p.extra_categories.map((id) => { const x = cat(id); return `<span class="cat-tag" style="--c:${safeColor(x.color)}"><span class="dot"></span>${esc(x.name)}</span>`; }).join('')}</div>` : ''}
       </div>
       <button class="icon-btn quiet" data-act="close" aria-label="Chiudi">${icon('x', 14, 3)}</button>
     </div>`;
@@ -1203,8 +1205,9 @@ function openPlaceForm(place = null, preset = {}) {
     name: '', category_id: '', lat: null, lng: null, area: '', address: '', price: null,
     url: '', source_url: '', notes: '', proposed_by: S.me || '', guide_id: null,
     trip_id: null, day: null, photo_url: null, photo_credit: null, photo_source: null,
-    phone: '', email: '', instagram: '', menu_url: '', opening_hours: null,
+    phone: '', email: '', instagram: '', menu_url: '', opening_hours: null, extra_categories: [],
     ...(place ? {
+      extra_categories: [...(place.extra_categories || [])],
       phone: place.phone || '', email: place.email || '', instagram: place.instagram || '',
       menu_url: place.menu_url || '', opening_hours: place.opening_hours || null,
       name: place.name, category_id: place.category_id, lat: place.lat, lng: place.lng, area: place.area || '',
@@ -1223,6 +1226,7 @@ function openPlaceForm(place = null, preset = {}) {
     async onSave(api) {
       const payload = {
         name: f.name.trim(), category_id: f.category_id, lat: f.lat, lng: f.lng,
+        extra_categories: f.extra_categories.filter((c) => c && c !== f.category_id).slice(0, 2),
         area: f.area || null, address: f.address || null, price: f.price || null,
         url: safeUrl(f.url) || null, source_url: f.source_url || null, notes: f.notes.trim() || null,
         proposed_by: f.proposed_by || null, guide_id: f.guide_id || null,
@@ -1265,8 +1269,9 @@ function openPlaceForm(place = null, preset = {}) {
           <div class="group"><div class="group-line"><input class="left" id="pf-name" placeholder="Nome del posto" value="${esc(f.name)}" aria-label="Nome"></div></div>
         </div>
         <div>
-          <span class="field-label">Categoria</span>
+          <span class="field-label">Categorie</span>
           <div class="cat-picker" id="pf-cats"></div>
+          <div id="pf-main"></div>
           <div id="pf-newcat"></div>
         </div>
         <div>
@@ -1331,16 +1336,54 @@ function openPlaceForm(place = null, preset = {}) {
         });
       };
 
+      // Categorie: la prima scelta è la principale, poi al massimo due secondarie
+      const selected = () => [f.category_id, ...f.extra_categories].filter(Boolean);
       const renderCats = () => {
-        q('#pf-cats').innerHTML = S.categories.map((c) =>
-          `<button class="cat-opt" data-cat="${esc(c.id)}" style="--c:${safeColor(c.color)}" aria-pressed="${f.category_id === c.id}"><span class="dot"></span>${esc(c.name)}</button>`
-        ).join('') + '<button class="cat-opt add" data-cat="__new">+ Nuova</button>';
+        q('#pf-cats').innerHTML = S.categories.map((c) => {
+          const main = f.category_id === c.id;
+          const extra = f.extra_categories.includes(c.id);
+          return `<button class="cat-opt${extra ? ' extra' : ''}" data-cat="${esc(c.id)}" style="--c:${safeColor(c.color)}" aria-pressed="${main || extra}"><span class="dot"></span>${esc(c.name)}</button>`;
+        }).join('') + '<button class="cat-opt add" data-cat="__new">+ Nuova</button>';
+        const sel = selected();
+        const el = q('#pf-main');
+        if (sel.length < 2) {
+          el.innerHTML = sel.length ? '<div class="field-hint">Toccane altre per aggiungere fino a due categorie secondarie.</div>' : '';
+          return;
+        }
+        el.innerHTML = `
+          <div class="group" style="margin-top:10px"><div class="group-line"><span>Principale</span>
+            <div class="segmented" id="pf-main-seg">${sel.map((id) => `<button data-main="${esc(id)}" aria-pressed="${f.category_id === id}">${esc(cat(id).name)}</button>`).join('')}</div>
+          </div></div>
+          <div class="field-hint">La principale decide colore e icona del pin. Le altre servono a ritrovarlo nei filtri.</div>`;
+      };
+      const toggleCat = (id) => {
+        if (f.category_id === id) {
+          f.category_id = f.extra_categories.shift() || '';
+        } else if (f.extra_categories.includes(id)) {
+          f.extra_categories = f.extra_categories.filter((x) => x !== id);
+        } else if (!f.category_id) {
+          f.category_id = id;
+        } else if (f.extra_categories.length < 2) {
+          f.extra_categories.push(id);
+        } else {
+          toast('Al massimo tre categorie: una principale e due secondarie');
+          return;
+        }
+        renderCats(); validate();
       };
       q('#pf-cats').addEventListener('click', (e) => {
         const b = e.target.closest('[data-cat]');
         if (!b) return;
         if (b.dataset.cat === '__new') { newCat = { name: '', color: PALETTE[8], icon: 'pin' }; renderNewCat(); return; }
-        f.category_id = b.dataset.cat; renderCats(); validate();
+        toggleCat(b.dataset.cat);
+      });
+      q('#pf-main').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-main]');
+        if (!b || b.dataset.main === f.category_id) return;
+        const id = b.dataset.main;
+        f.extra_categories = [f.category_id, ...f.extra_categories.filter((x) => x !== id)].filter(Boolean);
+        f.category_id = id;
+        renderCats();
       });
 
       const renderNewCat = () => {
@@ -1368,8 +1411,8 @@ function openPlaceForm(place = null, preset = {}) {
           if (error) return fail(error, 'Non riesco a creare la categoria');
           S.categories.push(row);
           S.catById.set(row.id, row);
-          f.category_id = row.id;
           newCat = null;
+          if (selected().length < 3) toggleCat(row.id);
           renderNewCat(); renderCats(); renderChips(); validate();
         });
       };

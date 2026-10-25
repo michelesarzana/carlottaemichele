@@ -21,9 +21,11 @@ const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/6
 const BOT_UA = 'carlottaemichele.it/1.0 (dettagli automatici dei posti)';
 const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 const BATCH = 8;
+const isFood = (p: { category_id: string; extra_categories?: string[] | null }) =>
+  FOOD.has(p.category_id) || (p.extra_categories || []).some((c) => FOOD.has(c));
 
 type Place = {
-  id: string; name: string; category_id: string; lat: number; lng: number;
+  id: string; name: string; category_id: string; extra_categories?: string[] | null; lat: number; lng: number;
   area: string | null; address: string | null; url: string | null;
   phone: string | null; email: string | null; instagram: string | null; menu_url: string | null;
   opening_hours: string | null; photo_url: string | null; photo_source: string | null; enriched_at: string | null;
@@ -302,7 +304,7 @@ async function enrich(place: Place) {
     if (o) {
       fill('url', o.website, 'OpenStreetMap');
       for (const k of ['phone', 'email', 'opening_hours', 'instagram'] as const) fill(k, o[k], 'OpenStreetMap');
-      if (FOOD.has(place.category_id)) fill('menu_url', o.menu_url, 'OpenStreetMap');
+      if (isFood(place)) fill('menu_url', o.menu_url, 'OpenStreetMap');
     }
     website = place.url || (patch.url as string) || null;
   }
@@ -312,7 +314,7 @@ async function enrich(place: Place) {
     fill('phone', s.phone, 'sito');
     fill('email', s.email, 'sito');
     fill('instagram', s.instagram, 'sito');
-    if (FOOD.has(place.category_id)) fill('menu_url', s.menu_url, 'sito');
+    if (isFood(place)) fill('menu_url', s.menu_url, 'sito');
   }
 
   if (needsPhoto) {
@@ -342,7 +344,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
-  const sel = 'id,name,category_id,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
+  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
   const filter = 'or=(enriched_at.is.null,and(photo_url.is.null,photo_source.is.null))';
   const r = await db(`places?select=${sel}&${filter}&lat=not.is.null&order=created_at.desc&limit=${BATCH}`);
   if (!r.ok) return new Response(JSON.stringify({ error: await r.text() }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
