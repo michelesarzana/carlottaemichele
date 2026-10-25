@@ -16,8 +16,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:50.352+00:00",
         "source_url": "https://www.google.com/maps/place/Res-Albert+Chalet,+Loc.+Presalbert,+23020+San+Giacomo+Filippo+SO,+Italy/@46.3344572,9.3856143,17z/data=!4m6!3m5!1s0x478467f7efffd3c5:0xdc8ad1315eb435c9!8m2!3d46.3344572!4d9.3856143!16s%2Fg%2F11j65rh55_?g_ep=Eg1tbF8yMDI2MTAxM18wIJvbDyoASAJQAg%3D%3D"
       },
       {
@@ -93,7 +93,7 @@
         "hours": null,
         "photo": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jpeg/mjEvnqkBKguklpqx/img_1857-eFNgJmy1lUGKQCJy.jpg",
         "photo_source": "auto",
-        "enriched_at": null,
+        "enriched_at": "2026-10-25T10:27:46.395+00:00",
         "source_url": "https://maps.app.goo.gl/9YvYefFgMyXmtJs37?g_st=ic"
       },
       {
@@ -111,8 +111,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:48.343+00:00",
         "source_url": "https://maps.app.goo.gl/jzGGA5qgi9MWjZ4D9?g_st=ic"
       },
       {
@@ -130,8 +130,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:45.935+00:00",
         "source_url": "https://maps.app.goo.gl/MxGNxxy6ZZ59b1oi8?g_st=ic"
       },
       {
@@ -149,8 +149,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:33.105+00:00",
         "source_url": "https://maps.app.goo.gl/LkVYhaevLymvStzw5?g_st=ic"
       },
       {
@@ -163,15 +163,15 @@
         "area": "Branzi",
         "lat": 45.9942543,
         "lng": 9.7543883,
-        "url": null,
-        "phone": null,
-        "email": null,
-        "insta": null,
-        "menu": null,
+        "url": "https://www.agriturismoallebaite.com/",
+        "phone": "+39 338 2113930",
+        "email": "info@agriturismoallebaite.com",
+        "insta": "https://www.instagram.com/agriturismo_alle_baite/",
+        "menu": "https://www.agriturismoallebaite.com/menu.asp",
         "hours": null,
-        "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo": "https://www.agriturismoallebaite.com/public/benvenuti/9112025132840a.jpg",
+        "photo_source": "auto",
+        "enriched_at": "2026-10-25T10:27:43.521+00:00",
         "source_url": "https://maps.app.goo.gl/7Dzo1932Ug66q4w17?g_st=ic"
       },
       {
@@ -182,15 +182,15 @@
         "area": "Milano",
         "lat": 45.4760289,
         "lng": 9.1836817,
-        "url": null,
+        "url": "https://larueofficiel.com/",
         "phone": null,
         "email": null,
-        "insta": null,
-        "menu": null,
+        "insta": "https://www.instagram.com/la_rue_official/",
+        "menu": "https://larueofficiel.com/menu-la-rue/",
         "hours": null,
-        "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo": "https://larueofficiel.com/wp-content/uploads/2025/09/LaRue_Entrecote_Milano_Homepage_Scroll-1.webp",
+        "photo_source": "auto",
+        "enriched_at": "2026-10-25T10:27:41.522+00:00",
         "source_url": "https://maps.app.goo.gl/1kBiARwKhT3zCefz7?g_st=ic"
       },
       {
@@ -201,15 +201,15 @@
         "area": "Milano",
         "lat": 45.4506934,
         "lng": 9.211772,
-        "url": null,
-        "phone": null,
-        "email": null,
-        "insta": null,
-        "menu": null,
+        "url": "https://unsaccobellomilano.it/",
+        "phone": "02 55016966",
+        "email": "prenotazioni.unsaccobello@gmail.com",
+        "insta": "https://www.instagram.com/unsaccobellomilano",
+        "menu": "https://www.unsaccobellomilano.it/menu",
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:40.047+00:00",
         "source_url": "https://maps.app.goo.gl/kpTM6bgKqhuApwQx8?g_st=ic"
       },
       {
@@ -227,8 +227,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:34.013+00:00",
         "source_url": "https://maps.app.goo.gl/uQxDs6ExiXkYZ3Ji7?g_st=ic"
       },
       {
@@ -246,8 +246,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:33.54+00:00",
         "source_url": "https://maps.app.goo.gl/Azbzh1tSXrP7Zn7o6?g_st=ic"
       },
       {
@@ -258,15 +258,15 @@
         "area": "Milano",
         "lat": 45.4486161,
         "lng": 9.2067114,
-        "url": null,
-        "phone": null,
+        "url": "https://bottegasiculamilano.it/",
+        "phone": "+390236534241",
         "email": null,
-        "insta": null,
-        "menu": null,
+        "insta": "https://www.instagram.com/bottegasiculamilano/",
+        "menu": "https://bottegasiculamilano.it/menu/",
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:27.691+00:00",
         "source_url": "https://maps.app.goo.gl/xHTxtXJWaHT4TYAF6?g_st=ic"
       },
       {
@@ -277,15 +277,15 @@
         "area": "Milano",
         "lat": 45.4480693,
         "lng": 9.2066634,
-        "url": null,
-        "phone": null,
-        "email": null,
-        "insta": null,
-        "menu": null,
+        "url": "https://www.osteriailgranburrone.it/",
+        "phone": "//0254118438",
+        "email": "martino@osteriailgranburrone.it",
+        "insta": "https://www.instagram.com/ilgranburrone/",
+        "menu": "https://www.osteriailgranburrone.it/menu-osteria-il-gran-burrone/",
         "hours": null,
-        "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_01.JPG/1280px-2013-04_wm_conf_milano_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "photo_source": "auto",
+        "enriched_at": "2026-10-25T10:27:29.259+00:00",
         "source_url": "https://maps.app.goo.gl/RuSRzDfbaN3JYyiq5?g_st=ic"
       },
       {
@@ -304,7 +304,7 @@
         "hours": null,
         "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Peschiera_Borromeo_-_Cimitero_di_San_Bovio_-_2025-09-13_10-38-03_001.jpg/1280px-Peschiera_Borromeo_-_Cimitero_di_San_Bovio_-_2025-09-13_10-38-03_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
         "photo_source": "auto",
-        "enriched_at": "2026-10-25T10:21:34.807+00:00",
+        "enriched_at": "2026-10-25T10:27:29.719+00:00",
         "source_url": "https://maps.app.goo.gl/msro7jiGaET87S149?g_st=ic"
       },
       {
@@ -317,15 +317,15 @@
         "area": "Madrid",
         "lat": 40.4204626,
         "lng": -3.6864269,
-        "url": null,
-        "phone": null,
+        "url": "https://www.museodelprado.es/",
+        "phone": "+34 913302800",
         "email": null,
         "insta": null,
         "menu": null,
-        "hours": null,
+        "hours": "Mo-Sa 10:00-20:00; Su 10:00-19:00",
         "photo": null,
-        "photo_source": null,
-        "enriched_at": "2026-10-25T10:20:53.768+00:00",
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:25.818+00:00",
         "source_url": "https://maps.app.goo.gl/6Ldj1i1xsx5GidtC6?g_st=ic"
       },
       {
@@ -341,10 +341,10 @@
         "email": null,
         "insta": null,
         "menu": null,
-        "hours": null,
+        "hours": "Oct-Mar: 06:00-22:00; Apr-Sep: 06:00-24:00",
         "photo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Madrid-MetroRetiroExterior.jpg?utm_source=it.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
         "photo_source": "auto",
-        "enriched_at": null,
+        "enriched_at": "2026-10-25T10:27:30.664+00:00",
         "source_url": "https://maps.app.goo.gl/Vpi21MHtQqiBPNPs5?g_st=ic"
       },
       {
@@ -362,8 +362,8 @@
         "menu": null,
         "hours": null,
         "photo": null,
-        "photo_source": null,
-        "enriched_at": null,
+        "photo_source": "none",
+        "enriched_at": "2026-10-25T10:27:30.2+00:00",
         "source_url": "https://maps.app.goo.gl/iveQpw9cN7wJsPbR7?g_st=ic"
       }
     ]
