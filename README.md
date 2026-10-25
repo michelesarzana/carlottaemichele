@@ -49,3 +49,7 @@ Formato di `items`:
 ```json
 [{ "name": "…", "area": "…", "lat": 45.5, "lng": 10.9, "why": "…", "verified": true, "category": "ristoranti", "url": "…" }]
 ```
+
+## Pubblicare una modifica al sito
+
+Prima del commit: `./scripts/versione.sh`. Aggiorna il numero di versione di CSS e moduli JS, così i browser scaricano subito la versione nuova invece di usare quella in memoria.

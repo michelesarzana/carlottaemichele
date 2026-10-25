@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js';
-import { icon, CATEGORY_ICONS } from './icons.js';
-import { Sheet } from './sheet.js';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js';
-import { prettyHours } from './enrich.js';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261025122737';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261025122737';
+import { Sheet } from './sheet.js?v=20261025122737';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261025122737';
+import { prettyHours } from './enrich.js?v=20261025122737';
 
 const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 
