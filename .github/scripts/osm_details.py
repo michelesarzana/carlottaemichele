@@ -109,3 +109,4 @@ for i in range(0, len(ids), 6):
     except Exception as ex:  # noqa: BLE001
         print("  funzione errore", ex)
 # avvio: 2026-10-25T10:26:17
+# avvio: 2026-10-25T11:19:00
