@@ -1050,7 +1050,7 @@ $('sheet').addEventListener('click', async (e) => {
       const it = g.items[Number(t.dataset.index)];
       openPlaceForm(null, {
         name: it.name, lat: it.lat, lng: it.lng, area: it.area || '', notes: it.why || '',
-        url: it.url || '', category_id: it.category || g.category || '', guide_id: g.id
+        url: it.url || '', category_id: it.category || g.category || '', guide_id: g.id, trip_id: g.trip_id || null
       });
       break;
     }
