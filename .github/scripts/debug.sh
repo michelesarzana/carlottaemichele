@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
-for u in https://unsaccobellomilano.it/ https://bottegasiculamilano.it/ https://www.osteriailgranburrone.it/ http://lapobbia.com/ https://arctictreehousehotel.com/; do
-  echo "### $u"
-  curl -sL -m 25 -A "$UA" "$u" -o /tmp/p.html -w "HTTP %{http_code} %{url_effective}\n"
-  grep -oiE '(og:image"[^>]*content="[^"]+"|content="[^"]+"[^>]*og:image)' /tmp/p.html | head -2
-  grep -oiE '(https?:)?//[^"'"'"' )]+\.(jpe?g|webp|png)(\?[^"'"'"' )]*)?' /tmp/p.html | grep -viE 'logo|icon|favicon|sprite|badge|flag|payment' | sort -u | head -15
-  grep -oiE 'tel:[^"'"'"']+|mailto:[^"'"'"'?]+' /tmp/p.html | sort -u | head -4
-done
-echo "### wikipedia"
-for t in "Museo_del_Prado" "Gran_Vía_(Madrid)" "Parco_del_Retiro"; do
-  curl -s -m 20 -A "carlottaemichele.it/1.0" "https://it.wikipedia.org/api/rest_v1/page/summary/$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$t")" | jq -r '"\(.title) | \(.originalimage.source // "-")"'
-done
+fn="https://btyvzzmyzmlvyhxwavxd.supabase.co/functions/v1/resolve-link"
+key="sb_publishable_u8wHUg1_eKbo1U3nwGphRA_vVF-u8Vj"
+echo "### preflight dal sito"
+curl -s -i -m 20 -X OPTIONS "$fn" -H "Origin: https://carlottaemichele.it" \
+  -H "Access-Control-Request-Method: POST" \
+  -H "Access-Control-Request-Headers: authorization,x-client-info,apikey,content-type,x-supabase-api-version" | grep -iE "^HTTP|access-control"
+echo "### POST come il browser (senza login)"
+curl -s -m 40 -X POST "$fn" -H "Origin: https://carlottaemichele.it" -H "apikey: $key" -H "Authorization: Bearer $key" \
+  -H "x-client-info: supabase-js-web/2.118.0" -H "Content-Type: application/json" \
+  -d '{"url":"https://maps.app.goo.gl/Kkm1tPCB8vsErGgZ8?g_st=ic"}' -w "\nHTTP %{http_code}\n" | sed -E 's/"url":"[^"]*",//' | cut -c1-300
+echo "### sito pubblicato: versione"
+curl -s -m 20 https://carlottaemichele.it/ | grep -oE 'app\.(js|css)\?v=[0-9]+' | head -2
+curl -s -m 20 "https://carlottaemichele.it/js/app.js" | grep -c "data?.lat"
