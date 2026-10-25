@@ -1,0 +1,40 @@
+# Ogni 15 minuti: cerca su OpenStreetMap i posti da compilare e li passa alla funzione enrich-places.
+name: Dettagli posti
+
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+concurrency: dettagli
+
+env:
+  PROJECT_REF: btyvzzmyzmlvyhxwavxd
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+jobs:
+  osm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ci sono posti da cercare?
+        id: check
+        run: |
+          n=$(curl -s "https://btyvzzmyzmlvyhxwavxd.supabase.co/rest/v1/places?select=id&enriched_at=is.null&lat=not.is.null" \
+            -H "apikey: sb_publishable_u8wHUg1_eKbo1U3nwGphRA_vVF-u8Vj" | jq length)
+          echo "n=$n" >> "$GITHUB_OUTPUT"; echo "Posti da cercare: $n"
+      - uses: supabase/setup-cli@v1
+        if: steps.check.outputs.n != '0'
+        with:
+          version: latest
+      - name: Chiave di questo giro
+        if: steps.check.outputs.n != '0'
+        run: |
+          t=$(openssl rand -hex 24)
+          echo "::add-mask::$t"
+          echo "ENRICH_TOKEN=$t" >> "$GITHUB_ENV"
+          supabase secrets set ENRICH_TOKEN="$t" --project-ref "$PROJECT_REF" >/dev/null
+          sleep 20
+      - name: Cerca e salva
+        if: steps.check.outputs.n != '0'
+        run: python3 .github/scripts/osm_details.py

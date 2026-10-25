@@ -292,7 +292,7 @@ async function commons(lat: number, lng: number, radius: number, name?: string):
 
 // ─── un posto ──────────────────────────────────────────────
 
-async function enrich(place: Place) {
+async function enrich(place: Place, given?: { osm: any } | null) {
   const patch: Record<string, unknown> = {};
   const used: string[] = [];
   const fill = (col: keyof Place, v: unknown, source: string) => {
@@ -301,6 +301,7 @@ async function enrich(place: Place) {
     if (!used.includes(source)) used.push(source);
   };
   const needsDetails = !place.enriched_at;
+  let osmDone = false;
   const needsPhoto = !place.photo_url && place.photo_source !== 'none' && place.photo_source !== 'own';
 
   const g = await google(place).catch(() => null);
@@ -311,7 +312,9 @@ async function enrich(place: Place) {
       fill('phone', g.phone, 'Google');
       fill('opening_hours', g.opening_hours, 'Google');
     }
-    const o = await osm(place).catch(() => null);
+    // OpenStreetMap blocca i server cloud: i dati arrivano dal flusso GitHub (given), altrimenti si prova lo stesso
+    const o = given ? given.osm : await osm(place).catch(() => null);
+    if (o || given) osmDone = true;
     if (o) {
       fill('url', o.website, 'OpenStreetMap');
       for (const k of ['phone', 'email', 'opening_hours', 'instagram'] as const) fill(k, o[k], 'OpenStreetMap');
@@ -337,7 +340,11 @@ async function enrich(place: Place) {
     if (photo) Object.assign(patch, { photo_url: photo.url, photo_credit: photo.credit, photo_source: 'auto' });
     else patch.photo_source = 'none';
   }
-  if (needsDetails) patch.enriched_at = new Date().toISOString();
+  // Segna come cercato solo se OpenStreetMap ha risposto, o se qualcosa è stato trovato:
+  // così il flusso GitHub ripassa sui posti che il server non è riuscito a cercare
+  if (needsDetails && (osmDone || g || Object.keys(patch).some((k) => !['photo_url', 'photo_credit', 'photo_source'].includes(k)))) {
+    patch.enriched_at = new Date().toISOString();
+  }
 
   // Scrive solo i campi che erano vuoti
   const r = await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify(patch) });
@@ -377,11 +384,18 @@ Deno.serve(async (req) => {
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
   const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
   const filter = 'or=(enriched_at.is.null,and(photo_url.is.null,photo_source.is.null))';
-  const r = await db(`places?select=${sel}&${filter}&lat=not.is.null&order=created_at.desc&limit=${BATCH}`);
+  // Il flusso GitHub manda {osm: {"<id>": {...dati OpenStreetMap...} | null}}: lavora solo quei posti
+  const token = Deno.env.get('ENRICH_TOKEN') || '';
+  const trusted = !!token && req.headers.get('x-enrich-token') === token;
+  const given: Record<string, any> | null = trusted && body?.osm && typeof body.osm === 'object' ? body.osm : null;
+  const ids = given ? Object.keys(given).filter((x) => /^[0-9a-f-]{36}$/.test(x)).slice(0, 20) : [];
+  const r = given
+    ? await db(`places?select=${sel}&id=in.(${ids.join(',')})`)
+    : await db(`places?select=${sel}&${filter}&lat=not.is.null&order=created_at.desc&limit=${BATCH}`);
   if (!r.ok) return new Response(JSON.stringify({ error: await r.text() }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
   const todo: Place[] = await r.json();
 
   const done = [];
-  for (const p of todo) done.push(await enrich(p).catch((e) => ({ name: p.name, error: String(e?.message || e) })));
+  for (const p of todo) done.push(await enrich(p, given ? { osm: given[p.id] ?? null } : null).catch((e) => ({ name: p.name, error: String(e?.message || e) })));
   return new Response(JSON.stringify({ google: !!GKEY, done }), { headers: { ...cors, 'Content-Type': 'application/json' } });
 });
