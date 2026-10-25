@@ -1,0 +1,237 @@
+[
+ {
+  "name": "Bodega Jesús Díaz e Hijos",
+  "nominatim": [
+   {
+    "name": "Bodegas Jesús Díaz e Hijos",
+    "display": "Bodegas Jesús Díaz e Hijos, 38, Calle del Convento, Casco Antiguo, Colmenar de Oreja, Comunidad de Madrid, 28380, Spagna",
+    "lat": 40.1078491,
+    "lng": -3.3935698,
+    "type": "craft/winery",
+    "website": "https://bodegasjesusdiazehijos.com/",
+    "phone": "+34 918 943 962",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Plaza Mayor de Chinchón",
+  "nominatim": [
+   {
+    "name": "Plaza Mayor",
+    "display": "Plaza Mayor, Chinchón, Comunidad de Madrid, 28370, Spagna",
+    "lat": 40.1401188,
+    "lng": -3.422534,
+    "type": "highway/pedestrian",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Plaza Mayor",
+    "display": "Plaza Mayor, Chinchón, Comunidad de Madrid, 28370, Spagna",
+    "lat": 40.1401252,
+    "lng": -3.4225414,
+    "type": "highway/living_street",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Plaza Mayor",
+    "display": "Plaza Mayor, Chinchón, Comunidad de Madrid, 28370, Spagna",
+    "lat": 40.1398127,
+    "lng": -3.4225214,
+    "type": "tourism/hotel",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Bodegas Bernabeleva",
+  "nominatim": [
+   {
+    "name": "Bodega Bernabeleva",
+    "display": "Bodega Bernabeleva, Carretera de Ávila a Toledo, San Martín de Valdeiglesias, Ávila, Comunidad de Madrid, 28680, Spagna",
+    "lat": 40.3666064,
+    "lng": -4.431286,
+    "type": "shop/wine",
+    "website": "http://bernabeleva.com/",
+    "phone": "+34 91 509 19 09",
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Bodega del Real Cortijo de Carlos III",
+  "nominatim": [
+   {
+    "name": "Real Cortijo de San Isidro",
+    "display": "Real Cortijo de San Isidro, Aranjuez, Comunidad de Madrid, 28300, Spagna",
+    "lat": 40.0545829,
+    "lng": -3.5652801,
+    "type": "place/hamlet",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Palacio Real de Aranjuez",
+  "nominatim": [
+   {
+    "name": "Palazzo Reale di Aranjuez",
+    "display": "Palazzo Reale di Aranjuez, Plaza de Parejas, Palacio, Aranjuez, Comunidad de Madrid, 28300, Spagna",
+    "lat": 40.0363361,
+    "lng": -3.6082618,
+    "type": "building/yes",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Bodega de la Ardosa",
+  "nominatim": [
+   {
+    "name": "Bodega de la Ardosa",
+    "display": "Bodega de la Ardosa, 13, Calle de Colón, Malasaña, Universidad, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "lat": 40.4237686,
+    "lng": -3.7017746,
+    "type": "amenity/bar",
+    "website": "http://www.laardosa.es/",
+    "phone": "+34 915 214 979",
+    "opening_hours": "Mo-Fr 08:30-02:00; Sa-Su 11:45-02:30"
+   }
+  ]
+ },
+ {
+  "name": "Taberna Tempranillo",
+  "nominatim": [
+   {
+    "name": "Taberna Tempranillo",
+    "display": "Taberna Tempranillo, 38, Calle de la Cava Baja, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "lat": 40.4120145,
+    "lng": -3.7101129,
+    "type": "amenity/bar",
+    "website": null,
+    "phone": null,
+    "opening_hours": "Tu-Th, Sa-Su 13:00-16:00, 20:00-23:00; Fr 13:00-16:00"
+   }
+  ]
+ },
+ {
+  "name": "Ermita de San Antonio de la Florida",
+  "nominatim": [
+   {
+    "name": "Ermita de San Antonio de la Florida",
+    "display": "Ermita de San Antonio de la Florida, GR-124 Senda Real, Casa de Campo, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.425736,
+    "lng": -3.7259298,
+    "type": "amenity/place_of_worship",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Parque El Capricho",
+  "nominatim": [
+   {
+    "name": "Av. Logroño - Parque El Capricho",
+    "display": "Av. Logroño - Parque El Capricho, Avenida de Logroño, Alameda de Osuna, Barajas, Madrid, Comunidad de Madrid, 28042, Spagna",
+    "lat": 40.4587234,
+    "lng": -3.5970123,
+    "type": "highway/bus_stop",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Museo Cerralbo",
+  "nominatim": [
+   {
+    "name": "Museo Cerralbo",
+    "display": "Museo Cerralbo, 17, Calle de Ventura Rodríguez, Argüelles, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4237115,
+    "lng": -3.7145146,
+    "type": "tourism/museum",
+    "website": null,
+    "phone": "+34 915473646",
+    "opening_hours": "Th 09:30-15:00, 17:00-20:00; Tu-We, Fr-Sa 09:30-15:00; Su 10:00-15:00"
+   }
+  ]
+ },
+ {
+  "name": "Faro de Moncloa",
+  "nominatim": [
+   {
+    "name": "Faro de Moncloa",
+    "display": "Faro de Moncloa, Avenida de la Memoria, Ciudad Universitaria, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4372985,
+    "lng": -3.7216762,
+    "type": "tourism/attraction",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Faro de Moncloa",
+    "display": "Faro de Moncloa, Interc. Moncloa Isla 3, Ciudad Universitaria, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4357833,
+    "lng": -3.7190397,
+    "type": "information/board",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   },
+   {
+    "name": "Faro de Moncloa",
+    "display": "Faro de Moncloa, Avenida de la Memoria, Ciudad Universitaria, Moncloa-Aravaca, Madrid, Comunidad de Madrid, 28008, Spagna",
+    "lat": 40.4373021,
+    "lng": -3.7216736,
+    "type": "tourism/viewpoint",
+    "website": null,
+    "phone": null,
+    "opening_hours": null
+   }
+  ]
+ },
+ {
+  "name": "Matadero Madrid",
+  "nominatim": [
+   {
+    "name": "Matadero Madrid, Centro de creación Contemporánea",
+    "display": "Matadero Madrid, Centro de creación Contemporánea, Calle 30, Chopera, Arganzuela, Madrid, Comunidad de Madrid, 28045, Spagna",
+    "lat": 40.3915448,
+    "lng": -3.6976625,
+    "type": "amenity/arts_centre",
+    "website": null,
+    "phone": null,
+    "opening_hours": "Mo-Su 09:00-22:00"
+   }
+  ]
+ },
+ {
+  "name": "Museo del Romanticismo",
+  "nominatim": [
+   {
+    "name": "Museo del Romanticismo",
+    "display": "Museo del Romanticismo, 13, Calle de San Mateo, Chueca, Justicia, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "lat": 40.4260218,
+    "lng": -3.6989394,
+    "type": "tourism/museum",
+    "website": "https://www.culturaydeporte.gob.es/mromanticismo",
+    "phone": "+34 914481045",
+    "opening_hours": "May 02-Oct 31: Tu-Sa 09:30-20:30; May 02-Oct 31: Su,PH 10:00-15:00; Nov 01-Apr 30: Tu-Sa 09:30-18:00; Nov 01-Apr 30: Su,PH 10:00-15:00; Mo off; Jan 01,06,May 01,15,Dec 24,25,31: off"
+   }
+  ]
+ }
+]
