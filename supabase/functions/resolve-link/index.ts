@@ -87,6 +87,41 @@ async function inspectPage(u: URL) {
   }
 }
 
+// Posizione da Google Places (nome + indirizzo dal link). Mai oltre la quota gratuita.
+const GKEY = Deno.env.get('GOOGLE_PLACES_KEY') || '';
+const SB_URL = Deno.env.get('SUPABASE_URL') || '';
+const SB_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+async function quota(kind: string, max = 800) {
+  if (!SB_URL || !SB_KEY) return false;
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/rpc/use_quota`, {
+      method: 'POST',
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_kind: kind, p_max: max })
+    });
+    return r.ok && (await r.json()) === true;
+  } catch { return false; }
+}
+async function googleLocate(text: string) {
+  if (!GKEY || !text || !(await quota('locate'))) return null;
+  try {
+    const r = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': GKEY,
+        // Solo campi della fascia "Pro": quota gratuita di 5.000 al mese
+        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location'
+      },
+      body: JSON.stringify({ textQuery: text, languageCode: 'it', maxResultCount: 1 })
+    });
+    if (!r.ok) return null;
+    const p = (await r.json())?.places?.[0];
+    if (!p?.location) return null;
+    return { lat: p.location.latitude, lng: p.location.longitude, name: p.displayName?.text || null, address: p.formattedAddress || null };
+  } catch { return null; }
+}
+
 async function resolveShort(req: Request, start: URL) {
   if (!SHORT.some((r) => r.test(start.hostname))) return json(req, { error: 'solo link corti di Google Maps' }, 400);
   let current = start;
@@ -122,12 +157,23 @@ async function resolveShort(req: Request, start: URL) {
     hops.push(`pagina: ${coords ? 'coordinate trovate' : 'niente coordinate'}`);
   }
   const parts = isText ? q.split(',').map((s) => s.trim()).filter(Boolean) : [];
+  let gname: string | null = null;
+  let gaddress: string | null = null;
+  if (!coords && isText) {
+    const g = await googleLocate(q);
+    if (g) {
+      coords = { lat: g.lat, lng: g.lng };
+      gname = g.name;
+      gaddress = g.address;
+      hops.push('google: posizione trovata');
+    } else hops.push('google: niente');
+  }
   return json(req, {
     url: current.href,
     lat: coords?.lat ?? null,
     lng: coords?.lng ?? null,
-    name: title || parts[0] || null,
-    address: parts.length > 1 ? parts.slice(1).join(', ') : null,
+    name: gname || title || parts[0] || null,
+    address: gaddress || (parts.length > 1 ? parts.slice(1).join(', ') : null),
     hops
   });
 }
