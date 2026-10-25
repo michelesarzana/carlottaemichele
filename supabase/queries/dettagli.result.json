@@ -13,7 +13,9 @@
         "010_categorie_secondarie.sql",
         "011_ricerca_dettagli_di_nuovo.sql",
         "012_ricerca_dettagli_rilancio.sql",
-        "013_ricerca_dettagli_github.sql"
+        "013_ricerca_dettagli_github.sql",
+        "014_dettagli_a_mano.sql",
+        "015_limite_google.sql"
       ],
       "cron": [
         {
@@ -25,6 +27,12 @@
         "posti_dettagli"
       ],
       "chiamate": [
+        {
+          "status": 200,
+          "err": null,
+          "body": "{\"google\":true,\"done\":[{\"name\":\"La Stua\",\"filled\":[\"url\",\"phone\",\"opening_hours\",\"menu_url\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Gran Vía\",\"filled\":[],\"from\":[],\"ok\":true},{\"name\":\"El Retiro Park\",\"filled\":[],\"from\":[],\"ok\":true},{\"name\":\"Trattoria dei Cacciatori\",\"filled\":[\"url\",\"phone\",\"opening_hours\",\"email\",\"instagram\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Primo Naso Vineria\",\"filled\":[\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true},{\"name\":\"Baita Del Càin\",\"filled\":[\"url\",\"phone\",\"email\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Revivre Village\",\"filled\":[\"url\",\"phone\",\"email\",\"instagram\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Ristorante Il Ruscello 十二馔\",\"filled\":[\"url\",\"phone\",\"opening_hours\",\"instagram\",\"menu_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
+          "at": "2026-10-25T11:19:05.902423+00:00"
+        },
         {
           "status": 200,
           "err": null,
@@ -48,15 +56,21 @@
           "err": null,
           "body": "{\"google\":false,\"done\":[{\"name\":\"El Retiro Park\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
           "at": "2026-10-25T10:15:06.763313+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":false,\"done\":[{\"name\":\"El Retiro Park\",\"filled\":[\"photo_url\"],\"from\":[],\"ok\":true}]}",
-          "at": "2026-10-25T10:15:06.763313+00:00"
         }
       ],
       "posti": [
+        {
+          "name": "La Stua",
+          "url": "https://mymenuweb.com/it/restaurants/1032836/?utm_source=google_profile&utm_medium=google_profile&utm_campaign=admin",
+          "phone": "+39 045 707 5520",
+          "hours": "Mo 11:30-14:00; Tu 11:30-14:00; We 11:30-14:00,18:30-21:00; Th 11:30-14:00,18:30-21:15; Fr 11:30-14:00,18:30-21:15; Sa 11:30-14:00,18:30-21:15; Su 11:00-16:00",
+          "menu": "https://mymenuweb.com/",
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: La Stua SNC su Google Maps",
+          "src": "auto",
+          "enriched": "2026-10-25T11:19:10.937+00:00"
+        },
         {
           "name": "Gran Vía",
           "url": null,
@@ -67,7 +81,7 @@
           "photo": null,
           "credit": null,
           "src": "none",
-          "enriched": "2026-10-25T10:27:30.2+00:00"
+          "enriched": "2026-10-25T11:19:52.693+00:00"
         },
         {
           "name": "El Retiro Park",
@@ -79,7 +93,7 @@
           "photo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Madrid-MetroRetiroExterior.j",
           "credit": "Foto: Wikipedia, voce \"Retiro (metropolitana di Madrid)\"",
           "src": "auto",
-          "enriched": "2026-10-25T10:27:30.664+00:00"
+          "enriched": "2026-10-25T11:19:53.025+00:00"
         },
         {
           "name": "Museo Nacional del Prado",
@@ -88,32 +102,32 @@
           "hours": "Mo-Sa 10:00-20:00; Su 10:00-19:00",
           "menu": null,
           "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
+          "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Museo_del_Prado_2016_%",
+          "credit": "Foto: Wikimedia Commons, voce \"Museo del Prado\"",
+          "src": "auto",
           "enriched": "2026-10-25T10:27:25.818+00:00"
         },
         {
           "name": "Trattoria dei Cacciatori",
-          "url": null,
-          "phone": null,
-          "hours": null,
+          "url": "http://trattoriacacciatori.it/",
+          "phone": "+39 02 753 1154",
+          "hours": "Mo off; Tu 12:30-15:30,19:00-23:30; We 12:30-15:30,19:00-23:30; Th 12:30-15:30,19:00-23:30; Fr 12:30-15:30,19:00-23:30; Sa 12:30-15:30,19:00-23:30; Su 12:30-15:30",
           "menu": null,
-          "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Peschiera_Borromeo_-_Ci",
-          "credit": "Foto: Ysogo, CC BY-SA 4.0, Wikimedia Commons",
+          "insta": "https://www.instagram.com/trattoria_dei_cacciatori_/?hl=it",
+          "photo": "https://trattoriacacciatori.it/wp-content/uploads/2020/09/tavolo2.jpg",
+          "credit": "Foto: trattoriacacciatori.it",
           "src": "auto",
-          "enriched": "2026-10-25T10:27:29.719+00:00"
+          "enriched": "2026-10-25T11:19:28.07+00:00"
         },
         {
           "name": "Osteria il Gran Burrone",
           "url": "https://www.osteriailgranburrone.it/",
-          "phone": "//0254118438",
+          "phone": "+39 02 5411 8438",
           "hours": null,
           "menu": "https://www.osteriailgranburrone.it/menu-osteria-il-gran-burrone/",
           "insta": "https://www.instagram.com/ilgranburrone/",
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/2013-04_wm_conf_milano_",
-          "credit": "Foto: Ziko van Dijk, CC BY-SA 3.0, Wikimedia Commons",
+          "photo": "https://www.osteriailgranburrone.it/wp-content/uploads/2021/10/interno-2.jpg",
+          "credit": "Foto: osteriailgranburrone.it",
           "src": "auto",
           "enriched": "2026-10-25T10:27:29.259+00:00"
         },
@@ -124,34 +138,34 @@
           "hours": null,
           "menu": "https://bottegasiculamilano.it/menu/",
           "insta": "https://www.instagram.com/bottegasiculamilano/",
-          "photo": null,
-          "credit": null,
-          "src": "none",
+          "photo": "https://bottegasiculamilano.it/wp-content/uploads/2023/04/275486143_133634234345",
+          "credit": "Foto: bottegasiculamilano.it",
+          "src": "auto",
           "enriched": "2026-10-25T10:27:27.691+00:00"
         },
         {
           "name": "Primo Naso Vineria",
           "url": null,
-          "phone": null,
-          "hours": null,
+          "phone": "+39 351 329 4560",
+          "hours": "Mo 18:30-00:00; Tu off; We 18:30-00:00; Th 18:30-00:00; Fr 12:00-14:30,19:00-00:00; Sa 12:00-14:30,19:00-00:00; Su 12:00-14:30,19:00-00:00",
           "menu": null,
           "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:33.54+00:00"
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: Primo Naso Vineria su Google Maps",
+          "src": "auto",
+          "enriched": "2026-10-25T11:19:34.921+00:00"
         },
         {
           "name": "Ristorante La Pobbia 1850",
-          "url": null,
-          "phone": null,
+          "url": "https://lapobbia.com/",
+          "phone": "+39 02 3800 6641",
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:34.013+00:00"
+          "photo": "https://lapobbia.com/wp-content/uploads/2022/06/slider-hp.jpg",
+          "credit": "Foto: lapobbia.com",
+          "src": "auto",
+          "enriched": "2026-10-25T10:36:06.847503+00:00"
         },
         {
           "name": "Un Sacco Bello",
@@ -160,9 +174,9 @@
           "hours": null,
           "menu": "https://www.unsaccobellomilano.it/menu",
           "insta": "https://www.instagram.com/unsaccobellomilano",
-          "photo": null,
-          "credit": null,
-          "src": "none",
+          "photo": "https://static.wixstatic.com/media/f45054_49081478f1644d558fc8cdabbe95f6dd~mv2.j",
+          "credit": "Foto: unsaccobellomilano.it",
+          "src": "auto",
           "enriched": "2026-10-25T10:27:40.047+00:00"
         },
         {
@@ -191,51 +205,51 @@
         },
         {
           "name": "Baita Del Càin",
-          "url": null,
-          "phone": null,
+          "url": "https://www.cainchalet.it/it",
+          "phone": "+39 366 655 0687",
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:33.105+00:00"
+          "photo": "https://www.cainchalet.it/files/anteprima/1280/cain-comfort-chalet-trentino---va",
+          "credit": "Foto: cainchalet.it",
+          "src": "auto",
+          "enriched": "2026-10-25T11:19:38.709+00:00"
         },
         {
           "name": "Revivre Village",
-          "url": null,
-          "phone": null,
+          "url": "https://www.revivre.vda.it/",
+          "phone": "+39 347 644 6894",
           "hours": null,
           "menu": null,
-          "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:45.935+00:00"
+          "insta": "https://www.instagram.com/revivre_village/",
+          "photo": "https://www.revivre.vda.it/wp-content/uploads/2021/02/baite-montagna-champorcher",
+          "credit": "Foto: revivre.vda.it",
+          "src": "auto",
+          "enriched": "2026-10-25T11:19:41.365+00:00"
         },
         {
           "name": "Arctic TreeHouse Hotel",
-          "url": null,
-          "phone": null,
+          "url": "https://arctictreehousehotel.com/",
+          "phone": "+358 50 517 6909",
           "hours": null,
           "menu": null,
           "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:48.343+00:00"
+          "photo": "https://www.visitrovaniemi.fi/wp-content/uploads/86179210-557d-11f0-ae44-c12d0d4",
+          "credit": "Foto: Visit Rovaniemi",
+          "src": "auto",
+          "enriched": "2026-10-25T10:36:06.847503+00:00"
         },
         {
           "name": "Ristorante Il Ruscello 十二馔",
-          "url": null,
-          "phone": null,
-          "hours": null,
-          "menu": null,
-          "insta": null,
+          "url": "https://ristoranteilruscello.it/",
+          "phone": "+39 02 4549 5592",
+          "hours": "Mo 12:00-15:00,18:30-23:00; Tu 12:00-15:00,18:30-23:00; We 12:00-15:00,18:30-23:00; Th 12:00-15:00,18:30-23:00; Fr 12:00-15:00,18:30-23:00; Sa 12:00-15:00,18:30-23:00; Su off",
+          "menu": "https://ristoranteilruscello.it/cibo-cinese-a-milano/",
+          "insta": "https://www.instagram.com/il_ruscello/",
           "photo": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jp",
           "credit": "Foto: Cooking with the Hamster (cookingwiththehamster.com)",
           "src": "auto",
-          "enriched": "2026-10-25T10:27:46.395+00:00"
+          "enriched": "2026-10-25T11:19:47.587+00:00"
         },
         {
           "name": "Trattoria Tina",
@@ -275,15 +289,15 @@
         },
         {
           "name": "Res-Albert Chalet",
-          "url": null,
-          "phone": null,
-          "hours": null,
+          "url": "https://resalbertchalet.com/",
+          "phone": "+39 351 902 7288",
+          "hours": "24/7",
           "menu": null,
-          "insta": null,
-          "photo": null,
-          "credit": null,
-          "src": "none",
-          "enriched": "2026-10-25T10:27:50.352+00:00"
+          "insta": "https://www.instagram.com/resalbert.casevacanze/",
+          "photo": "https://resalbertchalet.com/wp-content/uploads/2021/04/chalet_panorama_3.jpg",
+          "credit": "Foto: resalbertchalet.com",
+          "src": "auto",
+          "enriched": "2026-10-25T11:19:57.09+00:00"
         }
       ]
     }
