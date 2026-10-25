@@ -204,25 +204,26 @@ async function findMenu(req: Request, start: URL) {
     const og = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1] ||
       html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1] || null;
     // Foto vere della pagina: jpg/webp, niente loghi, icone, badge
-    const BAD = /(logo|icon|favicon|badge|seal|sprite|placeholder|avatar|banner-ad|payment|flag|stemma|screenshot|removebg|gemini_generated)/i;
+    const BAD = /(logo|icon|favicon|badge|seal|sprite|placeholder|avatar|banner-ad|payment|flag|stemma|screenshot|removebg|gemini_generated|award|winner|entrepreneur|dummy|blank|pixel|tripadvisor|google|facebook|instagram)/i;
     const imgs: string[] = [];
     const push = (raw?: string) => {
       if (!raw) return;
-      let src = raw.replace(/&amp;/g, '&').split(/\s+/)[0];
+      let src = raw.replace(/&amp;/g, '&').replace(/\\\//g, '/').split(/\s+/)[0];
       try { src = new URL(src, res.url).href.replace(/^http:/, 'https:'); } catch { return; }
-      if (!/\.(jpe?g|webp)(\?|$)/i.test(src) || BAD.test(src)) return;
+      if (!/\.(jpe?g|webp)(\?|$|\/)/i.test(src) || BAD.test(src)) return;
+      // Wix: dall'URL ridimensionato all'originale
+      const wix = src.match(/^(https:\/\/static\.wixstatic\.com\/media\/[^/]+?\.(?:jpe?g|webp))/i);
+      if (wix) src = wix[1];
+      // WordPress: niente -300x200, si usa il file originale
+      src = src.replace(/-\d{2,4}x\d{2,4}(\.(?:jpe?g|webp))/i, '$1').replace(/\.(jpe?g)\.webp$/i, '.$1');
       if (/squarespace-cdn\.com/.test(src) && !/format=/.test(src)) src += (src.includes('?') ? '&' : '?') + 'format=1500w';
       if (!imgs.includes(src)) imgs.push(src);
     };
-    if (og && /\.(jpe?g|webp)(\?|$)/i.test(og)) push(og);
-    for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
-      const tag = m[0];
-      push(tag.match(/\bdata-(?:src|image)=["']([^"']+)["']/i)?.[1] || tag.match(/\bsrc=["']([^"']+)["']/i)?.[1]);
-    }
-    for (const m of html.matchAll(/background-image:\s*url\(["']?([^"')]+)["']?\)/gi)) push(m[1]);
+    if (og) push(og);
+    for (const m of html.matchAll(/(?:https?:)?\/\/[^"'\s()<>]+?\.(?:jpe?g|webp)(?:\?[^"'\s()<>]*)?/gi)) push(m[0]);
     return json(req, {
       menu,
-      phone: tel ? decodeURIComponent(tel) : null,
+      phone: tel ? decodeURIComponent(tel).replace(/^\/+/, '').replace(/\s+/g, ' ').trim() : null,
       email: mail ? decodeURIComponent(mail) : null,
       instagram: insta,
       image: imgs[0] || null,

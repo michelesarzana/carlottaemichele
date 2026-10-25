@@ -233,23 +233,29 @@ async function site(url: string | null) {
   const mail = links.find((l) => /^mailto:/i.test(l.href))?.href.replace(/^mailto:/i, '').split('?')[0].trim() || null;
   const insta = links.map((l) => l.href).find((h) => /instagram\.com\/[A-Za-z0-9_.]+/.test(h) && !/\/(p|reel|explore)\//.test(h)) || null;
 
-  const BAD = /(logo|icon|favicon|badge|seal|sprite|placeholder|avatar|banner-ad|payment|flag|stemma|screenshot|removebg|gemini_generated)/i;
+  // Foto del sito: tutte le immagini jpg/webp nel codice della pagina (img, slider, sfondi, Wix…),
+  // senza loghi e premi, preferendo l'originale alle versioni ridotte di WordPress
+  const BAD = /(logo|icon|favicon|badge|seal|sprite|placeholder|avatar|banner-ad|payment|flag|stemma|screenshot|removebg|gemini_generated|award|winner|entrepreneur|dummy|blank|pixel|tripadvisor|google|facebook|instagram)/i;
   const imgs: string[] = [];
   const push = (raw?: string) => {
     if (!raw) return;
-    let src = raw.replace(/&amp;/g, '&').split(/\s+/)[0];
+    let src = raw.replace(/&amp;/g, '&').replace(/\\\//g, '/').split(/\s+/)[0];
     try { src = new URL(src, res.url).href.replace(/^http:/, 'https:'); } catch { return; }
-    if (!/\.(jpe?g|webp)(\?|$)/i.test(src) || BAD.test(src)) return;
+    if (!/\.(jpe?g|webp)(\?|$|\/)/i.test(src) || BAD.test(src)) return;
+    // Wix: dall'URL ridimensionato all'originale
+    const wix = src.match(/^(https:\/\/static\.wixstatic\.com\/media\/[^/]+?\.(?:jpe?g|webp))/i);
+    if (wix) src = wix[1];
+    // WordPress: niente -300x200, si usa il file originale
+    src = src.replace(/-\d{2,4}x\d{2,4}(\.(?:jpe?g|webp))/i, '$1').replace(/\.(jpe?g)\.webp$/i, '.$1');
     if (/squarespace-cdn\.com/.test(src) && !/format=/.test(src)) src += (src.includes('?') ? '&' : '?') + 'format=1500w';
     if (!imgs.includes(src)) imgs.push(src);
   };
   push(html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1] ||
     html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1]);
-  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
-    push(m[0].match(/\bdata-(?:src|image)=["']([^"']+)["']/i)?.[1] || m[0].match(/\bsrc=["']([^"']+)["']/i)?.[1]);
-  }
+  for (const m of html.matchAll(/(?:https?:)?\/\/[^"'\s()<>]+?\.(?:jpe?g|webp)(?:\?[^"'\s()<>]*)?/gi)) push(m[0]);
   let phone: string | null = null;
   try { phone = tel ? decodeURIComponent(tel) : null; } catch { phone = tel; }
+  if (phone) phone = phone.replace(/^\/+/, '').replace(/\s+/g, ' ').trim();
   return {
     menu_url: menu,
     phone,
