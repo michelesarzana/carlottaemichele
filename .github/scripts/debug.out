@@ -1,17 +1,20 @@
-### La Rue
-nominatim HTTP 200 0.166526s
-  La Rue | amenity/restaurant | web=https://larueofficiel.com/ | tel= | ore=
-### Bottega Sicula
-nominatim HTTP 200 0.140315s
-  Bottega Sicula | amenity/restaurant | web=https://bottegasiculamilano.it/ | tel= | ore=
-### Alle Baite
-nominatim HTTP 200 0.575557s
-  Agriturismo alle Baite | amenity/restaurant | web=https://www.agriturismoallebaite.com/ | tel=+39 338 2113930 | ore=
-### Revivre Village
-nominatim HTTP 200 0.509681s
-### Primo Naso
-nominatim HTTP 200 0.665390s
-https://overpass.private.coffee/api/interpreter HTTP 000 20.001061s elementi: 
-https://maps.mail.ru/osm/tools/overpass/api/interpreter HTTP 504 1.175526s elementi: 
-https://overpass.osm.jp/api/interpreter HTTP 000 0.591979s elementi: 
-https://overpass-api.de/api/interpreter HTTP 000 20.000375s elementi: 
+### b7e95cc3-fb81-46c1-a26c-55a8767c5750
+{
+ "place": "La Rue",
+ "nominatim_http": 403,
+ "nominatim_body": "Access denied. See https://operations.osmfoundation.org/policies/nominatim/",
+ "osm": null,
+ "site": null,
+ "ms": 4220
+}
+HTTP 200
+### 706dbc3b-c873-4166-82c5-3f0d80ce6647
+{
+ "place": "Farmhouse Alle Baite Branzi",
+ "nominatim_http": 403,
+ "nominatim_body": "Access denied. See https://operations.osmfoundation.org/policies/nominatim/",
+ "osm": null,
+ "site": null,
+ "ms": 7362
+}
+HTTP 200
