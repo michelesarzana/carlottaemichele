@@ -1,14 +1,21 @@
-FINAL https://maps.app.goo.gl/9YvYefFgMyXmtJs37
-39537 page.html
+location: https://maps.google.com?q=Ristorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94,+Via+Adda,+3,+20124+Milano+MI&ftid=0x4786c7cb319524b7:0x83a18ca5c897a3d4&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,100809209,94218641,100808659,94282134,94286869,100820247,100822504,100838877,121816461&g_ep=CAISEjI2LjQzLjEuMDAxOTUxMTAxMBgAIIgnKoUBLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCwxMDA4MDkyMDksOTQyMTg2NDEsMTAwODA4NjU5LDk0MjgyMTM0LDk0Mjg2ODY5LDEwMDgyMDI0NywxMDA4MjI1MDQsMTAwODM4ODc3LDEyMTgxNjQ2MUICSVQ%3D&skid=d6723b95-3cb7-484f-bcb5-6ca4fc25d5cd&g_st=ic&g_st=ic
+FINAL https://maps.google.com?q=Ristorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94,+Via+Adda,+3,+20124+Milano+MI&ftid=0x4786c7cb319524b7:0x83a18ca5c897a3d4&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,100809209,94218641,100808659,94282134,94286869,100820247,100822504,100838877,121816461&g_ep=CAISEjI2LjQzLjEuMDAxOTUxMTAxMBgAIIgnKoUBLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCwxMDA4MDkyMDksOTQyMTg2NDEsMTAwODA4NjU5LDk0MjgyMTM0LDk0Mjg2ODY5LDEwMDgyMDI0NywxMDA4MjI1MDQsMTAwODM4ODc3LDEyMTgxNjQ2MUICSVQ%3D&skid=d6723b95-3cb7-484f-bcb5-6ca4fc25d5cd&g_st=ic&g_st=ic
+211896 page.html
 --- tel
 --- +39
 --- 02 
 --- http
-      5 https:\/\/maps.app.goo.gl
-      3 https:\/\/accounts.google.com
-      2 https:\/\/myaccount.google.com
-      1 https:\/\/www.gstatic.com
 --- orari
 --- ruscello
+mscope="" itemtype="http://schema.org/Place" lang="it-US"> <head>  <link href="/maps/preview/place?authuser=0&amp;hl=it&amp;gl=us&amp;q=Ristorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94%2C+Via+Adda%2C+3%2C+20124+Milano+MI&amp;pb=%211m15%211s0x4786c7cb319524b7%3A0x83a18ca5c897a3d4%212sRistorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94%2C+Via+Adda%2C+3%2C+20124+Milano+MI%213m12%211m3%211d3173884.2458162485
+,null,null,null,null,null,null,0,0]],null,null,\"1\",\"113\",1,0,null,\"it\",0,null,null,0,0,[null,\"https://www.google.com/maps?q\u003dRistorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94,+Via+Adda,+3,+20124+Milano+MI\\u0026ftid\u003d0x4786c7cb319524b7:0x83a18ca5c897a3d4\\u0026entry\u003dgps\\u0026shh\u003dCAE\\u0026lucs\u003d,94297699,94231188,94280568,100821555,47071704,100809209,94218641,100808659,94282
+s://accounts.google.com/ServiceLogin?hl\u003dit\u0026amp;passive\u003dtrue\u0026amp;continue\u003dhttps://www.google.com/maps%3Fq%3DRistorante%2BIl%2BRuscello%2B%25E5%258D%2581%25E4%25BA%258C%25E9%25A6%2594,%2BVia%2BAdda,%2B3,%2B20124%2BMilano%2BMI%26ftid%3D0x4786c7cb319524b7:0x83a18ca5c897a3d4%26entry%3Dgps%26shh%3DCAE%26lucs%3D,94297699,94231188,94280568,100821555,47071704,100809209,94218641,100808659,9
+0566336,800565184,800565184,800565184,800565184]]]],null,[null,null,null,null,null,")]}'\n[[\"0x4786c7cb319524b7:0x83a18ca5c897a3d4\",\"Ristorante Il Ruscello 十二馔, Via Adda, 3, 20124 Milano MI\",[[3173884.2458162485,-77.844326,39.026799399999994],[0,0,0],[1024,768],13.1]],null,null,null,null,null,null,null,null,null,null,[null,[360,120,null,8]],[null,[203,100],[null,4,null,null,1],null,null,[[[86,86],[408
+,[0,-77.844326,39.026799399999994,null,3173884.2458162485,null,13.1,0,0,0],null,1],[null,null,["0x4786c7cb319524b7:0x83a18ca5c897a3d4","Ristorante Il Ruscello 十二馔, Via Adda, 3, 20124 Milano MI"]],null,null,null,null,null,null,null,null,null,null,null,null,null,[1]],null,null,[59,63,60,67,68,61,65,66,78,79],["Google Maps","Find local businesses, view maps and get driving directions in Google Maps.","https:
+';window.LOGGING_ENDPOINT='/maps/preview/log204?authuser\x3d0\x26hl\x3dit\x26gl\x3dus';window.PRODUCT_ID=81;window.ES5DGURL='/maps?q\x3dRistorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94,+Via+Adda,+3,+20124+Milano+MI\x26entry\x3dgps\x26shh\x3dCAE\x26lucs\x3d,94297699,94231188,94280568,100821555,47071704,100809209,94218641,100808659,94282134,94286869,100820247,100822504,100838877,121816461\x26g_ep\x3dCAISE
 --- preview
+/maps/preview/place?authuser=0&amp;hl=it&amp;gl=us&amp;q=Ristorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94%2C+Via+Adda%2C+3%2C+20124+Milano+MI&amp;pb=%211m15%211s0x4786c7cb319524b7%3A0x83a18ca5c897a3d4%212sRistorante+Il+Ruscello+%E5%8D%81%E4%BA%8C%E9%A6%94%2C+Via+Adda%2C+3%2C+20124+Milano+MI%213m12%211m3%211d3173884.2458162485%212d-77.844326%213d39.026799399999994%212m3%211f0.0%212f0.0%213f0.0%213m2%211i1024%212i76
+/maps/preview/placeupdate?authuser\u003d0\u0026hl\u003dit\u0026gl\u003dus
+/maps/preview/placeactions/writeaction?authuser\u003d0\u0026hl\u003dit\u0026gl\u003dus
 --- img
+https://lh3.googleusercontent.com/ogw/default-user
