@@ -354,6 +354,26 @@ Deno.serve(async (req) => {
   };
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
+  // Diagnostica: {"debug": "<id>"} mostra cosa trova ogni fonte, senza scrivere niente
+  let body: any = {};
+  try { body = await req.json(); } catch { /* corpo vuoto */ }
+  if (body?.debug) {
+    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
+    const rr = await db(`places?select=${sel0}&id=eq.${encodeURIComponent(body.debug)}`);
+    const [pl] = await rr.json();
+    if (!pl) return new Response(JSON.stringify({ error: 'posto non trovato' }), { headers: { ...cors, 'Content-Type': 'application/json' } });
+    const out: Record<string, unknown> = { place: pl.name };
+    const t0 = Date.now();
+    const params = new URLSearchParams({ q: pl.name, format: 'jsonv2', extratags: '1', limit: '5', 'accept-language': 'it' });
+    const raw = await get(`https://nominatim.openstreetmap.org/search?${params}`, { headers: { 'User-Agent': BOT_UA } }, 10000);
+    out.nominatim_http = raw ? raw.status : 'nessuna risposta';
+    out.nominatim_body = raw ? (await raw.text()).slice(0, 600) : null;
+    out.osm = await osm(pl).catch((e) => 'errore: ' + e);
+    out.site = await site(pl.url || (out.osm as any)?.website || null).catch((e) => 'errore: ' + e);
+    out.ms = Date.now() - t0;
+    return new Response(JSON.stringify(out, null, 1), { headers: { ...cors, 'Content-Type': 'application/json' } });
+  }
+
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
   const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
   const filter = 'or=(enriched_at.is.null,and(photo_url.is.null,photo_source.is.null))';

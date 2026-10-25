@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
-UA="carlottaemichele.it/1.0 (dettagli automatici dei posti)"
-for spec in "La Rue|45.4760289|9.1836817" "Bottega Sicula|45.4486161|9.2067114" "Alle Baite|45.9942543|9.7543883" "Revivre Village|45.6239176|7.6069725" "Primo Naso|45.47|9.19"; do
-  IFS='|' read -r name lat lng <<<"$spec"
-  echo "### $name"
-  vb=$(python3 -c "print(f'{$lng-0.02},{$lat+0.015},{$lng+0.02},{$lat-0.015}')")
-  t0=$(date +%s.%N)
-  curl -s -m 20 -A "$UA" -G "https://nominatim.openstreetmap.org/search" --data-urlencode "q=$name" \
-    --data "format=jsonv2&extratags=1&limit=3&bounded=1&viewbox=$vb" -o /tmp/n.json -w "nominatim HTTP %{http_code} %{time_total}s\n"
-  jq -r '.[] | "  \(.name) | \(.category)/\(.type) | web=\(.extratags.website // .extratags["contact:website"] // "") | tel=\(.extratags.phone // .extratags["contact:phone"] // "") | ore=\(.extratags.opening_hours // "")"' /tmp/n.json 2>/dev/null
-  sleep 1.2
-done
-q='[out:json][timeout:10];nwr(around:200,45.4760289,9.1836817)["name"];out tags 5;'
-for ep in https://overpass.private.coffee/api/interpreter https://maps.mail.ru/osm/tools/overpass/api/interpreter https://overpass.osm.jp/api/interpreter https://overpass-api.de/api/interpreter; do
-  curl -s -m 20 -A "$UA" --data-urlencode "data=$q" "$ep" -o /tmp/o.json -w "$ep HTTP %{http_code} %{time_total}s " ; echo "elementi: $(jq '.elements|length' /tmp/o.json 2>/dev/null)"
+fn="https://btyvzzmyzmlvyhxwavxd.supabase.co/functions/v1/enrich-places"
+key="sb_publishable_u8wHUg1_eKbo1U3nwGphRA_vVF-u8Vj"
+sleep 60  # lascia il tempo di pubblicare la funzione
+for id in b7e95cc3-fb81-46c1-a26c-55a8767c5750 706dbc3b-c873-4166-82c5-3f0d80ce6647; do
+  echo "### $id"
+  curl -sS -m 60 -X POST "$fn" -H "apikey: $key" -H "Content-Type: application/json" -d "{\"debug\":\"$id\"}" -w "\nHTTP %{http_code}\n"
 done
