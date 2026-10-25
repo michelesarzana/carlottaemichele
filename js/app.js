@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261025122737';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261025122737';
-import { Sheet } from './sheet.js?v=20261025122737';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261025122737';
-import { prettyHours } from './enrich.js?v=20261025122737';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261025124604';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261025124604';
+import { Sheet } from './sheet.js?v=20261025124604';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261025124604';
+import { prettyHours } from './enrich.js?v=20261025124604';
 
 const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 
@@ -1425,6 +1425,7 @@ function openPlaceForm(place = null, preset = {}) {
             <input id="pf-link" type="text" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="Google Maps, Apple Maps, sito…" value="${esc(f.source_url)}">
             <button class="btn btn-quiet" id="pf-read">Leggi</button>
           </div>
+          <div class="field-hint" id="pf-link-status" aria-live="polite"></div>
         </div>
         <div>
           <label class="field-label" for="pf-q">Oppure cerca</label>
@@ -1624,12 +1625,23 @@ function openPlaceForm(place = null, preset = {}) {
         q('#pf-results').innerHTML = '<div class="field-hint">Cerco…</div>';
         try { renderResults(await nominatimSearch(text)); } catch (e) { renderResults(null); fail(e, 'Ricerca non riuscita'); }
       };
-      q('#pf-search').addEventListener('click', () => doSearch(q('#pf-q').value));
-      q('#pf-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(e.target.value); } });
+      const linkInSearch = () => {
+        const v = q('#pf-q').value.trim();
+        if (!/https?:\/\/\S+/.test(v)) return false;
+        q('#pf-link').value = v;
+        q('#pf-q').value = '';
+        readLink();
+        return true;
+      };
+      q('#pf-q').addEventListener('paste', () => setTimeout(linkInSearch, 50));
+      q('#pf-search').addEventListener('click', () => { if (!linkInSearch()) doSearch(q('#pf-q').value); });
+      q('#pf-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); if (!linkInSearch()) doSearch(e.target.value); } });
 
       const readLink = async () => {
         const raw = q('#pf-link').value.trim();
         if (!raw) return;
+        const status = (t) => { const el = q('#pf-link-status'); if (el) el.textContent = t; };
+        status('Leggo il link…');
         // Da app e condivisioni arriva spesso "Nome · Indirizzo https://maps.app.goo.gl/…"
         const m = raw.match(/https?:\/\/\S+/);
         const u = m ? m[0].replace(/[),.;]+$/, '') : raw;
@@ -1641,6 +1653,7 @@ function openPlaceForm(place = null, preset = {}) {
         if (r.isShort && r.lat == null) {
           q('#pf-read').disabled = true;
           q('#pf-read').textContent = 'Apro…';
+          status('Apro il link di Google Maps…');
           try {
             const { data, error } = await sb.functions.invoke('resolve-link', { body: { url: u } });
             if (error) throw error;
@@ -1657,6 +1670,7 @@ function openPlaceForm(place = null, preset = {}) {
             let detail = e?.message || '';
             try { detail = (await e?.context?.json?.())?.error || detail; } catch { /* niente */ }
             toast('Non riesco ad aprire il link corto' + (detail ? `: ${detail}` : ''));
+            status('Non riesco ad aprire il link' + (detail ? `: ${detail}` : '') + '. Cerca il nome qui sotto.');
           } finally {
             q('#pf-read').disabled = false;
             q('#pf-read').textContent = 'Leggi';
@@ -1667,9 +1681,11 @@ function openPlaceForm(place = null, preset = {}) {
         if (r.lat != null) {
           f.lat = r.lat; f.lng = r.lng;
           renderLocated(); validate();
+          status(`Trovato: ${r.name || 'posizione dal link'}`);
           try { Object.assign(f, await nominatimReverse(r.lat, r.lng)); renderLocated(); } catch { /* ok */ }
           toast('Trovato dal link');
         } else if (r.address) {
+          status('Cerco l’indirizzo del link…');
           // Prima l'indirizzo, che OpenStreetMap trova bene; il nome resta quello di Google
           q('#pf-q').value = r.address;
           q('#pf-results').innerHTML = '<div class="field-hint">Cerco l’indirizzo…</div>';
@@ -1689,6 +1705,7 @@ function openPlaceForm(place = null, preset = {}) {
           q('#pf-q').value = r.name;
           doSearch(r.name);
         } else if (r.isShort) {
+          status('Il link non contiene la posizione: cerca il nome qui sotto.');
           toast('Link corto: cerca il nome qui sotto');
           q('#pf-q').focus();
         } else {
