@@ -1,0 +1,88 @@
+[
+  {
+    "stato": {
+      "migrations": [
+        "002_viaggi_foto.sql",
+        "003_contatti.sql",
+        "004_guida_osterie_valpolicella.sql",
+        "005_dettagli_posti.sql",
+        "006_foto_borgo_incantato.sql",
+        "007_foto_trattoria_tina.sql",
+        "008_foto_il_ruscello.sql",
+        "009_dettagli_dal_server.sql"
+      ],
+      "cron": [
+        {
+          "job": "dettagli-posti",
+          "schedule": "*/15 * * * *"
+        }
+      ],
+      "trigger": [
+        "posti_dettagli"
+      ],
+      "chiamate": null,
+      "posti": [
+        {
+          "name": "Ristorante Il Ruscello 十二馔",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jp",
+          "credit": "Foto: Cooking with the Hamster (cookingwiththehamster.com)",
+          "src": "auto",
+          "enriched": null
+        },
+        {
+          "name": "Trattoria Tina",
+          "url": "https://www.trattoriatina.it/",
+          "phone": "+39 02 3962 2378",
+          "hours": "Tu-Sa 19:30-22:30; Su,Mo off",
+          "menu": "https://www.scattidigusto.it/wp-content/uploads/2026/08/trattoria-tina-milano-menu-1280x1600.jpg",
+          "insta": "https://www.instagram.com/trattoriatinamilano/",
+          "photo": "https://www.scattidigusto.it/wp-content/uploads/2026/08/trattoria-tina-milano-ra",
+          "credit": "Foto: Scatti di Gusto (scattidigusto.it)",
+          "src": "auto",
+          "enriched": "2026-10-20T15:27:17.084+00:00"
+        },
+        {
+          "name": "Borgo Vescine",
+          "url": "https://www.vescine.it/",
+          "phone": "+39 0577 741144",
+          "hours": null,
+          "menu": null,
+          "insta": "https://www.instagram.com/borgovescine/",
+          "photo": "https://images.squarespace-cdn.com/content/v1/63fa5a875489c1006b8bcdd1/b4d8a974-",
+          "credit": "Foto: vescine.it",
+          "src": "auto",
+          "enriched": "2026-10-20T15:28:04.569+00:00"
+        },
+        {
+          "name": "Borgo Incantato Spoleto",
+          "url": "https://www.ilborgoincantato.com/",
+          "phone": "+39 331 103 8616",
+          "hours": null,
+          "menu": "https://www.ilborgoincantato.com/ristorante-en",
+          "insta": "https://www.instagram.com/borgoincantatospoleto/",
+          "photo": "https://www.ilborgoincantato.com/wp-content/uploads/2023/11/borgo-incantato-vist",
+          "credit": "Foto: ilborgoincantato.com",
+          "src": "auto",
+          "enriched": "2026-10-20T15:26:06.319+00:00"
+        },
+        {
+          "name": "Res-Albert Chalet",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Daloo_-_panoramio.jpg/1",
+          "credit": "Foto: Schölla Schwarz, CC BY 3.0, Wikimedia Commons",
+          "src": "auto",
+          "enriched": "2026-10-20T15:27:16.51+00:00"
+        }
+      ]
+    }
+  }
+]

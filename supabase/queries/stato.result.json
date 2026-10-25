@@ -7,7 +7,9 @@
         "004_guida_osterie_valpolicella.sql",
         "005_dettagli_posti.sql",
         "006_foto_borgo_incantato.sql",
-        "007_foto_trattoria_tina.sql"
+        "007_foto_trattoria_tina.sql",
+        "008_foto_il_ruscello.sql",
+        "009_dettagli_dal_server.sql"
       ],
       "guides": [
         {
@@ -68,8 +70,8 @@
           "instagram": null,
           "menu_url": null,
           "opening_hours": null,
-          "photo_url": null,
-          "photo_credit": null
+          "photo_url": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=756,fit=crop,f=jpeg/mjEvnqkBKguklpqx/img_1857-eFNgJmy1lUGKQCJy.jpg",
+          "photo_credit": "Foto: Cooking with the Hamster (cookingwiththehamster.com)"
         }
       ]
     }
