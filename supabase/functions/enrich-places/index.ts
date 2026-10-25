@@ -113,8 +113,18 @@ function googleHours(h: any): string | null {
   return [1, 2, 3, 4, 5, 6, 0].map((d) => `${GDAYS[d]} ${byDay.get(d)?.join(',') || 'off'}`).join('; ');
 }
 
+// Mai oltre la quota gratuita di Google (1.000 al mese per tipo): ci si ferma a 800
+const GOOGLE_MAX = 800;
+async function quota(kind: 'search' | 'photo') {
+  const r = await db('rpc/use_quota', { method: 'POST', body: JSON.stringify({ p_kind: kind, p_max: GOOGLE_MAX }) });
+  return r.ok && (await r.json()) === true;
+}
+
 async function google(place: Place) {
-  if (!GKEY) return null;
+  if (!GKEY || place.google_checked_at) return null;
+  if (!(await quota('search'))) return null;
+  // Segna subito il tentativo: ogni posto si cerca su Google una volta sola
+  await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify({ google_checked_at: new Date().toISOString() }) });
   const body = {
     textQuery: [place.name, place.address || place.area].filter(Boolean).join(', '),
     languageCode: 'it',
@@ -143,6 +153,7 @@ async function google(place: Place) {
 
 // La foto di Google la copiamo nel nostro archivio: l'indirizzo di Google contiene la chiave
 async function googlePhoto(place: Place, photo: any): Promise<Photo | null> {
+  if (!(await quota('photo'))) return null;
   if (!GKEY || !photo?.name) return null;
   const r = await get(`https://places.googleapis.com/v1/${photo.name}/media?maxWidthPx=1600&key=${GKEY}`, {}, 15000);
   if (!r?.ok || !/image\//.test(r.headers.get('content-type') || '')) return null;
@@ -371,7 +382,7 @@ Deno.serve(async (req) => {
   let body: any = {};
   try { body = await req.json(); } catch { /* corpo vuoto */ }
   if (body?.debug) {
-    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
+    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at';
     const rr = await db(`places?select=${sel0}&id=eq.${encodeURIComponent(body.debug)}`);
     const [pl] = await rr.json();
     if (!pl) return new Response(JSON.stringify({ error: 'posto non trovato' }), { headers: { ...cors, 'Content-Type': 'application/json' } });
@@ -388,7 +399,7 @@ Deno.serve(async (req) => {
   }
 
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
-  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at';
+  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at';
   const filter = 'or=(enriched_at.is.null,and(photo_url.is.null,photo_source.is.null))';
   // Il flusso GitHub manda {osm: {"<id>": {...dati OpenStreetMap...} | null}}: lavora solo quei posti
   const token = Deno.env.get('ENRICH_TOKEN') || '';
