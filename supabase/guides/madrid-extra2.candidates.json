@@ -1,0 +1,10 @@
+{"bbox": [39.8, -4.7, 41.0, -3.2], "items": [
+ {"name": "Plaza de Zocodover, Toledo", "query": "Plaza de Zocodover, Toledo"},
+ {"name": "Acueducto de Segovia", "query": "Acueducto de Segovia"},
+ {"name": "Mesón de Cándido", "query": "Mesón de Cándido, Segovia"},
+ {"name": "Casa Hernanz", "query": "Casa Hernanz, Calle de Toledo, Madrid"},
+ {"name": "Casa de Diego", "query": "Casa de Diego, Puerta del Sol, Madrid"},
+ {"name": "Café Central", "query": "Ateneo de Madrid, Calle del Prado"},
+ {"name": "Sala Equis", "query": "Sala Equis, Calle del Duque de Alba, Madrid"},
+ {"name": "Estadio Santiago Bernabéu", "query": "Estadio Santiago Bernabéu"}
+]}
