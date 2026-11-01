@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101115616';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261101115616';
-import { Sheet } from './sheet.js?v=20261101115616';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101115616';
-import { prettyHours } from './enrich.js?v=20261101115616';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101115755';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261101115755';
+import { Sheet } from './sheet.js?v=20261101115755';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101115755';
+import { prettyHours } from './enrich.js?v=20261101115755';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 
@@ -1422,6 +1422,39 @@ function pickOnMap(start) {
   });
 }
 
+// Doppioni: stesso nome, stesso punto o stesso sito
+function metersBetween(a, b) {
+  const R = 6371000, k = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * k, dLng = (b.lng - a.lng) * k;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * k) * Math.cos(b.lat * k) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const DUP_STOP = new Set(['di', 'del', 'della', 'dei', 'da', 'la', 'il', 'lo', 'le', 'e', 'al', 'alla', 'the', 'de', 'el', 'los', 'las', 'bar', 'ristorante', 'trattoria', 'osteria', 'pizzeria', 'cantina', 'hotel', 'caffe', 'cafe']);
+function nameWords(s) { return norm(s).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 1 && !DUP_STOP.has(w)); }
+function sameName(a, b) {
+  const na = norm(a).replace(/[^a-z0-9]/g, ''), nb = norm(b).replace(/[^a-z0-9]/g, '');
+  if (na && na === nb) return true;
+  const wa = nameWords(a), wb = new Set(nameWords(b));
+  if (!wa.length || !wb.size) return false;
+  const hit = wa.filter((w) => wb.has(w)).length;
+  return hit / Math.min(wa.length, wb.size) >= 0.6;
+}
+function siteKey(u) {
+  try { const x = new URL(u); return (x.hostname.replace(/^www\./, '') + x.pathname.replace(/\/+$/, '')).toLowerCase(); } catch { return ''; }
+}
+function findDuplicates(f, selfId) {
+  const site = f.url ? siteKey(safeUrl(f.url) || '') : '';
+  const here = f.lat != null && f.lng != null ? { lat: f.lat, lng: f.lng } : null;
+  return S.places.filter((p) => {
+    if (p.id === selfId) return false;
+    const d = here && p.lat != null ? metersBetween(here, p) : Infinity;
+    if (f.name.trim() && sameName(f.name, p.name) && (d < 2000 || !here)) return true;
+    if (d < 25) return true;
+    if (site && p.url && siteKey(p.url) === site && !/google\.|instagram\.|facebook\./.test(site)) return true;
+    return false;
+  }).slice(0, 3);
+}
+
 // Nuovo posto / modifica
 function openPlaceForm(place = null, preset = {}) {
   const f = {
@@ -1442,11 +1475,21 @@ function openPlaceForm(place = null, preset = {}) {
     ...preset
   };
   let newCat = null;
+  let dupOk = false;
 
   openModal({
     title: place ? 'Modifica posto' : 'Nuovo posto',
     rightLabel: 'Salva',
     async onSave(api) {
+      if (!dupOk && findDuplicates(f, place?.id).length) {
+        dupOk = true;
+        const box = document.getElementById('pf-dup');
+        box?.classList.add('shake');
+        box?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => box?.classList.remove('shake'), 500);
+        toast('Sembra già salvato. Tocca di nuovo Salva per aggiungerlo comunque');
+        return;
+      }
       const payload = {
         name: f.name.trim(), category_id: f.category_id, lat: f.lat, lng: f.lng,
         extra_categories: f.extra_categories.filter((c) => c && c !== f.category_id).slice(0, 2),
@@ -1488,6 +1531,7 @@ function openPlaceForm(place = null, preset = {}) {
           <div id="pf-results"></div>
         </div>
         <div id="pf-located"></div>
+        <div id="pf-dup" aria-live="polite"></div>
         <div>
           <span class="field-label">Nome</span>
           <div class="group"><div class="group-line"><input class="left" id="pf-name" placeholder="Nome del posto" value="${esc(f.name)}" aria-label="Nome"></div></div>
@@ -1528,6 +1572,16 @@ function openPlaceForm(place = null, preset = {}) {
       const q = (s) => body.querySelector(s);
       const validate = () => {
         api.setSaveEnabled(!!(f.name.trim() && f.category_id && f.lat != null && f.lng != null));
+        const dups = findDuplicates(f, place?.id);
+        const key = dups.map((d) => d.id).join();
+        if (key !== q('#pf-dup').dataset.key) {
+          q('#pf-dup').dataset.key = key;
+          dupOk = false;
+          q('#pf-dup').innerHTML = dups.length ? `<div class="dup-box">
+            <div class="dup-title">${icon('alert', 16, 2.4)}${dups.length > 1 ? 'Forse li avete già salvati' : 'Forse l\'avete già salvato'}</div>
+            ${dups.map((d) => `<button type="button" class="dup-item" data-dup="${esc(d.id)}"><span>${esc(d.name)}</span><span class="dup-sub">${esc([cat(d.category_id).name, d.area, d.trip_id ? S.tripById.get(d.trip_id)?.name : ''].filter(Boolean).join(' · '))}</span></button>`).join('')}
+          </div>` : '';
+        }
         const b = q('#pf-ph-auto');
         if (b) b.disabled = f.lat == null;
       };
@@ -1817,7 +1871,13 @@ function openPlaceForm(place = null, preset = {}) {
       renderPhoto();
 
       q('#pf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
-      q('#pf-url').addEventListener('input', (e) => { f.url = e.target.value; });
+      q('#pf-url').addEventListener('input', (e) => { f.url = e.target.value; validate(); });
+      q('#pf-dup').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-dup]');
+        if (!b) return;
+        api.close();
+        go(`#/posto/${b.dataset.dup}`);
+      });
       q('#pf-menu').addEventListener('input', (e) => { f.menu_url = e.target.value; });
       q('#pf-phone').addEventListener('input', (e) => { f.phone = e.target.value; });
       q('#pf-email').addEventListener('input', (e) => { f.email = e.target.value; });

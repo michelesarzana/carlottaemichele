@@ -656,3 +656,13 @@ a:hover { color: var(--accent-strong); }
 .action.on { color: var(--star); }
 .action.on .ic { fill: currentColor; }
 @media (prefers-reduced-motion: reduce) { .star-btn { transition: none; } }
+
+/* Possibile doppione nel modulo */
+.dup-box { background: rgba(255, 159, 10, 0.12); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.dup-title { display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 700; color: #B25E00; }
+.dup-item { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; text-align: left; border: 0; background: rgba(255, 255, 255, 0.7); border-radius: 10px; padding: 8px 10px; color: var(--ink); font-weight: 600; font-size: 0.9375rem; }
+.dup-item:active { transform: scale(0.98); }
+.dup-sub { font-size: 0.75rem; font-weight: 500; color: var(--ink-3); }
+.dup-box.shake { animation: dup-shake 0.4s ease-out; }
+@keyframes dup-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@media (prefers-reduced-motion: reduce) { .dup-box.shake { animation: none; } }
