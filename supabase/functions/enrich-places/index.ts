@@ -19,7 +19,7 @@ const GKEY = Deno.env.get('GOOGLE_PLACES_KEY') || '';
 
 const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
 const BOT_UA = 'carlottaemichele.it/1.0 (dettagli automatici dei posti)';
-const FOOD = new Set(['ristoranti', 'bar', 'vino']);
+const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const BATCH = 8;
 const isFood = (p: { category_id: string; extra_categories?: string[] | null }) =>
   FOOD.has(p.category_id) || (p.extra_categories || []).some((c) => FOOD.has(c));

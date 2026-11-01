@@ -1,11 +1,11 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101114403';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261101114403';
-import { Sheet } from './sheet.js?v=20261101114403';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101114403';
-import { prettyHours } from './enrich.js?v=20261101114403';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101115616';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261101115616';
+import { Sheet } from './sheet.js?v=20261101115616';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101115616';
+import { prettyHours } from './enrich.js?v=20261101115616';
 
-const FOOD = new Set(['ristoranti', 'bar', 'vino']);
+const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' }
