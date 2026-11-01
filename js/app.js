@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261025124604';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261025124604';
-import { Sheet } from './sheet.js?v=20261025124604';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261025124604';
-import { prettyHours } from './enrich.js?v=20261025124604';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101114403';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261101114403';
+import { Sheet } from './sheet.js?v=20261101114403';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101114403';
+import { prettyHours } from './enrich.js?v=20261101114403';
 
 const FOOD = new Set(['ristoranti', 'bar', 'vino']);
 
@@ -25,6 +25,7 @@ const S = {
   tripDates: new Map(),
   dates: new Map(),
   autoPhotosDone: false,
+  tripFilter: { star: false, prices: new Set() },
   editor: false,
   me: null,
   email: null,
@@ -61,7 +62,7 @@ function today() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
-function price(n) { return n ? '€'.repeat(n) : ''; }
+function price(n) { return n === 0 ? 'Gratis' : n ? '€'.repeat(n) : ''; }
 function slugify(s) {
   return norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cat-' + Date.now().toString(36);
 }
@@ -253,7 +254,9 @@ function renderMarkers() {
     return;
   }
   const selected = S.view.name === 'place' ? S.view.id : null;
-  const list = filtered();
+  const inTrip = S.view.name === 'trip' ? S.view.id : null;
+  const tf = S.tripFilter;
+  const list = inTrip && (tf.star || tf.prices.size) ? S.places.filter((p) => p.trip_id === inTrip && tripFilterMatch(p)) : filtered();
   const ids = new Set(list.map((p) => p.id));
   const toShow = selected && !ids.has(selected) ? [...list, S.placeById.get(selected)].filter(Boolean) : list;
   for (const p of toShow) {
@@ -262,8 +265,9 @@ function renderMarkers() {
     const btn = document.createElement('button');
     btn.className = 'pin' + (p.done ? ' done' : '') + (p.id === selected ? ' selected' : '');
     btn.style.setProperty('--c', safeColor(c.color));
-    btn.innerHTML = icon(c.icon, 16, 2.2);
-    btn.setAttribute('aria-label', `${p.name}${p.done ? ', fatto' : ', da fare'}`);
+    btn.innerHTML = icon(c.icon, 16, 2.2) + (p.starred ? `<span class="pin-star">${icon('star', 10, 3)}</span>` : '');
+    btn.setAttribute('aria-label', `${p.name}${p.starred ? ', da non perdere' : ''}${p.done ? ', fatto' : ', da fare'}`);
+    if (p.starred) el.style.zIndex = '2';
     btn.addEventListener('click', (e) => { e.stopPropagation(); go(`#/posto/${p.id}`); });
     el.append(btn);
     const m = new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(map);
@@ -522,9 +526,24 @@ function placeRow(p) {
   return `
     <button class="row" data-act="open-place" data-id="${esc(p.id)}">
       <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}</span>
-      <span class="row-main"><span class="row-title">${esc(p.name)}</span><span class="row-sub">${sub}</span></span>
+      <span class="row-main"><span class="row-title">${p.starred ? `<span class="star-mark" aria-label="Da non perdere">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}</span><span class="row-sub">${sub}${p.price_range ? ` · ${esc(p.price_range)}` : ''}</span></span>
       ${end}
     </button>`;
+}
+
+// Riga nel viaggio: la stella si tocca direttamente (solo per voi)
+function tripRow(p) {
+  if (!S.editor) return placeRow(p);
+  return `<div class="row-wrap${p.starred ? ' starred' : ''}">${placeRow(p)}
+    <button class="star-btn" data-act="toggle-star" data-id="${esc(p.id)}" aria-pressed="${!!p.starred}" aria-label="${p.starred ? 'Togli da' : 'Segna come'} da non perdere">${icon('star', 18, 2.2)}</button>
+  </div>`;
+}
+
+function tripFilterMatch(p) {
+  const F = S.tripFilter;
+  if (F.star && !p.starred) return false;
+  if (F.prices.size && !F.prices.has(p.price == null ? 'x' : String(p.price))) return false;
+  return true;
 }
 
 function viewList() {
@@ -614,7 +633,7 @@ function viewPlace() {
     };
   }
   const c = cat(p.category_id);
-  const meta = [c.name, p.area, price(p.price)].filter(Boolean).map(esc).join(' · ');
+  const meta = [c.name, p.area, price(p.price), p.price_range].filter(Boolean).map(esc).join(' · ');
   const head = `
     <div class="head-row" style="align-items:flex-start">
       <div style="min-width:0">
@@ -627,6 +646,7 @@ function viewPlace() {
 
   const acts = [`<a class="action primary" href="${directionsUrl(p)}" target="_blank" rel="noopener">${icon('directions', 20)}Indicazioni</a>`];
   if (S.editor) acts.push(`<button class="action" data-act="new-visit" data-id="${esc(p.id)}">${icon('check', 20)}${p.done ? 'Nuova visita' : 'Fatto!'}</button>`);
+  if (S.editor && p.trip_id) acts.push(`<button class="action${p.starred ? ' on' : ''}" data-act="toggle-star" data-id="${esc(p.id)}" aria-pressed="${!!p.starred}">${icon('star', 20)}${p.starred ? 'Da non perdere' : 'Stella'}</button>`);
   const site = safeUrl(p.url);
   if (site) acts.push(`<a class="action" href="${esc(site)}" target="_blank" rel="noopener">${icon('globe', 20)}Sito</a>`);
   acts.push(`<button class="action" data-act="share" data-id="${esc(p.id)}">${icon('share', 20)}Condividi</button>`);
@@ -924,16 +944,30 @@ function viewTrip() {
     if (t.review) body += `<p class="review" style="margin:14px 4px 0">${esc(t.review)}</p>`;
   }
 
-  const places = tripPlaces(t);
+  const all = tripPlaces(t);
+  const places = all.filter(tripFilterMatch);
   const tab = t.use_days ? (S.view.tab || 'giorni') : 'posti';
+  if (all.length) {
+    const F = S.tripFilter;
+    const nStar = all.filter((p) => p.starred).length;
+    const levels = [['0', 'Gratis'], ['1', '€'], ['2', '€€'], ['3', '€€€'], ['4', '€€€€'], ['x', 'Senza prezzo']]
+      .filter(([k]) => all.some((p) => (p.price == null ? 'x' : String(p.price)) === k));
+    body += `<div class="trip-filters" role="toolbar" aria-label="Filtri del viaggio">
+      <button class="chip chip-star" data-act="trip-star" aria-pressed="${F.star}">${icon('star', 14, 2.4)}Da non perdere ${nStar}</button>
+      ${levels.length > 1 ? levels.map(([k, l]) => `<button class="chip" data-act="trip-price" data-price="${k}" aria-pressed="${F.prices.has(k)}">${l}</button>`).join('') : ''}
+    </div>`;
+  }
+  const byStar = (a, b) => (b.starred ? 1 : 0) - (a.starred ? 1 : 0) || a.name.localeCompare(b.name);
   if (t.use_days) {
     body += `<div class="segmented" style="margin:16px 0 4px">
       <button data-act="trip-tab" data-tab="giorni" aria-pressed="${tab === 'giorni'}">Giorni</button>
       <button data-act="trip-tab" data-tab="posti" aria-pressed="${tab === 'posti'}">Posti</button>
     </div>`;
   }
-  if (!places.length) {
+  if (!all.length) {
     body += `<div class="empty">Nessun posto ancora.${S.editor ? '<br>Aggiungine uno qui sotto.' : ''}</div>`;
+  } else if (!places.length) {
+    body += '<div class="empty">Nessun posto con questi filtri.</div>';
   } else if (tab === 'giorni') {
     const byDay = new Map();
     for (const p of places) {
@@ -943,10 +977,10 @@ function viewTrip() {
     }
     const keys = [...byDay.keys()].sort((a, b) => (a || 999) - (b || 999));
     for (const k of keys) {
-      body += `<div class="section-label">${k ? `Giorno ${k}` : 'Senza giorno'}</div><div class="rows">${byDay.get(k).sort((a, b) => a.name.localeCompare(b.name)).map(placeRow).join('')}</div>`;
+      body += `<div class="section-label">${k ? `Giorno ${k}` : 'Senza giorno'}</div><div class="rows">${byDay.get(k).sort(byStar).map(tripRow).join('')}</div>`;
     }
   } else {
-    body += `<div class="rows" style="margin-top:8px">${places.sort((a, b) => a.name.localeCompare(b.name)).map(placeRow).join('')}</div>`;
+    body += `<div class="rows" style="margin-top:8px">${places.sort(byStar).map(tripRow).join('')}</div>`;
   }
 
   if (S.editor) {
@@ -972,6 +1006,24 @@ $('sheet').addEventListener('click', async (e) => {
     case 'close': go('#/'); break;
     case 'open-trip': go(`#/viaggio/${id}`); break;
     case 'close-trip': go('#/viaggi'); break;
+    case 'trip-star': S.tripFilter.star = !S.tripFilter.star; renderSheet(); renderMarkers(); break;
+    case 'trip-price': {
+      const k = t.dataset.price;
+      S.tripFilter.prices.has(k) ? S.tripFilter.prices.delete(k) : S.tripFilter.prices.add(k);
+      renderSheet(); renderMarkers();
+      break;
+    }
+    case 'toggle-star': {
+      e.stopPropagation();
+      const p = S.placeById.get(id);
+      if (!p) return;
+      const v = !p.starred;
+      p.starred = v; renderSheet(); renderMarkers();
+      const { error } = await sb.from('places').update({ starred: v }).eq('id', id);
+      if (error) { p.starred = !v; renderSheet(); renderMarkers(); return fail(error, 'Non riesco a salvare'); }
+      if (navigator.vibrate) navigator.vibrate(8);
+      break;
+    }
     case 'share-trip': {
       const tr = S.tripById.get(id);
       if (tr) shareLink(tr.name, `#/viaggio/${tr.id}`, `${tr.name}: i posti di Carlotta e Michele`);
@@ -1398,7 +1450,7 @@ function openPlaceForm(place = null, preset = {}) {
       const payload = {
         name: f.name.trim(), category_id: f.category_id, lat: f.lat, lng: f.lng,
         extra_categories: f.extra_categories.filter((c) => c && c !== f.category_id).slice(0, 2),
-        area: f.area || null, address: f.address || null, price: f.price || null,
+        area: f.area || null, address: f.address || null, price: f.price ?? null,
         url: safeUrl(f.url) || null, source_url: f.source_url || null, notes: f.notes.trim() || null,
         proposed_by: f.proposed_by || null, guide_id: f.guide_id || null,
         trip_id: f.trip_id || null, day: f.trip_id && f.day ? Number(f.day) : null,
@@ -1602,7 +1654,7 @@ function openPlaceForm(place = null, preset = {}) {
         });
         draw();
       };
-      seg(q('#pf-price'), [1, 2, 3, 4].map((n) => ({ v: n, l: '€'.repeat(n) })), () => f.price, (v) => { f.price = v; });
+      seg(q('#pf-price'), [0, 1, 2, 3, 4].map((n) => ({ v: n, l: n ? '€'.repeat(n) : 'Gratis' })), () => f.price, (v) => { f.price = v; });
       seg(q('#pf-by'), PEOPLE.map((p) => ({ v: p, l: p })), () => f.proposed_by, (v) => { f.proposed_by = v || ''; });
 
       const renderResults = (list) => {
@@ -2126,6 +2178,7 @@ function route() {
   const key = JSON.stringify(S.view);
   const changed = key !== S.lastViewKey;
   S.lastViewKey = key;
+  if (changed && S.view.name !== 'place') S.tripFilter = { star: false, prices: new Set() };
 
   renderChips();
   renderMarkers();

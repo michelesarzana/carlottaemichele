@@ -623,3 +623,36 @@ a:hover { color: var(--accent-strong); }
 @media (prefers-reduced-transparency: reduce) {
   .glass, .chip, .sheet, .topbar { background: #F7F7F9 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 }
+
+/* Viaggi: posti da non perdere e filtri */
+:root { --star: #E2A300; }
+.star-mark { display: inline-flex; vertical-align: -1px; margin-right: 5px; color: var(--star); }
+.star-mark .ic { fill: currentColor; }
+.row-wrap { position: relative; display: flex; align-items: center; }
+.row-wrap .row { flex: 1; min-width: 0; padding-right: 48px; }
+.row-wrap + .row-wrap, .row + .row-wrap, .row-wrap + .row { box-shadow: 0 -0.5px 0 var(--line); }
+.star-btn {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent;
+  color: var(--ink-3); display: flex; align-items: center; justify-content: center;
+  transition: transform 140ms ease-out, color 140ms;
+}
+.star-btn:active { transform: translateY(-50%) scale(0.85); }
+.star-btn[aria-pressed="true"] { color: var(--star); }
+.star-btn[aria-pressed="true"] .ic { fill: currentColor; }
+.row-wrap.starred .row-title { font-weight: 700; }
+.trip-filters { display: flex; gap: 8px; overflow-x: auto; margin: 0 -4px 12px; padding: 2px 4px; scrollbar-width: none; }
+.trip-filters::-webkit-scrollbar { display: none; }
+.trip-filters .chip { height: 32px; padding: 0 12px; background: var(--fill); box-shadow: none; border-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.trip-filters .chip[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.chip-star .ic { color: var(--star); }
+.chip-star[aria-pressed="true"] .ic { fill: currentColor; }
+.pin-star {
+  position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-radius: 8px;
+  background: var(--star); color: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 1.5px #fff;
+}
+.pin-star .ic { fill: currentColor; }
+.action.on { color: var(--star); }
+.action.on .ic { fill: currentColor; }
+@media (prefers-reduced-motion: reduce) { .star-btn { transition: none; } }

@@ -29,6 +29,7 @@ type Place = {
   area: string | null; address: string | null; url: string | null;
   phone: string | null; email: string | null; instagram: string | null; menu_url: string | null;
   opening_hours: string | null; photo_url: string | null; photo_source: string | null; enriched_at: string | null;
+  google_checked_at?: string | null; price?: number | null; price_range?: string | null; price_checked_at?: string | null;
 };
 type Photo = { url: string; credit: string };
 
@@ -121,10 +122,11 @@ async function quota(kind: 'search' | 'photo') {
 }
 
 async function google(place: Place) {
-  if (!GKEY || place.google_checked_at) return null;
+  if (!GKEY || (place.google_checked_at && place.price_checked_at)) return null;
   if (!(await quota('search'))) return null;
-  // Segna subito il tentativo: ogni posto si cerca su Google una volta sola
-  await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify({ google_checked_at: new Date().toISOString() }) });
+  // Segna subito il tentativo: ogni posto si cerca su Google una volta sola (dettagli e prezzo insieme)
+  const now = new Date().toISOString();
+  await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify({ google_checked_at: place.google_checked_at || now, price_checked_at: now }) });
   const body = {
     textQuery: [place.name, place.address || place.area].filter(Boolean).join(', '),
     languageCode: 'it',
@@ -136,7 +138,7 @@ async function google(place: Place) {
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': GKEY,
-      'X-Goog-FieldMask': 'places.displayName,places.location,places.internationalPhoneNumber,places.websiteUri,places.regularOpeningHours,places.photos'
+      'X-Goog-FieldMask': 'places.displayName,places.location,places.internationalPhoneNumber,places.websiteUri,places.regularOpeningHours,places.photos,places.priceLevel,places.priceRange'
     },
     body: JSON.stringify(body)
   });
@@ -147,8 +149,22 @@ async function google(place: Place) {
     website: cleanUrl(hit.websiteUri),
     phone: hit.internationalPhoneNumber || null,
     opening_hours: googleHours(hit.regularOpeningHours),
-    photo: hit.photos?.[0] || null
+    photo: hit.photos?.[0] || null,
+    price: PRICE_LEVEL[hit.priceLevel] ?? null,
+    price_range: priceRange(hit.priceRange)
   };
+}
+
+const PRICE_LEVEL: Record<string, number> = {
+  PRICE_LEVEL_FREE: 0, PRICE_LEVEL_INEXPENSIVE: 1, PRICE_LEVEL_MODERATE: 2, PRICE_LEVEL_EXPENSIVE: 3, PRICE_LEVEL_VERY_EXPENSIVE: 4
+};
+function priceRange(r: any): string | null {
+  const a = r?.startPrice?.units, b = r?.endPrice?.units;
+  const cur = r?.startPrice?.currencyCode || r?.endPrice?.currencyCode;
+  if (!a && !b) return null;
+  const sym = cur === 'EUR' ? '€' : cur === 'USD' ? '$' : cur === 'GBP' ? '£' : (cur || '');
+  if (a && b) return `${a}–${b} ${sym}`.trim();
+  return a ? `da ${a} ${sym}`.trim() : `fino a ${b} ${sym}`.trim();
 }
 
 // La foto di Google la copiamo nel nostro archivio: l'indirizzo di Google contiene la chiave
@@ -322,6 +338,9 @@ async function enrich(place: Place, given?: { osm: any } | null) {
   const needsPhoto = !place.photo_url && place.photo_source !== 'none' && place.photo_source !== 'own';
 
   const g = await google(place).catch(() => null);
+  // Prezzo: solo se non l'avete già messo voi
+  if (g && place.price == null && g.price != null) { patch.price = g.price; used.push('Google'); }
+  if (g && !place.price_range && g.price_range) patch.price_range = g.price_range;
   let website = place.url;
   if (needsDetails) {
     if (g) {
@@ -382,7 +401,7 @@ Deno.serve(async (req) => {
   let body: any = {};
   try { body = await req.json(); } catch { /* corpo vuoto */ }
   if (body?.debug) {
-    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at';
+    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at';
     const rr = await db(`places?select=${sel0}&id=eq.${encodeURIComponent(body.debug)}`);
     const [pl] = await rr.json();
     if (!pl) return new Response(JSON.stringify({ error: 'posto non trovato' }), { headers: { ...cors, 'Content-Type': 'application/json' } });
@@ -399,8 +418,8 @@ Deno.serve(async (req) => {
   }
 
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
-  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at';
-  const filter = 'or=(enriched_at.is.null,and(photo_url.is.null,photo_source.is.null))';
+  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at';
+  const filter = 'or=(enriched_at.is.null,price_checked_at.is.null,and(photo_url.is.null,photo_source.is.null))';
   // Il flusso GitHub manda {osm: {"<id>": {...dati OpenStreetMap...} | null}}: lavora solo quei posti
   const token = Deno.env.get('ENRICH_TOKEN') || '';
   const trusted = !!token && req.headers.get('x-enrich-token') === token;
