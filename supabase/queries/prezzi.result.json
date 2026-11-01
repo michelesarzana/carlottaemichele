@@ -1,0 +1,76 @@
+[
+  {
+    "posti": 57,
+    "prezzo_cercato": 8,
+    "con_prezzo": 10,
+    "esempi": [
+      {
+        "n": "Sala Equis",
+        "p": 2,
+        "r": "10–20 €"
+      },
+      {
+        "n": "La Locandiera Carona",
+        "p": 2,
+        "r": null
+      },
+      {
+        "n": "Nest Sushi Milano",
+        "p": 3,
+        "r": "40–50 €"
+      },
+      {
+        "n": "Casa Gerardo",
+        "p": 2,
+        "r": "10–20 €"
+      },
+      {
+        "n": "Casa Ciriaco",
+        "p": 3,
+        "r": "20–50 €"
+      },
+      {
+        "n": "Casa Revuelta",
+        "p": 2,
+        "r": "10–20 €"
+      },
+      {
+        "n": "Alto Bardero",
+        "p": 2,
+        "r": "20–30 €"
+      },
+      {
+        "n": "Osteria milanese OSS BUS",
+        "p": 2,
+        "r": "20–30 €"
+      }
+    ],
+    "uso": [
+      {
+        "month": "2026-11",
+        "kind": "locate",
+        "count": 1
+      },
+      {
+        "month": "2026-11",
+        "kind": "search",
+        "count": 9
+      },
+      {
+        "month": "2026-10",
+        "kind": "photo",
+        "count": 21
+      },
+      {
+        "month": "2026-10",
+        "kind": "locate",
+        "count": 12
+      },
+      {
+        "month": "2026-10",
+        "kind": "search",
+        "count": 45
+      }
+    ]
+  }
+]
