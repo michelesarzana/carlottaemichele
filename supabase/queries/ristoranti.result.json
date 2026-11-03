@@ -1,0 +1,420 @@
+[
+  {
+    "id": "0df62e23-b6e6-4790-89e8-bbf9e8d1da05",
+    "name": "Azotea del Círculo de Bellas Artes",
+    "area": "Calle de Alcalá",
+    "address": null,
+    "category_id": "bar",
+    "extra_categories": []
+  },
+  {
+    "id": "a368c05d-acf6-44be-ba32-b61dcab4b92a",
+    "name": "Bodegas Rosell",
+    "area": "Madrid",
+    "address": "Calle de las Delicias, Palos de la Frontera, Arganzuela, Madrid, Comunidad de Madrid, 28045, Spagna",
+    "category_id": "bar",
+    "extra_categories": []
+  },
+  {
+    "id": "1b0d8120-6b8a-4704-af93-a1c7d4523519",
+    "name": "La Casa del Abuelo",
+    "area": "Calle de la Victoria",
+    "address": null,
+    "category_id": "bar",
+    "extra_categories": []
+  },
+  {
+    "id": "2bcec2de-576a-43a8-b036-d7ff3f2fc089",
+    "name": "Sala Equis",
+    "area": "Lavapiés",
+    "address": null,
+    "category_id": "bar",
+    "extra_categories": []
+  },
+  {
+    "id": "aaff1290-f8e2-435b-8aef-ae602324b7eb",
+    "name": "Casa Camacho",
+    "area": "Madrid",
+    "address": "Calle de San Andrés, Malasaña, Universidad, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "category_id": "bere",
+    "extra_categories": []
+  },
+  {
+    "id": "706dbc3b-c873-4166-82c5-3f0d80ce6647",
+    "name": "Farmhouse Alle Baite Branzi",
+    "area": "Branzi",
+    "address": "Via Rivioni, Cagnoli, Branzi, Comunità Montana della Valle Brembana, Bergamo, Lombardia, 24010, Italia",
+    "category_id": "dormire",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "6f2fc4d9-401a-4635-9908-b7403c353a63",
+    "name": "La Locandiera Carona",
+    "area": "Carona",
+    "address": "Via Angelo Bianchi, Carona, Comunità Montana della Valle Brembana, Bergamo, Lombardia, 24010, Italia",
+    "category_id": "dormire",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "94ba7f1b-99a3-4bb0-b65f-804525260b4b",
+    "name": "Locanda San Giorgio",
+    "area": "Neviglie",
+    "address": "Neviglie, Cuneo, Piemonte, 12052, Italia",
+    "category_id": "dormire",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "6b65a672-797b-4cfb-9725-efe24659024b",
+    "name": "Casearia Arnoldi Valtaleggio",
+    "area": "Peghera",
+    "address": "La Costa, Peghera, Taleggio, Comunità Montana della Valle Brembana, Bergamo, Lombardia, 24010, Italia",
+    "category_id": "esperienze",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "c20ae763-0fba-4191-b5ba-a533ccf49378",
+    "name": "Coop. Agricola S.Antonio",
+    "area": "Vedeseta",
+    "address": "Reggetto, Vedeseta, Comunità Montana della Valle Brembana, Bergamo, Lombardia, 24010, Italia",
+    "category_id": "esperienze",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "27408a84-3c3b-4d99-8c61-93fbf0a0c613",
+    "name": "Mercado de San Miguel",
+    "area": "Madrid",
+    "address": "Plaza de San Miguel, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "category_id": "posti",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  },
+  {
+    "id": "50846a08-384e-475f-8afd-3edd201238dc",
+    "name": "Albergo Ristorante dell'Angelo",
+    "area": "Vedeseta",
+    "address": "Via Centro, 11, Vedeseta (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "8ad8a320-fff6-4fb0-9e09-297bc491de00",
+    "name": "Alto Bardero",
+    "area": "Madrid",
+    "address": "Calle de Tabernillas, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "2dbdd318-fd3d-4ef8-b38b-641abc4c3f92",
+    "name": "Bottega Sicula",
+    "area": "Milano",
+    "address": "5, Via Mantova, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "7c12f01c-68af-43b1-bddd-aee450c0184f",
+    "name": "Casa Ciriaco",
+    "area": "Madrid",
+    "address": "Calle Mayor, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "5032a1ed-3096-4792-9bd6-792ffd7e92d3",
+    "name": "Casa Gerardo",
+    "area": "Madrid",
+    "address": "Calle de Calatrava, Barrio de la Latina, Palacio, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "3030454d-0b9e-47dd-b201-555b3a58cdb7",
+    "name": "Casa Lucio",
+    "area": "Cava Baja, La Latina",
+    "address": null,
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "e15f3b26-df64-4ad9-83aa-1b29d1344136",
+    "name": "Casa Revuelta",
+    "area": "Madrid",
+    "address": "Plaza de Puerta Cerrada, Barrio de los Austrias, Sol, Centro, Madrid, Comunidad de Madrid, 28005, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "655f859f-988b-43a4-a5b3-109c81ac0b5c",
+    "name": "Duca d'Aosta",
+    "area": "Sottochiesa",
+    "address": "SP25, Sottochiesa (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "76d97a82-3362-47e0-8a5e-9f5684673254",
+    "name": "fismuler madrid",
+    "area": "Madrid",
+    "address": "Calle de Sagasta, Trafalgar, Chamberí, Madrid, Comunidad de Madrid, 28071, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "466cb138-a8b3-4d56-9b91-b9dc2de006ac",
+    "name": "Il Colmetto | Ristorante in Franciacorta",
+    "area": "Castegnato",
+    "address": "Castegnato, Brescia, Lombardia, 25045, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": [
+      "vino"
+    ]
+  },
+  {
+    "id": "98fd64cf-c449-4b92-97fb-12d59a8fd5fd",
+    "name": "La Maruca Velázquez",
+    "area": "Madrid",
+    "address": "Calle de Ayala, Recoletos, Salamanca, Madrid, Comunidad de Madrid, 28001, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "5e02560b-737d-4304-99df-f4bed12af0ea",
+    "name": "La Primera",
+    "area": "Madrid",
+    "address": "Gran Vía, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28013, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "b7e95cc3-fb81-46c1-a26c-55a8767c5750",
+    "name": "La Rue",
+    "area": "Milano",
+    "address": "La Rue, 79, Corso Giuseppe Garibaldi, Brera, Municipio 1, Milano, Rodano, Milano, Lombardia, 20121, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "31469bec-40be-40f3-a954-a03c914cba64",
+    "name": "La Stua",
+    "area": "Erbezzo",
+    "address": "La Stua, 65, Circonvallazione Monte Baldo, Campagna, Erbezzo, Verona, Veneto, 37020, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": [
+      "dormire"
+    ]
+  },
+  {
+    "id": "216e399e-90bb-4aca-a231-3ca202c3cba6",
+    "name": "Malacatín",
+    "area": "La Latina",
+    "address": null,
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "82c5b9f8-a9f7-4d9a-b52d-3bc87e0a42c6",
+    "name": "Mercado de San Antón",
+    "area": "Chueca",
+    "address": null,
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "b43b144c-7e88-4fd4-91df-20dee16f1439",
+    "name": "Nest Sushi Milano",
+    "area": "Milano",
+    "address": "Via Adige, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "9710c8bb-1b4e-4067-ba1f-459023d68a46",
+    "name": "Osteria il Gran Burrone",
+    "area": "Milano",
+    "address": "10, Via Mantova, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "80c1820d-cb20-456a-a429-55e5a79f0cf3",
+    "name": "Osteria milanese OSS BUS",
+    "area": "Milano",
+    "address": "Via Magolfa, Navigli, Municipio 6, Milano, Rodano, Milano, Lombardia, 20136, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "0193d220-161d-475b-904c-b0b15927a4f2",
+    "name": "Posada de la Villa",
+    "area": "Cava Baja, La Latina",
+    "address": null,
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "561b3d1e-7026-40e5-b4d1-6ef88066b0e3",
+    "name": "Puerta 57",
+    "area": "Madrid",
+    "address": "Puerta 57, Calle del Padre Damián, Hispanoamérica, Chamartín, Madrid, Comunidad de Madrid, 28036, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "e28f70ad-ca79-43f0-a59c-6c493db7c7c4",
+    "name": "Raza Madrid Barquillo",
+    "area": "Madrid",
+    "address": "Calle del Barquillo, Chueca, Justicia, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "6351bdfc-7ba1-41ac-b3c2-7b1c75956ddf",
+    "name": "Restaurante De María - Felíx Boix",
+    "area": "Madrid",
+    "address": "Calle de Félix Boix, Costa Fleming, Nueva España, Chamartín, Madrid, Comunidad de Madrid, 28046, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "8bfa006f-312c-4910-9dcc-d340398ca178",
+    "name": "Restaurante La Tahona | Asador de carne Madrid",
+    "area": "Madrid",
+    "address": "La Tahona, 21, Calle del Poeta Joan Maragall, Castillejos, Tetuán, Madrid, Comunidad de Madrid, 28020, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "7f313596-3ff6-49fa-9d6f-22c7e8eb7e33",
+    "name": "Revoltosa Prado",
+    "area": "Madrid",
+    "address": "4, Calle del Prado, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "66384d09-e67a-4960-a835-56f6fa60a9ef",
+    "name": "Ristorante Il Ruscello 十二馔",
+    "area": "Milano",
+    "address": "Leon d'Oro, 3, Via Adda, Centrale, Municipio 2, Milano, Rodano, Milano, Lombardia, 20124, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "1b51088e-ec64-411c-bbe5-860afeff3e2c",
+    "name": "Ristorante La Pobbia 1850",
+    "area": "Milano",
+    "address": "La Pobbia, 92, Via Gallarate, Cassina Pobbia, Villapizzone, Municipio 8 di Milano, Milano, Lombardia, 20156, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "badf7e6a-9c94-46c9-a890-3384d873359d",
+    "name": "Ristorante San Marco",
+    "area": "Taleggio",
+    "address": "Via Santa Rosa, 1, Taleggio (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "5a7a5164-b02a-4b14-98a5-b27a6b43a4c7",
+    "name": "Taberna La Mina",
+    "area": "Madrid",
+    "address": "Calle General Álvarez de Castro, Trafalgar, Chamberí, Madrid, Comunidad de Madrid, 28010, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "15675727-c47c-4dfa-a01b-1e070900fe98",
+    "name": "Trattoria dei Cacciatori",
+    "area": "San Bovio",
+    "address": "2, Via Trieste, Longhignana, San Bovio, Peschiera Borromeo, Rodano, Milano, Lombardia, 20068, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "95931a8e-a393-437d-933e-97508d962fba",
+    "name": "Trattoria dell'Arlecchino",
+    "area": "Roncaglia, San Giovanni Bianco",
+    "address": "Via Roncaglia Entro, 72, San Giovanni Bianco (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "a1111fa8-e000-46dc-88de-178af7a096b6",
+    "name": "Trattoria Nonno Fifì",
+    "area": "Reggetto, Vedeseta",
+    "address": "Frazione Reggetto, Vedeseta (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "ae688362-2eee-47d8-a3f5-721714c88ef0",
+    "name": "Trattoria Tina",
+    "area": "Milano",
+    "address": "Via Altaguardia, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "1ef4a67c-a084-46ed-8020-2226b893d133",
+    "name": "Un Sacco Bello",
+    "area": "Milano",
+    "address": "50, Via Lodovico Muratori, Porta Romana, Municipio 4, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "a8a19124-4c64-460f-b7aa-89b99d99fb37",
+    "name": "Bodega Bernabeleva",
+    "area": "San Martín de Valdeiglesias, 70 km",
+    "address": null,
+    "category_id": "vino",
+    "extra_categories": []
+  },
+  {
+    "id": "41c5d2ca-71e6-4b48-9e36-2d61293a7862",
+    "name": "Bodega de la Ardosa",
+    "area": "Malasaña",
+    "address": null,
+    "category_id": "vino",
+    "extra_categories": []
+  },
+  {
+    "id": "cf47f609-0d8f-4175-ae65-9cda9fbcc672",
+    "name": "Bodegas Jesús Díaz e Hijos",
+    "area": "Colmenar de Oreja, 50 km",
+    "address": null,
+    "category_id": "vino",
+    "extra_categories": []
+  },
+  {
+    "id": "54a1c198-0da8-44b7-bb6b-aa826da33e7f",
+    "name": "Primo Naso Vineria",
+    "area": "Milano",
+    "address": "1, Via San Faustino, Lambrate, Municipio 3, Milano, Rodano, Milano, Lombardia, 20134, Italia",
+    "category_id": "vino",
+    "extra_categories": []
+  },
+  {
+    "id": "f0aff198-55db-4867-8cee-5d417c953f82",
+    "name": "Taberna Tempranillo",
+    "area": "Cava Baja, La Latina",
+    "address": null,
+    "category_id": "vino",
+    "extra_categories": [
+      "ristoranti"
+    ]
+  }
+]

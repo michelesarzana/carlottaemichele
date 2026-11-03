@@ -1,60 +1,85 @@
 [
   {
-    "posti": 57,
-    "prezzo_cercato": 8,
-    "con_prezzo": 10,
+    "posti": 79,
+    "prezzo_cercato": 79,
+    "con_prezzo": 42,
     "esempi": [
       {
-        "n": "Sala Equis",
+        "n": "Il Colmetto | Ristorante in Franciacorta",
+        "p": null,
+        "r": "50–100 €"
+      },
+      {
+        "n": "Trattoria Nonno Fifì",
+        "p": 2,
+        "r": "20–30 €"
+      },
+      {
+        "n": "Ristorante San Marco",
         "p": 2,
         "r": "10–20 €"
       },
       {
-        "n": "La Locandiera Carona",
-        "p": 2,
+        "n": "Albergo Ristorante dell'Angelo",
+        "p": null,
         "r": null
       },
       {
-        "n": "Nest Sushi Milano",
-        "p": 3,
-        "r": "40–50 €"
-      },
-      {
-        "n": "Casa Gerardo",
-        "p": 2,
-        "r": "10–20 €"
-      },
-      {
-        "n": "Casa Ciriaco",
-        "p": 3,
-        "r": "20–50 €"
-      },
-      {
-        "n": "Casa Revuelta",
-        "p": 2,
-        "r": "10–20 €"
-      },
-      {
-        "n": "Alto Bardero",
+        "n": "Trattoria dell'Arlecchino",
         "p": 2,
         "r": "20–30 €"
       },
       {
-        "n": "Osteria milanese OSS BUS",
+        "n": "Duca d'Aosta",
         "p": 2,
         "r": "20–30 €"
+      },
+      {
+        "n": "Cornello dei Tasso",
+        "p": null,
+        "r": null
+      },
+      {
+        "n": "Pizzino",
+        "p": 2,
+        "r": "10–20 €"
+      },
+      {
+        "n": "Casearia Arnoldi Valtaleggio",
+        "p": null,
+        "r": null
+      },
+      {
+        "n": "Coop. Agricola S.Antonio",
+        "p": null,
+        "r": null
+      },
+      {
+        "n": "Orrido della Val Taleggio",
+        "p": null,
+        "r": null
+      },
+      {
+        "n": "Baita&breakfast",
+        "p": null,
+        "r": null
       }
     ],
     "uso": [
       {
         "month": "2026-11",
-        "kind": "locate",
-        "count": 1
+        "kind": "photo",
+        "count": 13
       },
       {
         "month": "2026-11",
         "kind": "search",
-        "count": 9
+        "count": 80
+      },
+      {
+        "month": "2026-11",
+        "kind": "locate",
+        "count": 18
       },
       {
         "month": "2026-10",

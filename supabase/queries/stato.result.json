@@ -19,13 +19,18 @@
         },
         {
           "month": "2026-11",
-          "kind": "locate",
-          "count": 1
+          "kind": "photo",
+          "count": 13
         },
         {
           "month": "2026-11",
           "kind": "search",
-          "count": 9
+          "count": 80
+        },
+        {
+          "month": "2026-11",
+          "kind": "locate",
+          "count": 18
         }
       ],
       "places": [
@@ -55,7 +60,7 @@
           "credit": "Foto: ilborgoincantato.com",
           "photo_source": "auto",
           "enriched_at": "2026-10-20T15:26:06.319+00:00",
-          "google": null
+          "google": "2026-11-01T11:55:30.937+00:00"
         },
         {
           "name": "Borgo Vescine",
@@ -69,7 +74,7 @@
           "credit": "Foto: vescine.it",
           "photo_source": "auto",
           "enriched_at": "2026-10-20T15:28:04.569+00:00",
-          "google": null
+          "google": "2026-11-01T11:55:30.183+00:00"
         },
         {
           "name": "Trattoria Tina",
@@ -83,7 +88,7 @@
           "credit": "Foto: Scatti di Gusto (scattidigusto.it)",
           "photo_source": "auto",
           "enriched_at": "2026-10-20T15:27:17.084+00:00",
-          "google": null
+          "google": "2026-11-01T11:55:29.307+00:00"
         },
         {
           "name": "Ristorante Il Ruscello 十二馔",
@@ -111,7 +116,7 @@
           "credit": "Foto: Visit Rovaniemi",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:36:06.847503+00:00",
-          "google": null
+          "google": "2026-11-01T11:55:27.507+00:00"
         },
         {
           "name": "Revivre Village",
@@ -153,7 +158,7 @@
           "credit": "Foto: agriturismoallebaite.com",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:43.521+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:53.436+00:00"
         },
         {
           "name": "La Rue",
@@ -167,7 +172,7 @@
           "credit": "Foto: larueofficiel.com",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:41.522+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:52.649+00:00"
         },
         {
           "name": "Un Sacco Bello",
@@ -181,7 +186,7 @@
           "credit": "Foto: unsaccobellomilano.it",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:40.047+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:49.521+00:00"
         },
         {
           "name": "Ristorante La Pobbia 1850",
@@ -195,7 +200,7 @@
           "credit": "Foto: lapobbia.com",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:36:06.847503+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:47.258+00:00"
         },
         {
           "name": "Primo Naso Vineria",
@@ -223,7 +228,7 @@
           "credit": "Foto: bottegasiculamilano.it",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:27.691+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:44.935+00:00"
         },
         {
           "name": "Osteria il Gran Burrone",
@@ -237,7 +242,7 @@
           "credit": "Foto: osteriailgranburrone.it",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:29.259+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:30.779+00:00"
         },
         {
           "name": "Trattoria dei Cacciatori",
@@ -265,7 +270,7 @@
           "credit": "Foto: Wikimedia Commons, voce \"Museo del Prado\"",
           "photo_source": "auto",
           "enriched_at": "2026-10-25T10:27:25.818+00:00",
-          "google": null
+          "google": "2026-11-01T11:54:28.787+00:00"
         },
         {
           "name": "El Retiro Park",
@@ -826,6 +831,314 @@
           "photo_source": "auto",
           "enriched_at": "2026-11-01T11:40:40.405+00:00",
           "google": "2026-11-01T11:40:33.746+00:00"
+        },
+        {
+          "name": "Restaurante De María - Felíx Boix",
+          "url": "https://www.demariarestaurantes.es/",
+          "phone": "+34 913 59 65 07",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 13:00-16:30,20:30-01:00; Tu 13:00-16:30,20:30-01:00; We 13:00-16:30,20:30-01:00; Th 13:00-16:30,20:30-01:00; Fr 13:00-16:30,20:30-01:00; Sa 13:00-16:30,20:30-01:00; Su 13:00-16:30,20:30-01:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-6351bdfc-7ba1-41ac-b3c2-7b1c75956ddf.jpg?v=mvxrswle",
+          "credit": "Foto: Restaurante De María - Felíx Boix su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:52:24.578+00:00",
+          "google": "2026-11-01T11:52:17.991+00:00"
+        },
+        {
+          "name": "Raza Madrid Barquillo",
+          "url": "http://www.razamadrid.com/",
+          "phone": "+34 917 01 23 66",
+          "email": null,
+          "insta": "https://www.instagram.com/RAZAMADRID/",
+          "menu": "https://razamadrid.com/cartas/",
+          "hours": "Mo 13:00-23:30; Tu 13:00-23:30; We 13:00-23:30; Th 13:00-23:30; Fr 13:00-23:30; Sa 13:00-23:30; Su 13:00-23:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-e28f70ad-ca79-43f0-a59c-6c493db7c7c4.jpg?v=mvxrtboh",
+          "credit": "Foto: Raza Madrid Barquillo su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:52:44.129+00:00",
+          "google": "2026-11-01T11:52:39.217+00:00"
+        },
+        {
+          "name": "La Maruca Velázquez",
+          "url": "https://grupocanadio.com/restaurantes/madrid/la-maruca/velazquez/?utm_source=google&utm_medium=organic&utm_campaign=perfil_google&utm_content=la_maruca_velazquez_gbp_web",
+          "phone": "+34 917 81 49 69",
+          "email": null,
+          "insta": "https://www.instagram.com/grupocanadio/",
+          "menu": "https://grupocanadio.com/carta-la-maruca-velazquez/",
+          "hours": "Mo 08:00-01:00; Tu 08:00-01:00; We 08:00-01:00; Th 08:00-01:00; Fr 08:00-01:00; Sa 09:30-01:00; Su 09:30-01:00",
+          "photo": "https://grupocanadio.com/wp-content/uploads/2026/08/2013-la-maruca-velazquez.jpg",
+          "credit": "Foto: grupocanadio.com",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:53:37.852+00:00",
+          "google": "2026-11-01T11:53:34.105+00:00"
+        },
+        {
+          "name": "Taberna La Mina",
+          "url": "http://www.instagram.com/lamina_bar",
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-5a7a5164-b02a-4b14-98a5-b27a6b43a4c7.jpg?v=mvxrux67",
+          "credit": "Foto: Jose Barreal su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:53:58.639+00:00",
+          "google": "2026-11-01T11:53:55.324+00:00"
+        },
+        {
+          "name": "fismuler madrid",
+          "url": "https://fismuler.com/home/madrid/",
+          "phone": "+34 918 27 75 81",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 13:30-16:00,20:00-23:00; Tu 13:30-16:00,20:00-23:00; We 13:30-16:00,20:00-23:00; Th 13:30-16:00,20:00-23:00; Fr 13:30-16:00,20:00-23:30; Sa 13:00-16:00,20:00-23:30; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-76d97a82-3362-47e0-8a5e-9f5684673254.jpg?v=mvxrviud",
+          "credit": "Foto: Pinocchio su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:54:26.725+00:00",
+          "google": "2026-11-01T11:54:22.714+00:00"
+        },
+        {
+          "name": "La Primera",
+          "url": "https://grupocanadio.com/restaurantes/madrid/la-primera/?utm_source=google&utm_medium=organic&utm_campaign=perfil_google&utm_content=la_primera_gbp_webhttp://restaurantelaprimera.com/",
+          "phone": "+34 910 52 06 20",
+          "email": null,
+          "insta": "https://www.instagram.com/grupocanadio/",
+          "menu": "https://grupocanadio.com/carta-la-primera/",
+          "hours": "Mo 08:00-01:00; Tu 08:00-01:00; We 08:00-01:00; Th 08:00-01:00; Fr 08:00-01:00; Sa 09:30-01:00; Su 09:30-01:00",
+          "photo": "https://grupocanadio.com/wp-content/uploads/2026/03/LP_Mayo_2023-7.jpg",
+          "credit": "Foto: grupocanadio.com",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:54:44.865+00:00",
+          "google": "2026-11-01T11:54:40.933+00:00"
+        },
+        {
+          "name": "Casa Camacho",
+          "url": null,
+          "phone": "+34 915 31 35 98",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 12:30-02:00; Tu off; We 12:30-02:00; Th 12:30-02:00; Fr 12:30-02:00; Sa 12:30-02:00; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-aaff1290-f8e2-435b-8aef-ae602324b7eb.jpg?v=mvxrwt6o",
+          "credit": "Foto: Ivonne Cruz su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:55:26.784+00:00",
+          "google": "2026-11-01T11:55:22.958+00:00"
+        },
+        {
+          "name": "Bodegas Rosell",
+          "url": "http://bodegasrosell.es/",
+          "phone": "+34 914 67 84 58",
+          "email": null,
+          "insta": "https://www.instagram.com/bodegasrosell/",
+          "menu": "http://bodegasrosell.es/Carta-de-comida/",
+          "hours": "Mo off; Tu 12:00-16:00,19:00-00:00; We 12:00-16:00,19:00-00:00; Th 12:00-16:00,19:00-00:00; Fr 12:00-16:00,19:00-00:00; Sa 12:00-16:00,19:00-00:00; Su 12:00-16:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-a368c05d-acf6-44be-ba32-b61dcab4b92a.jpg?v=mvxrxyed",
+          "credit": "Foto: Bodegas Rosell su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T11:56:20.197+00:00",
+          "google": "2026-11-01T11:56:16.89+00:00"
+        },
+        {
+          "name": "Meira Cugulet",
+          "url": "https://air.tl/NNP7Rebs",
+          "phone": "+39 349 099 2841",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-3ff8eb7b-390d-4cc4-a39e-c78c07b09dd0.jpg?v=mvy77fx6",
+          "credit": "Foto: Meira Cugulet su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T19:03:37.05+00:00",
+          "google": "2026-11-01T19:03:33.44+00:00"
+        },
+        {
+          "name": "Meyra Patoch",
+          "url": "https://www.airbnb.it/rooms/945305824938114751?unique_share_id=6eba010c-32e1-4e9c-a9cb-eba4338f255a&viralityEntryPoint=1&s=76&check_in=2026-12-05&check_out=2026-12-07&guests=2&adults=2&pets=1",
+          "phone": "401626263",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": "https://a0.muscache.com/im/pictures/airflow/Hosting-945305824938114751/original/3a967b1a-ec52-4cc3-a9c5-84fb313e4774.jpg?im_w=720&width=720&quality=70&auto=webp",
+          "credit": "Foto: airbnb.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T19:05:32.23+00:00",
+          "google": "2026-11-01T19:05:28.202+00:00"
+        },
+        {
+          "name": "Baita&breakfast",
+          "url": "http://www.ecomuseovaltaleggio.it/proposta/baita-breakfast",
+          "phone": "+39 348 406 1813",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-f84979b6-32d2-44e0-9912-b45704fec2ce.jpg?v=mvy7u1kb",
+          "credit": "Foto: G M (Grace) su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-01T19:21:11.531+00:00",
+          "google": "2026-11-01T19:21:04.38+00:00"
+        },
+        {
+          "name": "Orrido della Val Taleggio",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "24/7",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-3bc4b93a-fd20-41b3-83cb-fb731775baa5.jpg?v=mvzsrljy",
+          "credit": "Foto: sonia plizzari su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T21:54:55.582+00:00",
+          "google": "2026-11-02T21:54:50.861+00:00"
+        },
+        {
+          "name": "Coop. Agricola S.Antonio",
+          "url": "http://www.santantoniovaltaleggio.it/",
+          "phone": "+39 0345 47467",
+          "email": "info@santantoniovaltaleggio.it",
+          "insta": "https://www.instagram.com/coop.santantonio/",
+          "menu": null,
+          "hours": "Mo 09:00-12:00,14:30-17:30; Tu 09:00-12:00,14:30-17:30; We 09:00-12:00,14:30-17:30; Th 09:00-12:00,14:30-17:30; Fr 09:00-12:00,14:30-17:30; Sa 09:00-12:30,14:30-18:00; Su 09:00-12:30,14:30-18:00",
+          "photo": "https://www.santantoniovaltaleggio.it/wp-content/uploads/2025/10/panorama-1.webp",
+          "credit": "Foto: santantoniovaltaleggio.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T21:56:11.769+00:00",
+          "google": "2026-11-02T21:56:04.844+00:00"
+        },
+        {
+          "name": "Casearia Arnoldi Valtaleggio",
+          "url": "http://www.arnoldivaltaleggio.it/",
+          "phone": "+39 0345 47068",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": "https://www.arnoldivaltaleggio.it/wp-content/uploads/2023/11/img-20181005-wa0003.jpg",
+          "credit": "Foto: arnoldivaltaleggio.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T21:56:54.965+00:00",
+          "google": "2026-11-02T21:56:47.869+00:00"
+        },
+        {
+          "name": "Pizzino",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo off; Tu off; We off; Th 08:00-19:00; Fr 08:00-19:00; Sa 08:00-19:00; Su 08:00-19:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-add4c4d3-06f0-4af4-98e6-ec13fa2d67cf.jpg?v=mvzsvgmu",
+          "credit": "Foto: Chiara Gabelloni su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T21:57:55.83+00:00",
+          "google": "2026-11-02T21:57:52.236+00:00"
+        },
+        {
+          "name": "Cornello dei Tasso",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "24/7",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-8f5fe624-682e-4870-adfc-36659547b06b.jpg?v=mvzsw1cd",
+          "credit": "Foto: Calogero Monastra su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T21:58:22.669+00:00",
+          "google": "2026-11-02T21:58:19.279+00:00"
+        },
+        {
+          "name": "Albergo Ristorante dell'Angelo",
+          "url": null,
+          "phone": "+39 0345 47073",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 07:00-00:00; Tu 07:00-00:00; We 07:00-00:00; Th 07:00-00:00; Fr 07:00-00:00; Sa 07:00-00:00; Su 07:00-00:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-50846a08-384e-475f-8afd-3edd201238dc.jpg?v=mvzt4opu",
+          "credit": "Foto: Albergo Ristorante Pizzeria Bar dell'Angelo su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:06.21+00:00",
+          "google": "2026-11-02T22:04:59.918+00:00"
+        },
+        {
+          "name": "Ristorante San Marco",
+          "url": null,
+          "phone": "+39 0345 47340",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 08:00-15:30; Tu 08:00-00:30; We 08:00-00:30; Th 08:00-00:30; Fr 08:00-00:30; Sa 08:00-00:30; Su 08:00-00:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-badf7e6a-9c94-46c9-a890-3384d873359d.jpg?v=mvzt4u68",
+          "credit": "Foto: Martina Pazzano su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:13.28+00:00",
+          "google": "2026-11-02T22:05:06.314+00:00"
+        },
+        {
+          "name": "Duca d'Aosta",
+          "url": "https://www.caffeducadaosta.it/",
+          "phone": "+39 348 614 4748",
+          "email": null,
+          "insta": "http://www.instagram.com/caffe_duca_daosta/",
+          "menu": "https://www.caffeducadaosta.it/menu/",
+          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
+          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-15-at-16.28.12-7.jpeg",
+          "credit": "Foto: caffeducadaosta.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:04:53.864+00:00",
+          "google": "2026-11-02T22:04:51.026+00:00"
+        },
+        {
+          "name": "Trattoria dell'Arlecchino",
+          "url": "https://www.trattoriadellarlecchino.it/",
+          "phone": "+39 0345 41198",
+          "email": "belottimirko@gmail.com",
+          "insta": "https://instagram.com/trattoriadellarlecchino/",
+          "menu": "https://www.trattoriadellarlecchino.it/Cucina-Bergamasca-San-Giovanni-Bianco-Bergamo-Valbrembana",
+          "hours": "Mo off; Tu 06:30-23:00; We 06:30-23:00; Th 06:30-23:00; Fr 06:30-23:00; Sa 15:00-23:00; Su 07:30-23:00",
+          "photo": "https://irp.cdn-website.com/a87fd62a/dms3rep/multi/opt/IMG_2031-09aea850-6d1b8a5a-00c3eebb-733h.JPG",
+          "credit": "Foto: trattoriadellarlecchino.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:04:59.819+00:00",
+          "google": "2026-11-02T22:04:53.95+00:00"
+        },
+        {
+          "name": "Trattoria Nonno Fifì",
+          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
+          "phone": "+39 345 113 4490",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-Strachitunt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:20.094+00:00",
+          "google": "2026-11-02T22:05:13.396+00:00"
+        },
+        {
+          "name": "Il Colmetto | Ristorante in Franciacorta",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": null,
+          "photo": null,
+          "credit": null,
+          "photo_source": "none",
+          "enriched_at": "2026-11-02T22:10:17.349+00:00",
+          "google": "2026-11-02T22:10:10.859+00:00"
         }
       ]
     }
