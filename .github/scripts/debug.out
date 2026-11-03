@@ -1,12 +1,1 @@
-### preflight dal sito
-HTTP/2 200 
-access-control-allow-origin: *
-access-control-allow-headers: authorization,x-client-info,apikey,content-type,x-supabase-api-version
-access-control-allow-methods: POST, OPTIONS
-### POST come il browser (senza login)
-{"lat":46.0202059,"lng":9.78214,"name":"La Locandiera Carona","address":"Piazza Vittorio Veneto, 3, 24010 Carona BG, Italia","hops":["302 maps.app.goo.gl","pagina: niente coordinate","google: posizione trovata"]}
-HTTP 200
-### sito pubblicato: versione
-app.css?v=20261025122737
-app.js?v=20261025122737
-1
+nessuna prova in corso
