@@ -57,8 +57,13 @@ jobs:
 
       - name: Pubblica le funzioni
         run: |
+          supabase --version
           for dir in supabase/functions/*/; do
             fn=$(basename "$dir")
             echo "Pubblico: $fn"
-            supabase functions deploy "$fn" --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+            # La CLI 3 vuole --yes nei flussi automatici; la 2 non lo conosce
+            supabase functions deploy "$fn" --project-ref "$PROJECT_REF" --no-verify-jwt --use-api --yes \
+              || supabase functions deploy "$fn" --project-ref "$PROJECT_REF" --no-verify-jwt --use-api \
+              || fail=1
           done
+          exit ${fail:-0}
