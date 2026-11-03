@@ -9,9 +9,9 @@
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icon.svg">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
-<link rel="stylesheet" href="css/app.css?v=20261103095531">
+<link rel="stylesheet" href="css/app.css?v=20261103105417">
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-<script type="module" src="js/app.js?v=20261103095531"></script>
+<script type="module" src="js/app.js?v=20261103105417"></script>
 </head>
 <body>
 <div id="app">
@@ -22,11 +22,14 @@
       <label class="search glass">
         <span class="sr-only">Cerca</span>
         <span class="search-ic" id="search-ic"></span>
-        <input id="search" type="search" placeholder="Cerca tra i nostri posti" autocomplete="off">
+        <span class="search-tokens" id="search-tokens"></span>
+        <input id="search" type="search" placeholder="Cerca tra i nostri posti" autocomplete="off" enterkeyhint="search">
+        <button class="filter-btn" id="filter-btn" type="button" aria-label="Filtri"></button>
       </label>
       <button class="profile glass" id="profile" aria-label="Accedi"></button>
     </div>
-    <div class="chips" id="chips" role="toolbar" aria-label="Filtri"></div>
+    <div class="suggest" id="suggest" hidden></div>
+    <div class="chips" id="chips" role="toolbar" aria-label="Filtri rapidi"></div>
   </header>
 
   <div class="map-tools glass" id="map-tools">

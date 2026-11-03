@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103095531';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261103095531';
-import { Sheet } from './sheet.js?v=20261103095531';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103095531';
-import { prettyHours } from './enrich.js?v=20261103095531';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103105417';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261103105417';
+import { Sheet } from './sheet.js?v=20261103105417';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103105417';
+import { prettyHours } from './enrich.js?v=20261103105417';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -32,7 +32,10 @@ const S = {
   editor: false,
   me: null,
   email: null,
-  filter: { status: 'all', cats: new Set(), q: '' },
+  filter: emptyFilter(),
+  sort: 'rel',
+  here: null,
+  pinEls: new Map(),
   view: { name: 'list' },
   lastViewKey: '',
   firstFit: false,
@@ -162,14 +165,100 @@ async function load() {
   S.placeById = new Map(S.places.map((x) => [x.id, x]));
 }
 
-function filtered() {
-  const q = norm(S.filter.q);
+// ─────────────────────────────────────────────
+// Filtri
+// ─────────────────────────────────────────────
+function emptyFilter() {
+  return { status: 'all', cats: new Set(), q: '', cuisines: new Set(), prices: new Set(), mich: new Set(), top: false, trip: '', near: false };
+}
+function cloneFilter(F) {
+  return { ...F, cats: new Set(F.cats), cuisines: new Set(F.cuisines), prices: new Set(F.prices), mich: new Set(F.mich) };
+}
+const NEAR_M = 3000;
+function filtered(F = S.filter) {
+  const q = norm(F.q);
   return S.places.filter((p) =>
-    (S.filter.status === 'all' || (S.filter.status === 'done') === p.done) &&
-    (!S.filter.cats.size || placeCats(p).some((c) => S.filter.cats.has(c))) &&
-    (!q || norm(`${p.name} ${p.area || ''} ${p.notes || ''} ${(p.cuisines || []).join(' ')} ${placeCats(p).map((c) => cat(c).name).join(' ')}`).includes(q))
+    (F.status === 'all' || (F.status === 'done') === p.done) &&
+    (!F.cats.size || placeCats(p).some((c) => F.cats.has(c))) &&
+    (!F.cuisines.size || (p.cuisines || []).some((c) => F.cuisines.has(c))) &&
+    (!F.prices.size || F.prices.has(p.price == null ? 'x' : String(p.price))) &&
+    (!F.mich.size || (F.mich.has('stars') && p.michelin_stars > 0) || (F.mich.has('green') && p.michelin_green) || (F.mich.has('bib') && p.michelin_bib)) &&
+    (!F.top || (p.score != null && p.score >= 3.5)) &&
+    (!F.trip || p.trip_id === F.trip) &&
+    (!F.near || !S.here || metersBetween(S.here, p) <= NEAR_M) &&
+    (!q || norm(`${p.name} ${p.area || ''} ${p.address || ''} ${p.notes || ''} ${(p.cuisines || []).join(' ')} ${placeCats(p).map((c) => cat(c).name).join(' ')}`).includes(q))
   );
 }
+function activeCount(F = S.filter) {
+  return F.cats.size + F.cuisines.size + F.prices.size + F.mich.size + (F.top ? 1 : 0) + (F.trip ? 1 : 0) + (F.near ? 1 : 0);
+}
+const PRICE_LABEL = { 0: 'Gratis', 1: '€', 2: '€€', 3: '€€€', 4: '€€€€', x: 'Senza prezzo' };
+const MICH_LABEL = { stars: 'Stellati Michelin', green: 'Stella verde', bib: 'Bib Gourmand' };
+function filterTokens(F = S.filter) {
+  const out = [];
+  for (const id of F.cats) out.push({ key: `cat:${id}`, label: cat(id).name });
+  for (const c of F.cuisines) out.push({ key: `cu:${c}`, label: c });
+  for (const k of F.prices) out.push({ key: `p:${k}`, label: PRICE_LABEL[k] || k });
+  for (const k of F.mich) out.push({ key: `m:${k}`, label: MICH_LABEL[k] || k });
+  if (F.top) out.push({ key: 'top', label: 'Da tornarci' });
+  if (F.trip) out.push({ key: 'trip', label: S.tripById.get(F.trip)?.name || 'Viaggio' });
+  if (F.near) out.push({ key: 'near', label: 'Vicino a me' });
+  return out;
+}
+function toggleToken(F, key, on) {
+  const [k, ...rest] = key.split(':');
+  const v = rest.join(':');
+  const set = k === 'cat' ? F.cats : k === 'cu' ? F.cuisines : k === 'p' ? F.prices : k === 'm' ? F.mich : null;
+  if (set) { const want = on ?? !set.has(v); want ? set.add(v) : set.delete(v); return; }
+  if (k === 'top') F.top = on ?? !F.top;
+  else if (k === 'near') F.near = on ?? !F.near;
+  else if (k === 'trip') F.trip = on === false ? '' : (v || '');
+}
+function filterHash(F = S.filter) {
+  const u = new URLSearchParams();
+  if (F.q.trim()) u.set('q', F.q.trim());
+  if (F.status !== 'all') u.set('stato', F.status === 'done' ? 'fatti' : 'dafare');
+  if (F.cats.size) u.set('cat', [...F.cats].join(','));
+  if (F.cuisines.size) u.set('cucina', [...F.cuisines].join(','));
+  if (F.prices.size) u.set('prezzo', [...F.prices].join(','));
+  if (F.mich.size) u.set('michelin', [...F.mich].join(','));
+  if (F.top) u.set('voto', 'tornarci');
+  if (F.trip) u.set('viaggio', F.trip);
+  if (F.near) u.set('vicino', '1');
+  const qs = u.toString();
+  return `#/cerca${qs ? '?' + qs : ''}`;
+}
+function filterFromQuery(qs) {
+  const u = new URLSearchParams(qs || '');
+  const F = emptyFilter();
+  const list = (k) => (u.get(k) || '').split(',').map((x) => x.trim()).filter(Boolean);
+  F.q = u.get('q') || '';
+  F.status = u.get('stato') === 'fatti' ? 'done' : u.get('stato') === 'dafare' ? 'todo' : 'all';
+  F.cats = new Set(list('cat'));
+  F.cuisines = new Set(list('cucina'));
+  F.prices = new Set(list('prezzo'));
+  F.mich = new Set(list('michelin').filter((k) => MICH_LABEL[k]));
+  F.top = u.get('voto') === 'tornarci';
+  F.trip = u.get('viaggio') || '';
+  F.near = u.get('vicino') === '1';
+  return F;
+}
+function allCuisines() {
+  const n = new Map();
+  for (const p of S.places) for (const c of p.cuisines || []) n.set(c, (n.get(c) || 0) + 1);
+  return [...n.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([c]) => c);
+}
+function locateMe() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { toast('Posizione non disponibile su questo dispositivo'); return resolve(null); }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { S.here = { lat: pos.coords.latitude, lng: pos.coords.longitude }; resolve(S.here); },
+      () => { toast('Non riesco a leggere la posizione'); resolve(null); },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
+}
+function fmtDist(m) { return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toLocaleString('it-IT', { maximumFractionDigits: 1 })} km`; }
 
 // ─────────────────────────────────────────────
 // Mappa
@@ -268,6 +357,7 @@ function renderMarkers() {
     });
     return;
   }
+  S.pinEls = new Map();
   const selected = S.view.name === 'place' ? S.view.id : null;
   const inTrip = S.view.name === 'trip' ? S.view.id : null;
   const tf = S.tripFilter;
@@ -288,6 +378,7 @@ function renderMarkers() {
     const m = new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(map);
     if (p.id === selected) el.style.zIndex = '3';
     markers.push(m);
+    S.pinEls.set(p.id, btn);
   }
 }
 
@@ -407,13 +498,41 @@ function renderChips() {
     ${S.guides.length ? `<button class="chip" data-guides="1" aria-pressed="${S.view.name === 'guides' || S.view.name === 'guide'}">${icon('sparkle', 14, 2)}Guide ${S.guides.length}</button>` : ''}
     <button class="chip" data-status="all" aria-pressed="${st === 'all' && !tripsOn && !guidesOn}">Tutto</button>
     <button class="chip" data-status="todo" aria-pressed="${st === 'todo'}">Da fare ${todo}</button>
-    <button class="chip" data-status="done" aria-pressed="${st === 'done'}">Fatti ${done}</button>
-    <span class="chip-sep" aria-hidden="true"></span>`;
-  for (const c of S.categories) {
-    const on = S.filter.cats.has(c.id);
-    h += `<button class="chip" data-cat="${esc(c.id)}" aria-pressed="${on}"><span class="dot" style="background:${safeColor(c.color)}"></span>${esc(c.name)}</button>`;
-  }
+    <button class="chip" data-status="done" aria-pressed="${st === 'done'}">Fatti ${done}</button>`;
   $('chips').innerHTML = h;
+  renderSearchBar();
+}
+
+// Barra di ricerca: filtri attivi come etichette e bottone del pannello
+function renderSearchBar() {
+  const toks = filterTokens();
+  $('search-tokens').innerHTML = toks.map((t) => `<span class="token">${esc(t.label)}<button type="button" data-untoken="${esc(t.key)}" aria-label="Togli ${esc(t.label)}">${icon('x', 10, 3)}</button></span>`).join('');
+  $('search-tokens').hidden = !toks.length;
+  const n = activeCount();
+  const b = $('filter-btn');
+  b.innerHTML = icon('sliders', 16, 2.4) + (n ? `<span>${n}</span>` : '');
+  b.classList.toggle('on', n > 0);
+  b.setAttribute('aria-label', n ? `Filtri, ${n} attivi` : 'Filtri');
+  $('search').placeholder = toks.length ? 'Cerca…' : 'Cerca tra i nostri posti';
+  if ($('search').value !== S.filter.q && document.activeElement !== $('search')) $('search').value = S.filter.q;
+}
+
+// Dopo ogni cambio di filtri: aggiorna tutto, e sulla pagina dei risultati anche l'indirizzo
+function filtersChanged({ toResults = false } = {}) {
+  renderChips();
+  renderMarkers();
+  if (toResults || S.view.name === 'search') {
+    const h = filterHash();
+    if (location.hash === h) { renderSheet(); fitResults(); }
+    else go(h);
+    return;
+  }
+  if (S.view.name !== 'list') go('#/');
+  else renderSheet();
+}
+function fitResults() {
+  const pts = filtered().map((p) => [p.lng, p.lat]);
+  if (pts.length) fitTo(pts, 14);
 }
 
 $('chips').addEventListener('click', (e) => {
@@ -428,27 +547,110 @@ $('chips').addEventListener('click', (e) => {
     return;
   }
   if (b.dataset.status) S.filter.status = b.dataset.status;
-  if (b.dataset.cat) {
-    const id = b.dataset.cat;
-    S.filter.cats.has(id) ? S.filter.cats.delete(id) : S.filter.cats.add(id);
-  }
-  renderChips();
-  renderMarkers();
-  if (S.view.name !== 'list') go('#/');
-  else renderSheet();
+  filtersChanged();
 });
 
 let searchTimer = 0;
 $('search').addEventListener('input', (e) => {
   S.filter.q = e.target.value;
+  renderSuggest();
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
     renderMarkers();
-    if (S.view.name !== 'list') go('#/');
+    if (S.view.name === 'search') { const h = filterHash(); history.replaceState(null, '', h); S.view = { name: 'search', qs: h.split('?')[1] || '' }; S.lastViewKey = JSON.stringify(S.view); renderSheet(); }
+    else if (S.view.name !== 'list') go('#/');
     else renderSheet();
     const pts = filtered().map((p) => [p.lng, p.lat]);
     if (S.filter.q && pts.length) fitTo(pts);
   }, 180);
+});
+$('search').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); $('search').blur(); hideSuggest(); filtersChanged({ toResults: true }); }
+  else if (e.key === 'Escape') { $('search').blur(); hideSuggest(); }
+});
+$('search').addEventListener('focus', renderSuggest);
+$('search').addEventListener('blur', () => setTimeout(hideSuggest, 150));
+$('search-tokens').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-untoken]');
+  if (!b) return;
+  e.preventDefault();
+  toggleToken(S.filter, b.dataset.untoken, false);
+  filtersChanged();
+});
+$('filter-btn').addEventListener('click', (e) => { e.preventDefault(); openFilters(); });
+
+// Suggerimenti mentre scrivi
+function hl(text, q) {
+  const t = String(text);
+  const i = norm(t).indexOf(norm(q));
+  if (i < 0 || !q) return esc(t);
+  return esc(t.slice(0, i)) + '<b>' + esc(t.slice(i, i + q.length)) + '</b>' + esc(t.slice(i + q.length));
+}
+function hideSuggest() { $('suggest').hidden = true; }
+function renderSuggest() {
+  const box = $('suggest');
+  const qs = S.filter.q.trim();
+  const q = norm(qs);
+  if (q.length < 2 || document.activeElement !== $('search')) { box.hidden = true; return; }
+  const has = (s) => norm(s).includes(q);
+  const starts = (word, min = 2) => q.length >= min && norm(word).startsWith(q);
+  const base = cloneFilter(S.filter); base.q = '';
+  const count = (key) => { const F = cloneFilter(base); toggleToken(F, key, true); return filtered(F).length; };
+  const sug = [];
+  for (const c of S.categories) if (has(c.name) && !S.filter.cats.has(c.id)) sug.push({ key: `cat:${c.id}`, pre: 'Categoria', label: c.name, color: c.color, ic: c.icon });
+  for (const c of allCuisines()) if (has(c) && !S.filter.cuisines.has(c)) sug.push({ key: `cu:${c}`, pre: 'Cucina', label: c, color: '#D9480F', ic: 'fork' });
+  for (const t of S.trips) if (has(t.name) && S.filter.trip !== t.id) sug.push({ key: `trip:${t.id}`, pre: 'Viaggio', label: t.name, color: '#0F7F7F', ic: 'plane' });
+  if (starts('gratis') && !S.filter.prices.has('0')) sug.push({ key: 'p:0', pre: 'Prezzo', label: 'Gratis', color: '#2B7A4B', ic: 'tag' });
+  if ((starts('michelin') || starts('stellato', 4) || starts('stellati', 4)) && !S.filter.mich.has('stars')) sug.push({ key: 'm:stars', pre: 'Michelin', label: 'Stellati', color: '#C8102E', ic: 'star' });
+  if ((starts('verde', 3) || starts('stella verde', 4) || starts('michelin', 3)) && !S.filter.mich.has('green')) sug.push({ key: 'm:green', pre: 'Michelin', label: 'Stella verde', color: '#2E8B3D', ic: 'star' });
+  if ((starts('bib') || starts('michelin', 3)) && !S.filter.mich.has('bib')) sug.push({ key: 'm:bib', pre: 'Michelin', label: 'Bib Gourmand', color: '#C8102E', ic: 'star' });
+  if ((starts('tornarci', 3) || starts('preferiti', 3)) && !S.filter.top) sug.push({ key: 'top', pre: 'Voto', label: 'Da tornarci', color: '#8E2C48', ic: 'heart' });
+  if (starts('vicino', 3) && !S.filter.near) sug.push({ key: 'near', pre: 'Dove', label: 'Vicino a me', color: '#0A84FF', ic: 'locate' });
+  const filt = sug.slice(0, 5).map((x) => ({ ...x, n: count(x.key) }));
+  const places = filtered().slice(0, 5);
+  let h = '';
+  if (filt.length) {
+    h += '<div class="sg-label">Filtri</div><div class="sg-group">' + filt.map((x) => `
+      <button type="button" class="sg-row" data-sg-key="${esc(x.key)}">
+        <span class="sg-ic" style="--c:${safeColor(x.color)}">${icon(x.ic, 17, 2)}</span>
+        <span class="sg-main"><span>${esc(x.pre)}: ${hl(x.label, qs)}</span><span class="sg-sub">${x.n} ${x.n === 1 ? 'posto' : 'posti'}</span></span>
+        <span class="sg-add">Aggiungi</span>
+      </button>`).join('') + '</div>';
+  }
+  if (places.length) {
+    h += '<div class="sg-label">Posti</div><div class="sg-group">' + places.map((p) => {
+      const c = cat(p.category_id);
+      const ph = safeUrl(p.photo_url);
+      const sub = [c.name, (p.cuisines || []).join(', '), p.area, price(p.price)].filter(Boolean);
+      return `<button type="button" class="sg-row" data-sg-place="${esc(p.id)}">
+        <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(c.icon, 16, 2.1)}</span>
+        <span class="sg-main"><span class="sg-name">${hl(p.name, qs)}${michelin(p, 10)}</span><span class="sg-sub">${sub.map((x) => hl(x, qs)).join(' · ')}</span></span>
+      </button>`;
+    }).join('') + '</div>';
+  }
+  h += `<button type="button" class="sg-all" data-sg-all="1">${icon('search', 16, 2.4)}Vedi tutti i risultati per "${esc(qs)}"</button>`;
+  box.innerHTML = h;
+  box.hidden = false;
+}
+$('suggest').addEventListener('pointerdown', (e) => e.preventDefault());
+$('suggest').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.sgKey) {
+    toggleToken(S.filter, b.dataset.sgKey, true);
+    if (b.dataset.sgKey === 'near' && !S.here) locateMe().then(() => filtersChanged());
+    S.filter.q = '';
+    $('search').value = '';
+    hideSuggest();
+    filtersChanged();
+    $('search').focus();
+  } else if (b.dataset.sgPlace) {
+    hideSuggest(); $('search').blur();
+    go(`#/posto/${b.dataset.sgPlace}`);
+  } else if (b.dataset.sgAll) {
+    hideSuggest(); $('search').blur();
+    filtersChanged({ toResults: true });
+  }
 });
 
 $('profile').addEventListener('click', () => (S.email ? openProfile() : openLogin()));
@@ -525,6 +727,7 @@ function renderSheet() {
   else if (S.view.name === 'trips') out = viewTrips();
   else if (S.view.name === 'guides') out = viewGuides();
   else if (S.view.name === 'trip') out = viewTrip();
+  else if (S.view.name === 'search') out = viewResults();
   else out = viewList();
   head.innerHTML = out.head;
   body.innerHTML = out.body;
@@ -561,6 +764,72 @@ function tripFilterMatch(p) {
   return true;
 }
 
+// Pagina dei risultati
+const SORTS = [['rel', 'Pertinenza'], ['near', 'Vicini'], ['score', 'Voto'], ['price', 'Prezzo']];
+function sortResults(list) {
+  const q = norm(S.filter.q);
+  const ref = S.here || (() => { try { const c = map.getCenter(); return { lat: c.lat, lng: c.lng }; } catch { return null; } })();
+  const d = (p) => (ref ? metersBetween(ref, p) : 0);
+  const by = {
+    rel: (a, b) => {
+      const r = (p) => (q && norm(p.name).startsWith(q) ? 0 : q && norm(p.name).includes(q) ? 1 : 2);
+      return r(a) - r(b) || (b.starred ? 1 : 0) - (a.starred ? 1 : 0) || d(a) - d(b);
+    },
+    near: (a, b) => d(a) - d(b),
+    score: (a, b) => (b.score ?? -1) - (a.score ?? -1) || d(a) - d(b),
+    price: (a, b) => (a.price ?? 9) - (b.price ?? 9) || d(a) - d(b)
+  };
+  return [...list].sort(by[S.sort] || by.rel);
+}
+function resultCard(p) {
+  const c = cat(p.category_id);
+  const ph = safeUrl(p.photo_url);
+  const line1 = [(p.cuisines || []).join(', ') || c.name, p.area].filter(Boolean).map(esc).join(' · ');
+  const line2 = [price(p.price), p.price_range, ...michelinText(p)].filter(Boolean).map(esc).join(' · ');
+  const dist = S.here ? fmtDist(metersBetween(S.here, p)) : '';
+  const end = p.done && p.score != null ? `<span class="score-pill">${fmtScore(p.score)}</span>` : '';
+  return `
+    <button class="rcard" data-act="open-place" data-id="${esc(p.id)}">
+      <span class="rcard-ph${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">
+        ${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 30, 1.6)}
+        <span class="rcard-pills">
+          ${dist ? `<span class="pill">${esc(dist)}</span>` : '<span></span>'}
+          ${p.starred ? `<span class="pill pill-star">${icon('star', 11, 2.6)}Da non perdere</span>` : ''}
+        </span>
+      </span>
+      <span class="rcard-main">
+        <span class="row-title">${p.starred ? `<span class="star-mark">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}${michelin(p, 11)}</span>
+        <span class="row-sub">${line1}</span>
+        ${line2 ? `<span class="row-sub">${line2}</span>` : ''}
+      </span>
+      ${end}
+    </button>`;
+}
+function viewResults() {
+  const list = sortResults(filtered());
+  const n = list.length;
+  const any = activeCount() || S.filter.q.trim() || S.filter.status !== 'all';
+  const head = `
+    <div class="head-row">
+      <div>
+        <div class="eyebrow">${any ? (S.filter.q.trim() ? `Risultati per "${esc(S.filter.q.trim())}"` : 'Con questi filtri') : 'Tutti i nostri posti'}</div>
+        <h1 class="title">${n} ${n === 1 ? 'posto' : 'posti'}</h1>
+      </div>
+      <div class="head-actions">
+        <button class="icon-btn quiet" data-act="share-search" aria-label="Condividi la ricerca">${icon('share', 15, 2.4)}</button>
+        <button class="icon-btn quiet" data-act="close-search" aria-label="Chiudi la ricerca">${icon('x', 14, 3)}</button>
+      </div>
+    </div>
+    <div class="segmented sort-seg" role="group" aria-label="Ordina">${SORTS.map(([k, l]) => `<button data-act="sort" data-sort="${k}" aria-pressed="${S.sort === k}">${l}</button>`).join('')}</div>`;
+  let body = '';
+  if (!n) body += '<div class="empty"><b>Niente con questi filtri</b>Prova a togliere qualche filtro.</div>';
+  else body += `<div class="rcards">${list.slice(0, 120).map(resultCard).join('')}</div>`;
+  if (S.editor) {
+    body += `<button class="btn btn-quiet btn-block" style="margin-top:16px" data-act="search-google">${icon('plus', 16, 2.6)}Non c'è? Cerca su Google e aggiungi</button>`;
+  }
+  return { head, body };
+}
+
 function viewList() {
   const list = filtered();
   let shown = list;
@@ -582,7 +851,7 @@ function viewList() {
   const head = `
     <div class="head-row">
       <div>
-        <div class="eyebrow">${inArea ? "In quest'area" : (S.filter.q || S.filter.cats.size || st !== 'all' ? 'Con questi filtri' : 'Tutti i nostri posti')}</div>
+        <div class="eyebrow">${inArea ? "In quest'area" : (S.filter.q || activeCount() || st !== 'all' ? 'Con questi filtri' : 'Tutti i nostri posti')}</div>
         <h1 class="title">${n} ${noun}</h1>
       </div>
       ${S.editor ? `<button class="icon-btn" data-act="add-place" aria-label="Aggiungi un posto">${icon('plus', 18, 2.6)}</button>` : ''}
@@ -1010,6 +1279,14 @@ function viewTrip() {
   return { head, body };
 }
 
+// Sul computer: passando sopra una riga si illumina il suo pin
+$('sheet-body').addEventListener('mouseover', (e) => {
+  const r = e.target.closest('[data-act="open-place"]');
+  for (const el of S.pinEls.values()) el.classList.remove('hl');
+  if (r) S.pinEls.get(r.dataset.id)?.classList.add('hl');
+});
+$('sheet-body').addEventListener('mouseleave', () => { for (const el of S.pinEls.values()) el.classList.remove('hl'); });
+
 // Azioni nel pannello
 $('sheet').addEventListener('click', async (e) => {
   const t = e.target.closest('[data-act]');
@@ -1022,6 +1299,24 @@ $('sheet').addEventListener('click', async (e) => {
     case 'close': go('#/'); break;
     case 'open-trip': go(`#/viaggio/${id}`); break;
     case 'close-trip': go('#/viaggi'); break;
+    case 'sort': {
+      S.sort = t.dataset.sort;
+      if (S.sort === 'near' && !S.here) await locateMe();
+      renderSheet();
+      break;
+    }
+    case 'share-search': shareLink('Carlotta e Michele', filterHash(), 'Una ricerca tra i posti di Carlotta e Michele'); break;
+    case 'close-search': {
+      S.filter = emptyFilter(); $('search').value = ''; renderChips(); renderMarkers(); go('#/');
+      break;
+    }
+    case 'search-google': {
+      const q = S.filter.q.trim();
+      openPlaceForm();
+      const inp = document.getElementById('pf-q');
+      if (inp && q) { inp.value = q; document.getElementById('pf-search')?.click(); }
+      break;
+    }
     case 'trip-star': S.tripFilter.star = !S.tripFilter.star; renderSheet(); renderMarkers(); break;
     case 'trip-price': {
       const k = t.dataset.price;
@@ -1435,6 +1730,76 @@ function pickOnMap(start) {
     };
     $('picker-ok').onclick = () => { const c = map.getCenter(); done({ lat: c.lat, lng: c.lng }); };
     $('picker-cancel').onclick = () => done(null);
+  });
+}
+
+// Pannello dei filtri
+function openFilters() {
+  hideSuggest();
+  $('search').blur();
+  const F = cloneFilter(S.filter);
+  let draw = () => {};
+  openModal({
+    title: 'Filtri',
+    rightLabel: 'Azzera',
+    async onSave() {
+      const q = F.q;
+      Object.assign(F, emptyFilter(), { q });
+      draw();
+    },
+    mount(body, api) {
+      const chip = (key, label, on, dot) => `<button type="button" class="fchip" data-fk="${esc(key)}" aria-pressed="${on}">${dot ? `<span class="dot" style="background:${safeColor(dot)}"></span>` : ''}${label}</button>`;
+      const segBtn = (key, label, on) => `<button type="button" data-fk="${esc(key)}" aria-pressed="${on}">${label}</button>`;
+      draw = () => {
+        const n = filtered(F).length;
+        const cuis = allCuisines();
+        body.innerHTML = `
+          <div class="fgroup"><span class="field-label">Stato</span>
+            <div class="segmented">${segBtn('st:all', 'Tutti', F.status === 'all')}${segBtn('st:todo', 'Da fare', F.status === 'todo')}${segBtn('st:done', 'Fatti', F.status === 'done')}</div></div>
+          <div class="fgroup"><span class="field-label">Categoria</span>
+            <div class="fchips">${S.categories.map((c) => chip(`cat:${c.id}`, esc(c.name), F.cats.has(c.id), c.color)).join('')}</div></div>
+          ${cuis.length ? `<div class="fgroup"><span class="field-label">Cucina</span>
+            <div class="fchips">${cuis.map((c) => chip(`cu:${c}`, esc(c), F.cuisines.has(c))).join('')}</div></div>` : ''}
+          <div class="fgroup"><span class="field-label">Prezzo</span>
+            <div class="segmented">${['0', '1', '2', '3', '4'].map((k) => segBtn(`p:${k}`, PRICE_LABEL[k], F.prices.has(k))).join('')}</div></div>
+          <div class="fgroup"><span class="field-label">Michelin e voto</span>
+            <div class="fchips">
+              ${chip('m:stars', `<span class="mich mich-red">${icon('star', 12, 2.6)}</span>Stellati`, F.mich.has('stars'))}
+              ${chip('m:green', `<span class="mich mich-green">${icon('star', 12, 2.6)}</span>Stella verde`, F.mich.has('green'))}
+              ${chip('m:bib', 'Bib Gourmand', F.mich.has('bib'))}
+              ${chip('top', 'Da tornarci', F.top)}
+            </div></div>
+          <div class="group">
+            <div class="group-line"><span>Viaggio</span><select id="ff-trip" aria-label="Viaggio">
+              <option value="">Tutti</option>
+              ${S.trips.map((t) => `<option value="${esc(t.id)}" ${F.trip === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
+            </select></div>
+            <div class="group-line"><span>Vicino a me <span class="field-note">entro 3 km</span></span>
+              <button type="button" class="fswitch" data-fk="near" role="switch" aria-checked="${F.near}" aria-label="Vicino a me"><i></i></button></div>
+          </div>
+          <div class="fshow"><button type="button" class="btn btn-accent btn-block" data-fshow="1">${n ? `Mostra ${n} ${n === 1 ? 'posto' : 'posti'}` : 'Nessun posto'}</button></div>`;
+      };
+      body.addEventListener('click', async (e) => {
+        const b = e.target.closest('[data-fk], [data-fshow]');
+        if (!b) return;
+        if (b.dataset.fshow) {
+          S.filter = F;
+          api.close();
+          filtersChanged({ toResults: true });
+          return;
+        }
+        const k = b.dataset.fk;
+        if (k.startsWith('st:')) F.status = k.slice(3);
+        else if (k.startsWith('p:')) toggleToken(F, k);
+        else toggleToken(F, k);
+        if (k === 'near' && F.near && !S.here) { draw(); await locateMe(); if (!S.here) F.near = false; }
+        draw();
+      });
+      body.addEventListener('change', (e) => {
+        if (e.target.id === 'ff-trip') { F.trip = e.target.value; draw(); }
+      });
+      draw();
+    }
   });
 }
 
@@ -2308,6 +2673,11 @@ function route() {
   else if ((m = h.match(/^#\/viaggio\/([\w-]+)/))) S.view = { name: 'trip', id: m[1] };
   else if (/^#\/viaggi/.test(h)) S.view = { name: 'trips' };
   else if (/^#\/guide$/.test(h)) S.view = { name: 'guides' };
+  else if ((m = h.match(/^#\/cerca(?:\?(.*))?$/))) {
+    S.view = { name: 'search', qs: m[1] || '' };
+    if (filterHash() !== h) S.filter = filterFromQuery(m[1]);
+    if (S.filter.near && !S.here) locateMe().then(() => { renderMarkers(); renderSheet(); });
+  }
   else S.view = { name: 'list' };
 
   const key = JSON.stringify(S.view);
@@ -2329,6 +2699,10 @@ function route() {
       S.sheetVisible = sheet.visibleHeight();
       map.flyTo({ center: [p.lng, p.lat], zoom: Math.max(map.getZoom(), 13), padding: mapPadding(), duration: 650 });
     }
+  } else if (S.view.name === 'search') {
+    if (sheet.enabled && sheet.detent === 'small') sheet.snap('medium');
+    S.sheetVisible = sheet.visibleHeight();
+    fitResults();
   } else if (S.view.name === 'trip' || S.view.name === 'trips') {
     if (sheet.enabled && sheet.detent === 'small') sheet.snap('medium');
     S.sheetVisible = sheet.visibleHeight();
