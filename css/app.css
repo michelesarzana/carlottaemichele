@@ -666,3 +666,14 @@ a:hover { color: var(--accent-strong); }
 .dup-box.shake { animation: dup-shake 0.4s ease-out; }
 @keyframes dup-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
 @media (prefers-reduced-motion: reduce) { .dup-box.shake { animation: none; } }
+
+/* Guida Michelin */
+.mich { display: inline-flex; align-items: center; gap: 1px; margin-left: 6px; vertical-align: 0; }
+.mich .ic { fill: currentColor; }
+.mich-red { color: #C8102E; }
+.mich-green { color: #2E8B3D; }
+.mich-bib { font-size: 0.625rem; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: #C8102E; border-radius: 4px; padding: 1px 4px; text-transform: uppercase; }
+.mich-line { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2, var(--ink)); }
+.mich-line .mich:first-child { margin-left: 0; }
+#pf-mich button.m-red[aria-pressed="true"] { background: #C8102E; color: #fff; }
+#pf-mich button.m-green[aria-pressed="true"] { background: #2E8B3D; color: #fff; }

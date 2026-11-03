@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261101115755';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261101115755';
-import { Sheet } from './sheet.js?v=20261101115755';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261101115755';
-import { prettyHours } from './enrich.js?v=20261101115755';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103094145';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261103094145';
+import { Sheet } from './sheet.js?v=20261103094145';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103094145';
+import { prettyHours } from './enrich.js?v=20261103094145';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 
@@ -61,6 +61,18 @@ function fmtDate(d) {
 function today() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+// Guida Michelin: piccoli segni accanto al nome
+function michelin(p, size = 12) {
+  const out = [];
+  if (p.michelin_stars) out.push(`<span class="mich mich-red" title="${p.michelin_stars} ${p.michelin_stars === 1 ? 'stella' : 'stelle'} Michelin">${icon('star', size, 2.6).repeat(p.michelin_stars)}</span>`);
+  if (p.michelin_green) out.push(`<span class="mich mich-green" title="Stella verde Michelin">${icon('star', size, 2.6)}</span>`);
+  if (p.michelin_bib) out.push('<span class="mich mich-bib" title="Bib Gourmand">Bib</span>');
+  return out.join('');
+}
+function michelinText(p) {
+  return [p.michelin_stars ? `${p.michelin_stars} ${p.michelin_stars === 1 ? 'stella' : 'stelle'} Michelin` : '',
+    p.michelin_green ? 'Stella verde Michelin' : '', p.michelin_bib ? 'Bib Gourmand' : ''].filter(Boolean);
 }
 function price(n) { return n === 0 ? 'Gratis' : n ? '€'.repeat(n) : ''; }
 function slugify(s) {
@@ -526,7 +538,7 @@ function placeRow(p) {
   return `
     <button class="row" data-act="open-place" data-id="${esc(p.id)}">
       <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}</span>
-      <span class="row-main"><span class="row-title">${p.starred ? `<span class="star-mark" aria-label="Da non perdere">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}</span><span class="row-sub">${sub}${p.price_range ? ` · ${esc(p.price_range)}` : ''}</span></span>
+      <span class="row-main"><span class="row-title">${p.starred ? `<span class="star-mark" aria-label="Da non perdere">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}${michelin(p, 11)}</span><span class="row-sub">${sub}${p.price_range ? ` · ${esc(p.price_range)}` : ''}</span></span>
       ${end}
     </button>`;
 }
@@ -639,6 +651,7 @@ function viewPlace() {
       <div style="min-width:0">
         <h1 class="title title-xl">${esc(p.name)}</h1>
         <div class="meta" style="margin-top:4px">${meta}</div>
+        ${michelinText(p).length ? `<div class="mich-line">${michelin(p, 13)}<span>${michelinText(p).map(esc).join(' · ')}</span></div>` : ''}
         ${(p.extra_categories || []).length ? `<div class="cat-tags">${p.extra_categories.map((id) => { const x = cat(id); return `<span class="cat-tag" style="--c:${safeColor(x.color)}"><span class="dot"></span>${esc(x.name)}</span>`; }).join('')}</div>` : ''}
       </div>
       <button class="icon-btn quiet" data-act="close" aria-label="Chiudi">${icon('x', 14, 3)}</button>
@@ -1462,8 +1475,10 @@ function openPlaceForm(place = null, preset = {}) {
     url: '', source_url: '', notes: '', proposed_by: S.me || '', guide_id: null,
     trip_id: null, day: null, photo_url: null, photo_credit: null, photo_source: null,
     phone: '', email: '', instagram: '', menu_url: '', opening_hours: null, extra_categories: [],
+    michelin_stars: 0, michelin_green: false, michelin_bib: false,
     ...(place ? {
       extra_categories: [...(place.extra_categories || [])],
+      michelin_stars: place.michelin_stars || 0, michelin_green: !!place.michelin_green, michelin_bib: !!place.michelin_bib,
       phone: place.phone || '', email: place.email || '', instagram: place.instagram || '',
       menu_url: place.menu_url || '', opening_hours: place.opening_hours || null,
       name: place.name, category_id: place.category_id, lat: place.lat, lng: place.lng, area: place.area || '',
@@ -1500,7 +1515,8 @@ function openPlaceForm(place = null, preset = {}) {
         photo_url: f.photo_url || null, photo_credit: f.photo_credit || null, photo_source: f.photo_source || null,
         phone: f.phone.trim() || null, email: f.email.trim() || null,
         instagram: f.instagram.trim() ? (safeUrl(f.instagram.trim()) || `https://www.instagram.com/${f.instagram.trim().replace(/^@/, '')}/`) : null,
-        menu_url: safeUrl(f.menu_url.trim()) || null, opening_hours: f.opening_hours || null
+        menu_url: safeUrl(f.menu_url.trim()) || null, opening_hours: f.opening_hours || null,
+        michelin_stars: f.michelin_stars || 0, michelin_green: !!f.michelin_green, michelin_bib: !!f.michelin_bib
       };
       const q = place ? sb.from('places').update(payload).eq('id', place.id).select().single()
         : sb.from('places').insert(payload).select().single();
@@ -1547,6 +1563,7 @@ function openPlaceForm(place = null, preset = {}) {
           <div class="group">
             <div class="group-line"><span>Prezzo</span><div class="segmented" id="pf-price"></div></div>
             <div class="group-line"><span>Proposto da</span><div class="segmented" id="pf-by"></div></div>
+            <div class="group-line"><span>Michelin</span><div class="segmented" id="pf-mich"></div></div>
             <div class="group-line"><span>Sito</span><input id="pf-url" type="url" placeholder="https://" value="${esc(f.url)}"></div>
             <div class="group-line"><span>Menù</span><input id="pf-menu" type="url" placeholder="https://" value="${esc(f.menu_url)}"></div>
             <div class="group-line"><span>Telefono</span><input id="pf-phone" type="tel" placeholder="–" value="${esc(f.phone)}"></div>
@@ -1710,6 +1727,23 @@ function openPlaceForm(place = null, preset = {}) {
       };
       seg(q('#pf-price'), [0, 1, 2, 3, 4].map((n) => ({ v: n, l: n ? '€'.repeat(n) : 'Gratis' })), () => f.price, (v) => { f.price = v; });
       seg(q('#pf-by'), PEOPLE.map((p) => ({ v: p, l: p })), () => f.proposed_by, (v) => { f.proposed_by = v || ''; });
+      // Michelin: una scelta tra stelle e Bib, più la stella verde che si somma
+      {
+        const el = q('#pf-mich');
+        const opts = [['s1', '★'], ['s2', '★★'], ['s3', '★★★'], ['bib', 'Bib'], ['green', 'Verde']];
+        const on = (k) => k === 'green' ? f.michelin_green : k === 'bib' ? f.michelin_bib : f.michelin_stars === Number(k[1]);
+        const draw = () => { el.innerHTML = opts.map(([k, l]) => `<button type="button" data-m="${k}" class="${k === 'green' ? 'm-green' : k[0] === 's' ? 'm-red' : ''}" aria-pressed="${on(k)}">${l}</button>`).join(''); };
+        el.addEventListener('click', (e) => {
+          const b = e.target.closest('[data-m]');
+          if (!b) return;
+          const k = b.dataset.m;
+          if (k === 'green') f.michelin_green = !f.michelin_green;
+          else if (k === 'bib') { f.michelin_bib = !f.michelin_bib; if (f.michelin_bib) f.michelin_stars = 0; }
+          else { const n = Number(k[1]); f.michelin_stars = f.michelin_stars === n ? 0 : n; if (f.michelin_stars) f.michelin_bib = false; }
+          draw();
+        });
+        draw();
+      }
 
       const renderResults = (list) => {
         const el = q('#pf-results');
