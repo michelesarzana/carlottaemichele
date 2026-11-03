@@ -27,7 +27,7 @@ export class Sheet {
 
     grab.addEventListener('pointerdown', this._down);
     window.addEventListener('resize', this._resize);
-    this.mq = window.matchMedia('(min-width: 900px)');
+    this.mq = window.matchMedia('(min-width: 900px), (min-width: 600px) and (min-aspect-ratio: 3/4)');
     this.mq.addEventListener('change', this._resize);
     this._resize();
   }
@@ -36,7 +36,8 @@ export class Sheet {
     const h = window.innerHeight;
     const top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-top')) || 0;
     return {
-      large: Math.round(top + 56),
+      // aperto del tutto: subito sotto ricerca e filtri, come su computer
+      large: Math.round(document.getElementById('topbar')?.offsetHeight || top + 56),
       medium: Math.round(h * 0.52),
       small: Math.round(h - 150)
     };

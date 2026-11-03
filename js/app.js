@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103105417';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261103105417';
-import { Sheet } from './sheet.js?v=20261103105417';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103105417';
-import { prettyHours } from './enrich.js?v=20261103105417';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103150031';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261103150031';
+import { Sheet } from './sheet.js?v=20261103150031';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103150031';
+import { prettyHours } from './enrich.js?v=20261103150031';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -327,9 +327,12 @@ map.on('moveend', () => {
   moveTimer = setTimeout(renderSheet, 120);
 });
 
-const isDesktop = () => window.matchMedia('(min-width: 900px)').matches;
+const isDesktop = () => window.matchMedia('(min-width: 900px), (min-width: 600px) and (min-aspect-ratio: 3/4)').matches;
+// Altezza della barra in alto: il pannello parte subito sotto
+new ResizeObserver(() => document.documentElement.style.setProperty('--topbar-h', $('topbar').offsetHeight + 'px')).observe($('topbar'));
+
 function mapPadding() {
-  if (isDesktop()) return { top: 60, bottom: 60, left: 430, right: 60 };
+  if (isDesktop()) return { top: 60, bottom: 60, left: ($('topbar').offsetWidth || 400) + 50, right: 70 };
   return { top: 150, bottom: Math.min(S.sheetVisible, window.innerHeight * 0.6) + 30, left: 40, right: 40 };
 }
 
@@ -711,7 +714,7 @@ $('locate').addEventListener('click', () => {
 const sheet = new Sheet($('sheet'), {
   grab: $('sheet-grab'),
   scroll: $('sheet-body'),
-  onChange: (_detent, visible) => { S.sheetVisible = visible; }
+  onChange: (detent, visible) => { S.sheetVisible = visible; $('app').classList.toggle('sheet-full', detent === 'large'); }
 });
 
 function currentGuide() {
@@ -897,9 +900,21 @@ function viewList() {
   return { head, body };
 }
 
+function dotClass(v, i) { return v == null ? '' : i <= v ? 'on' : i - 0.5 === Number(v) ? 'half' : ''; }
 function dots(n) {
   if (n == null) return '<span class="dots-none">non votato</span>';
-  return `<span class="dots" aria-label="${n} su 4">${[1, 2, 3, 4].map((i) => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
+  return `<span class="dots" aria-label="${fmtScore(Number(n))} su 4">${[1, 2, 3, 4].map((i) => `<i class="${dotClass(Number(n), i)}"></i>`).join('')}</span>`;
+}
+// Voto con i mezzi punti: tocca un pallino per il voto pieno, ritocca per il mezzo, una terza volta per toglierlo
+function nextVote(cur, n) {
+  if (cur === n) return n > 1 ? n - 0.5 : null;
+  if (cur === n - 0.5) return null;
+  return n;
+}
+function voteLabel(v) {
+  if (v == null) return 'Tocca per votare';
+  if (Number.isInteger(v)) return VOTE_LABELS[v - 1];
+  return `${fmtScore(v)}: tra ${VOTE_LABELS[Math.floor(v) - 1].toLowerCase()} e ${VOTE_LABELS[Math.ceil(v) - 1].toLowerCase()}`;
 }
 
 function directionsUrl(p) {
@@ -2524,9 +2539,9 @@ function openTripForm(trip = null) {
         const row = (key, who, cls) => `
           <div class="vote-row">
             <span class="av ${cls}" style="width:28px;height:28px">${who[0]}</span>
-            <span class="vote-who"><b>${who}</b><span>${f[key] ? VOTE_LABELS[f[key] - 1] : 'Tocca per votare'}</span></span>
+            <span class="vote-who"><b>${who}</b><span>${voteLabel(f[key])}</span></span>
             <span class="vote-dots">${[1, 2, 3, 4].map((n) =>
-              `<button class="vote-dot ${f[key] && n <= f[key] ? 'on' : ''}" data-k="${key}" data-n="${n}" aria-label="${who}: ${n} su 4" aria-pressed="${f[key] === n}"><i></i></button>`
+              `<button class="vote-dot ${dotClass(f[key], n)}" data-k="${key}" data-n="${n}" aria-label="${who}: ${n} su 4, ritocca per ${n - 0.5}" aria-pressed="${f[key] === n || f[key] === n - 0.5}"><i></i></button>`
             ).join('')}</span>
           </div>`;
         el.innerHTML = `
@@ -2537,7 +2552,7 @@ function openTripForm(trip = null) {
           const b = e.target.closest('[data-k]');
           if (!b) return;
           const n = Number(b.dataset.n);
-          f[b.dataset.k] = f[b.dataset.k] === n ? null : n;
+          f[b.dataset.k] = nextVote(f[b.dataset.k], n);
           renderDone();
         });
         q('#tf-review').addEventListener('input', (e) => { f.review = e.target.value; });
@@ -2632,9 +2647,9 @@ function openVisitForm(place) {
         const row = (key, who, cls) => `
           <div class="vote-row">
             <span class="av ${cls}" style="width:28px;height:28px">${who[0]}</span>
-            <span class="vote-who"><b>${who}</b><span>${f[key] ? VOTE_LABELS[f[key] - 1] : 'Tocca per votare'}</span></span>
+            <span class="vote-who"><b>${who}</b><span>${voteLabel(f[key])}</span></span>
             <span class="vote-dots">${[1, 2, 3, 4].map((n) =>
-              `<button class="vote-dot ${f[key] && n <= f[key] ? 'on' : ''}" data-k="${key}" data-n="${n}" aria-label="${who}: ${n} su 4, ${VOTE_LABELS[n - 1]}" aria-pressed="${f[key] === n}"><i></i></button>`
+              `<button class="vote-dot ${dotClass(f[key], n)}" data-k="${key}" data-n="${n}" aria-label="${who}: ${n} su 4, ${VOTE_LABELS[n - 1]}" aria-pressed="${f[key] === n || f[key] === n - 0.5}"><i></i></button>`
             ).join('')}</span>
           </div>`;
         q('#vf-votes').innerHTML = row('vote_c', 'Carlotta', 'av-c') + row('vote_m', 'Michele', 'av-m');
@@ -2643,7 +2658,7 @@ function openVisitForm(place) {
         const b = e.target.closest('[data-k]');
         if (!b) return;
         const n = Number(b.dataset.n);
-        f[b.dataset.k] = f[b.dataset.k] === n ? null : n;
+        f[b.dataset.k] = nextVote(f[b.dataset.k], n);
         if (navigator.vibrate) navigator.vibrate(8);
         renderVotes(); validate();
       });
