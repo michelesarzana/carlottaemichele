@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103150031';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261103150031';
-import { Sheet } from './sheet.js?v=20261103150031';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103150031';
-import { prettyHours } from './enrich.js?v=20261103150031';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103160624';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261103160624';
+import { Sheet } from './sheet.js?v=20261103160624';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103160624';
+import { prettyHours } from './enrich.js?v=20261103160624';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -293,11 +293,19 @@ const LAYERS = {
 S.layer = 'mappa';
 try { const l = localStorage.getItem('cem-layer'); if (LAYERS[l]) S.layer = l; } catch { /* niente */ }
 
+// App sulla schermata Home: riparte da dove eravate (pagina e mappa)
+const STANDALONE = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+let savedView = null;
+try { savedView = JSON.parse(localStorage.getItem('cem-view') || 'null'); } catch { /* niente */ }
+const resumeView = STANDALONE && savedView && (!location.hash || location.hash === '#/') && Date.now() - (savedView.t || 0) < 7 * 864e5;
+if (resumeView && savedView.hash && savedView.hash !== '#/') history.replaceState(null, '', savedView.hash);
+if (location.search.includes('app=1')) history.replaceState(null, '', location.pathname + location.hash);
+
 const map = new maplibregl.Map({
   container: 'map',
   style: LAYERS[S.layer].style,
-  center: DEFAULT_VIEW.center,
-  zoom: DEFAULT_VIEW.zoom,
+  center: resumeView && savedView.center ? savedView.center : DEFAULT_VIEW.center,
+  zoom: resumeView && savedView.zoom != null ? savedView.zoom : DEFAULT_VIEW.zoom,
   attributionControl: { compact: true },
   dragRotate: false,
   pitchWithRotate: false
@@ -321,7 +329,18 @@ map.on('style.load', () => {
 });
 
 let moveTimer = 0;
+function saveView() {
+  try {
+    const c = map.getCenter();
+    localStorage.setItem('cem-view', JSON.stringify({ hash: location.hash || '#/', center: [c.lng, c.lat], zoom: map.getZoom(), t: Date.now() }));
+  } catch { /* niente */ }
+}
+window.addEventListener('hashchange', saveView);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveView(); });
+if (resumeView) S.firstFit = true;
+
 map.on('moveend', () => {
+  saveView();
   if (S.view.name !== 'list') return;
   clearTimeout(moveTimer);
   moveTimer = setTimeout(renderSheet, 120);
@@ -2780,3 +2799,8 @@ sb.auth.onAuthStateChange((event) => {
   };
   if (map.loaded()) start(); else map.once('load', start);
 })();
+
+// Funziona anche senza rete (e si aggiorna da sola)
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').catch(() => { /* niente */ });
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Carlotta e Michele",
+  "short_name": "C&M",
+  "description": "I posti di Carlotta e Michele: ristoranti, cantine, negozi e viaggi da fare e già fatti.",
+  "lang": "it",
+  "start_url": "./?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F1F0EB",
+  "theme_color": "#F1F0EB",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
