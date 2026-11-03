@@ -1,14 +1,7 @@
-#!/usr/bin/env bash
-fn="https://btyvzzmyzmlvyhxwavxd.supabase.co/functions/v1/resolve-link"
-key="sb_publishable_u8wHUg1_eKbo1U3nwGphRA_vVF-u8Vj"
-echo "### preflight dal sito"
-curl -s -i -m 20 -X OPTIONS "$fn" -H "Origin: https://carlottaemichele.it" \
-  -H "Access-Control-Request-Method: POST" \
-  -H "Access-Control-Request-Headers: authorization,x-client-info,apikey,content-type,x-supabase-api-version" | grep -iE "^HTTP|access-control"
-echo "### POST come il browser (senza login)"
-curl -s -m 40 -X POST "$fn" -H "Origin: https://carlottaemichele.it" -H "apikey: $key" -H "Authorization: Bearer $key" \
-  -H "x-client-info: supabase-js-web/2.118.0" -H "Content-Type: application/json" \
-  -d '{"url":"https://maps.app.goo.gl/Kkm1tPCB8vsErGgZ8?g_st=ic"}' -w "\nHTTP %{http_code}\n" | sed -E 's/"url":"[^"]*",//' | cut -c1-300
-echo "### sito pubblicato: versione"
-curl -s -m 20 https://carlottaemichele.it/ | grep -oE 'app\.(js|css)\?v=[0-9]+' | head -2
-curl -s -m 20 "https://carlottaemichele.it/js/app.js" | grep -c "data?.lat"
+set -x
+cd "$(dirname "$0")/../.."
+curl -sSL https://api.github.com/repos/supabase/cli/releases?per_page=6 | jq -r '.[] | "\(.tag_name) \(.published_at) prerelease=\(.prerelease)"'
+V=$(curl -sSL https://api.github.com/repos/supabase/cli/releases/latest | jq -r .tag_name | tr -d v)
+curl -sSL -o /tmp/s.tgz "https://github.com/supabase/cli/releases/download/v$V/supabase_linux_amd64.tar.gz" && tar -xzf /tmp/s.tgz -C /tmp
+/tmp/supabase --version
+SUPABASE_ACCESS_TOKEN=sbp_$(printf "0%.0s" $(seq 40)) timeout 120 /tmp/supabase functions deploy enrich-places --project-ref btyvzzmyzmlvyhxwavxd --no-verify-jwt --use-api 2>&1 | tail -30
