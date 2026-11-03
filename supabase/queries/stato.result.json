@@ -24,13 +24,13 @@
         },
         {
           "month": "2026-11",
-          "kind": "search",
-          "count": 80
+          "kind": "locate",
+          "count": 18
         },
         {
           "month": "2026-11",
-          "kind": "locate",
-          "count": 18
+          "kind": "search",
+          "count": 81
         }
       ],
       "places": [
@@ -1057,32 +1057,18 @@
           "google": "2026-11-02T21:58:19.279+00:00"
         },
         {
-          "name": "Albergo Ristorante dell'Angelo",
-          "url": null,
-          "phone": "+39 0345 47073",
+          "name": "Trattoria Nonno Fifì",
+          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
+          "phone": "+39 345 113 4490",
           "email": null,
           "insta": null,
           "menu": null,
-          "hours": "Mo 07:00-00:00; Tu 07:00-00:00; We 07:00-00:00; Th 07:00-00:00; Fr 07:00-00:00; Sa 07:00-00:00; Su 07:00-00:00",
-          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-50846a08-384e-475f-8afd-3edd201238dc.jpg?v=mvzt4opu",
-          "credit": "Foto: Albergo Ristorante Pizzeria Bar dell'Angelo su Google Maps",
+          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-Strachitunt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
           "photo_source": "auto",
-          "enriched_at": "2026-11-02T22:05:06.21+00:00",
-          "google": "2026-11-02T22:04:59.918+00:00"
-        },
-        {
-          "name": "Ristorante San Marco",
-          "url": null,
-          "phone": "+39 0345 47340",
-          "email": null,
-          "insta": null,
-          "menu": null,
-          "hours": "Mo 08:00-15:30; Tu 08:00-00:30; We 08:00-00:30; Th 08:00-00:30; Fr 08:00-00:30; Sa 08:00-00:30; Su 08:00-00:30",
-          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-badf7e6a-9c94-46c9-a890-3384d873359d.jpg?v=mvzt4u68",
-          "credit": "Foto: Martina Pazzano su Google Maps",
-          "photo_source": "auto",
-          "enriched_at": "2026-11-02T22:05:13.28+00:00",
-          "google": "2026-11-02T22:05:06.314+00:00"
+          "enriched_at": "2026-11-02T22:05:20.094+00:00",
+          "google": "2026-11-02T22:05:13.396+00:00"
         },
         {
           "name": "Duca d'Aosta",
@@ -1099,6 +1085,34 @@
           "google": "2026-11-02T22:04:51.026+00:00"
         },
         {
+          "name": "Ristorante San Marco",
+          "url": null,
+          "phone": "+39 0345 47340",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 08:00-15:30; Tu 08:00-00:30; We 08:00-00:30; Th 08:00-00:30; Fr 08:00-00:30; Sa 08:00-00:30; Su 08:00-00:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-badf7e6a-9c94-46c9-a890-3384d873359d.jpg?v=mvzt4u68",
+          "credit": "Foto: Martina Pazzano su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:13.28+00:00",
+          "google": "2026-11-02T22:05:06.314+00:00"
+        },
+        {
+          "name": "Albergo Ristorante dell'Angelo",
+          "url": null,
+          "phone": "+39 0345 47073",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 07:00-00:00; Tu 07:00-00:00; We 07:00-00:00; Th 07:00-00:00; Fr 07:00-00:00; Sa 07:00-00:00; Su 07:00-00:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-50846a08-384e-475f-8afd-3edd201238dc.jpg?v=mvzt4opu",
+          "credit": "Foto: Albergo Ristorante Pizzeria Bar dell'Angelo su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:06.21+00:00",
+          "google": "2026-11-02T22:04:59.918+00:00"
+        },
+        {
           "name": "Trattoria dell'Arlecchino",
           "url": "https://www.trattoriadellarlecchino.it/",
           "phone": "+39 0345 41198",
@@ -1113,20 +1127,6 @@
           "google": "2026-11-02T22:04:53.95+00:00"
         },
         {
-          "name": "Trattoria Nonno Fifì",
-          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
-          "phone": "+39 345 113 4490",
-          "email": null,
-          "insta": null,
-          "menu": null,
-          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-Strachitunt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
-          "photo_source": "auto",
-          "enriched_at": "2026-11-02T22:05:20.094+00:00",
-          "google": "2026-11-02T22:05:13.396+00:00"
-        },
-        {
           "name": "Il Colmetto | Ristorante in Franciacorta",
           "url": null,
           "phone": null,
@@ -1139,6 +1139,20 @@
           "photo_source": "none",
           "enriched_at": "2026-11-02T22:10:17.349+00:00",
           "google": "2026-11-02T22:10:10.859+00:00"
+        },
+        {
+          "name": "YAJIRI maison by Yumi",
+          "url": "https://www.yajirimaison.com/",
+          "phone": "+39 351 317 2407",
+          "email": null,
+          "insta": "https://www.instagram.com/yajirimaison?igsh=azN0ZmdqZG16MnFx&utm_source=qr",
+          "menu": "https://www.yajirimaison.com/_files/ugd/fd0693_2da502428ff54a549e181208b7030624.pdf",
+          "hours": "Mo off; Tu 19:30-22:30; We 19:30-22:30; Th 19:30-22:30; Fr 19:30-22:30; Sa 12:30-14:30,19:30-22:30; Su 12:30-14:30,19:30-22:30",
+          "photo": "https://static.wixstatic.com/media/fd0693_406202701c354110a08bb3d5946562bf~mv2.jpeg",
+          "credit": "Foto: yajirimaison.com",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-03T09:38:31.453+00:00",
+          "google": "2026-11-03T09:38:28.018+00:00"
         }
       ]
     }

@@ -1,0 +1,15 @@
+[
+  {
+    "ultime": [
+      "024_michelin.sql",
+      "023_salzana_ristoranti_val_taleggio.sql",
+      "022_categoria_bere.sql",
+      "021_stelle_prezzi.sql"
+    ],
+    "colonne": [
+      "michelin_bib",
+      "michelin_green",
+      "michelin_stars"
+    ]
+  }
+]

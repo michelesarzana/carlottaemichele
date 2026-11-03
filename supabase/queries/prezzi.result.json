@@ -1,9 +1,14 @@
 [
   {
-    "posti": 79,
-    "prezzo_cercato": 79,
-    "con_prezzo": 42,
+    "posti": 80,
+    "prezzo_cercato": 80,
+    "con_prezzo": 43,
     "esempi": [
+      {
+        "n": "YAJIRI maison by Yumi",
+        "p": 3,
+        "r": "40–50 €"
+      },
       {
         "n": "Il Colmetto | Ristorante in Franciacorta",
         "p": null,
@@ -58,11 +63,6 @@
         "n": "Orrido della Val Taleggio",
         "p": null,
         "r": null
-      },
-      {
-        "n": "Baita&breakfast",
-        "p": null,
-        "r": null
       }
     ],
     "uso": [
@@ -73,13 +73,13 @@
       },
       {
         "month": "2026-11",
-        "kind": "search",
-        "count": 80
+        "kind": "locate",
+        "count": 18
       },
       {
         "month": "2026-11",
-        "kind": "locate",
-        "count": 18
+        "kind": "search",
+        "count": 81
       },
       {
         "month": "2026-10",

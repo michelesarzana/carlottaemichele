@@ -23,7 +23,8 @@
         "020_guida_madrid_extra2.sql",
         "021_stelle_prezzi.sql",
         "022_categoria_bere.sql",
-        "023_salzana_ristoranti_val_taleggio.sql"
+        "023_salzana_ristoranti_val_taleggio.sql",
+        "024_michelin.sql"
       ],
       "cron": [
         {
@@ -38,35 +39,23 @@
         {
           "status": 200,
           "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Il Colmetto | Ristorante in Franciacorta\",\"filled\":[],\"from\":[],\"ok\":true}]}",
-          "at": "2026-11-02T22:15:00.260441+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Il Colmetto | Ristorante in Franciacorta\",\"filled\":[\"price\",\"price_range\",\"url\",\"phone\",\"opening_hours\",\"email\",\"instagram\",\"menu_url\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
-          "at": "2026-11-02T22:10:10.533886+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Duca d'Aosta\",\"filled\":[\"price_range\",\"phone\",\"opening_hours\",\"instagram\",\"menu_url\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Trattoria dell'Arlecchino\",\"filled\":[\"price_range\",\"phone\",\"opening_hours\",\"email\",\"instagram\",\"menu_url\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true},{\"name\":\"Albergo Ristorante dell'Angelo\",\"filled\":[\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true},{\"name\":\"Ristorante San Marco\",\"filled\":[\"price_range\",\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true},{\"name\":\"Trattoria Nonno Fifì\",\"filled\":[\"price_range\",\"url\",\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true}]}",
-          "at": "2026-11-02T22:04:50.190599+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Cornello dei Tasso\",\"filled\":[\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true}]}",
-          "at": "2026-11-02T21:58:19.031995+00:00"
-        },
-        {
-          "status": 200,
-          "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Pizzino\",\"filled\":[\"price\",\"price_range\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true}]}",
-          "at": "2026-11-02T21:57:52.033715+00:00"
+          "body": "{\"google\":true,\"done\":[{\"name\":\"YAJIRI maison by Yumi\",\"filled\":[\"price\",\"price_range\",\"url\",\"phone\",\"opening_hours\",\"instagram\",\"menu_url\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
+          "at": "2026-11-03T09:38:27.384819+00:00"
         }
       ],
       "posti": [
+        {
+          "name": "YAJIRI maison by Yumi",
+          "url": "https://www.yajirimaison.com/",
+          "phone": "+39 351 317 2407",
+          "hours": "Mo off; Tu 19:30-22:30; We 19:30-22:30; Th 19:30-22:30; Fr 19:30-22:30; Sa 12:30-14:30,19:30-22:30; Su 12:30-14:30,19:30-22:30",
+          "menu": "https://www.yajirimaison.com/_files/ugd/fd0693_2da502428ff54a549e181208b7030624.pdf",
+          "insta": "https://www.instagram.com/yajirimaison?igsh=azN0ZmdqZG16MnFx&utm_source=qr",
+          "photo": "https://static.wixstatic.com/media/fd0693_406202701c354110a08bb3d5946562bf~mv2.j",
+          "credit": "Foto: yajirimaison.com",
+          "src": "auto",
+          "enriched": "2026-11-03T09:38:31.453+00:00"
+        },
         {
           "name": "Il Colmetto | Ristorante in Franciacorta",
           "url": null,
@@ -80,16 +69,28 @@
           "enriched": "2026-11-02T22:10:17.349+00:00"
         },
         {
-          "name": "Duca d'Aosta",
-          "url": "https://www.caffeducadaosta.it/",
-          "phone": "+39 348 614 4748",
-          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
-          "menu": "https://www.caffeducadaosta.it/menu/",
-          "insta": "http://www.instagram.com/caffe_duca_daosta/",
-          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10",
-          "credit": "Foto: caffeducadaosta.it",
+          "name": "Trattoria Nonno Fifì",
+          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
+          "phone": "+39 345 113 4490",
+          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
+          "menu": null,
+          "insta": null,
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-",
+          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
           "src": "auto",
-          "enriched": "2026-11-02T22:04:53.864+00:00"
+          "enriched": "2026-11-02T22:05:20.094+00:00"
+        },
+        {
+          "name": "Trattoria dell'Arlecchino",
+          "url": "https://www.trattoriadellarlecchino.it/",
+          "phone": "+39 0345 41198",
+          "hours": "Mo off; Tu 06:30-23:00; We 06:30-23:00; Th 06:30-23:00; Fr 06:30-23:00; Sa 15:00-23:00; Su 07:30-23:00",
+          "menu": "https://www.trattoriadellarlecchino.it/Cucina-Bergamasca-San-Giovanni-Bianco-Bergamo-Valbrembana",
+          "insta": "https://instagram.com/trattoriadellarlecchino/",
+          "photo": "https://irp.cdn-website.com/a87fd62a/dms3rep/multi/opt/IMG_2031-09aea850-6d1b8a5",
+          "credit": "Foto: trattoriadellarlecchino.it",
+          "src": "auto",
+          "enriched": "2026-11-02T22:04:59.819+00:00"
         },
         {
           "name": "Albergo Ristorante dell'Angelo",
@@ -116,28 +117,16 @@
           "enriched": "2026-11-02T22:05:13.28+00:00"
         },
         {
-          "name": "Trattoria dell'Arlecchino",
-          "url": "https://www.trattoriadellarlecchino.it/",
-          "phone": "+39 0345 41198",
-          "hours": "Mo off; Tu 06:30-23:00; We 06:30-23:00; Th 06:30-23:00; Fr 06:30-23:00; Sa 15:00-23:00; Su 07:30-23:00",
-          "menu": "https://www.trattoriadellarlecchino.it/Cucina-Bergamasca-San-Giovanni-Bianco-Bergamo-Valbrembana",
-          "insta": "https://instagram.com/trattoriadellarlecchino/",
-          "photo": "https://irp.cdn-website.com/a87fd62a/dms3rep/multi/opt/IMG_2031-09aea850-6d1b8a5",
-          "credit": "Foto: trattoriadellarlecchino.it",
+          "name": "Duca d'Aosta",
+          "url": "https://www.caffeducadaosta.it/",
+          "phone": "+39 348 614 4748",
+          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
+          "menu": "https://www.caffeducadaosta.it/menu/",
+          "insta": "http://www.instagram.com/caffe_duca_daosta/",
+          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10",
+          "credit": "Foto: caffeducadaosta.it",
           "src": "auto",
-          "enriched": "2026-11-02T22:04:59.819+00:00"
-        },
-        {
-          "name": "Trattoria Nonno Fifì",
-          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
-          "phone": "+39 345 113 4490",
-          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
-          "menu": null,
-          "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-",
-          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-11-02T22:05:20.094+00:00"
+          "enriched": "2026-11-02T22:04:53.864+00:00"
         },
         {
           "name": "Cornello dei Tasso",
