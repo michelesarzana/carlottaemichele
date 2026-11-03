@@ -1,11 +1,14 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103094145';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261103094145';
-import { Sheet } from './sheet.js?v=20261103094145';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103094145';
-import { prettyHours } from './enrich.js?v=20261103094145';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103095531';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261103095531';
+import { Sheet } from './sheet.js?v=20261103095531';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103095531';
+import { prettyHours } from './enrich.js?v=20261103095531';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
+const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
+  'Thai', 'Indiana', 'Fusion', 'Spagnola', 'Tapas', 'Francese', 'Mediorientale', 'Messicana', 'Peruviana', 'Hamburger',
+  'Vegetariana', 'Brunch', 'Gelato', 'Dolci', 'Cocktail'];
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' }
@@ -164,7 +167,7 @@ function filtered() {
   return S.places.filter((p) =>
     (S.filter.status === 'all' || (S.filter.status === 'done') === p.done) &&
     (!S.filter.cats.size || placeCats(p).some((c) => S.filter.cats.has(c))) &&
-    (!q || norm(`${p.name} ${p.area || ''} ${p.notes || ''} ${placeCats(p).map((c) => cat(c).name).join(' ')}`).includes(q))
+    (!q || norm(`${p.name} ${p.area || ''} ${p.notes || ''} ${(p.cuisines || []).join(' ')} ${placeCats(p).map((c) => cat(c).name).join(' ')}`).includes(q))
   );
 }
 
@@ -530,7 +533,7 @@ function renderSheet() {
 
 function placeRow(p) {
   const c = cat(p.category_id);
-  const sub = [c.name, p.area, price(p.price)].filter(Boolean).map(esc).join(' · ');
+  const sub = [c.name, (p.cuisines || []).join(', '), p.area, price(p.price)].filter(Boolean).map(esc).join(' · ');
   const end = p.done
     ? (p.score != null ? `<span class="score-pill">${fmtScore(p.score)}</span>` : '')
     : (p.proposed_by ? `<span class="row-end">da ${esc(initial(p.proposed_by))}</span>` : '');
@@ -645,7 +648,7 @@ function viewPlace() {
     };
   }
   const c = cat(p.category_id);
-  const meta = [c.name, p.area, price(p.price), p.price_range].filter(Boolean).map(esc).join(' · ');
+  const meta = [c.name, (p.cuisines || []).join(', '), p.area, price(p.price), p.price_range].filter(Boolean).map(esc).join(' · ');
   const head = `
     <div class="head-row" style="align-items:flex-start">
       <div style="min-width:0">
@@ -1475,9 +1478,10 @@ function openPlaceForm(place = null, preset = {}) {
     url: '', source_url: '', notes: '', proposed_by: S.me || '', guide_id: null,
     trip_id: null, day: null, photo_url: null, photo_credit: null, photo_source: null,
     phone: '', email: '', instagram: '', menu_url: '', opening_hours: null, extra_categories: [],
-    michelin_stars: 0, michelin_green: false, michelin_bib: false,
+    michelin_stars: 0, michelin_green: false, michelin_bib: false, cuisines: [],
     ...(place ? {
       extra_categories: [...(place.extra_categories || [])],
+      cuisines: [...(place.cuisines || [])],
       michelin_stars: place.michelin_stars || 0, michelin_green: !!place.michelin_green, michelin_bib: !!place.michelin_bib,
       phone: place.phone || '', email: place.email || '', instagram: place.instagram || '',
       menu_url: place.menu_url || '', opening_hours: place.opening_hours || null,
@@ -1516,6 +1520,7 @@ function openPlaceForm(place = null, preset = {}) {
         phone: f.phone.trim() || null, email: f.email.trim() || null,
         instagram: f.instagram.trim() ? (safeUrl(f.instagram.trim()) || `https://www.instagram.com/${f.instagram.trim().replace(/^@/, '')}/`) : null,
         menu_url: safeUrl(f.menu_url.trim()) || null, opening_hours: f.opening_hours || null,
+        cuisines: f.cuisines.slice(0, 3),
         michelin_stars: f.michelin_stars || 0, michelin_green: !!f.michelin_green, michelin_bib: !!f.michelin_bib
       };
       const q = place ? sb.from('places').update(payload).eq('id', place.id).select().single()
@@ -1558,6 +1563,14 @@ function openPlaceForm(place = null, preset = {}) {
           <div id="pf-main"></div>
           <div id="pf-newcat"></div>
         </div>
+        <div id="pf-cuisine-wrap">
+          <span class="field-label">Cucina <span class="field-note">fino a 3</span></span>
+          <div class="cat-picker" id="pf-cuisine"></div>
+          <div class="inline-input" style="margin-top:8px">
+            <input id="pf-cuisine-new" type="text" placeholder="Altra cucina, es. Sarda" autocapitalize="sentences">
+            <button type="button" class="btn btn-quiet" id="pf-cuisine-add">Aggiungi</button>
+          </div>
+        </div>
         <div>
           <span class="field-label">Dettagli</span>
           <div class="group">
@@ -1587,7 +1600,14 @@ function openPlaceForm(place = null, preset = {}) {
         </div>`;
 
       const q = (s) => body.querySelector(s);
+      const renderCuisine = () => {
+        const isFood = [f.category_id, ...f.extra_categories].some((c) => FOOD.has(c));
+        q('#pf-cuisine-wrap').hidden = !isFood && !f.cuisines.length;
+        const list = [...new Set([...CUISINES, ...S.places.flatMap((p) => p.cuisines || []), ...f.cuisines])];
+        q('#pf-cuisine').innerHTML = list.map((c) => `<button type="button" class="cat-opt" data-cu="${esc(c)}" aria-pressed="${f.cuisines.includes(c)}">${esc(c)}</button>`).join('');
+      };
       const validate = () => {
+        renderCuisine();
         api.setSaveEnabled(!!(f.name.trim() && f.category_id && f.lat != null && f.lng != null));
         const dups = findDuplicates(f, place?.id);
         const key = dups.map((d) => d.id).join();
@@ -1906,6 +1926,27 @@ function openPlaceForm(place = null, preset = {}) {
 
       q('#pf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
       q('#pf-url').addEventListener('input', (e) => { f.url = e.target.value; validate(); });
+      q('#pf-cuisine').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-cu]');
+        if (!b) return;
+        const c = b.dataset.cu;
+        if (f.cuisines.includes(c)) f.cuisines = f.cuisines.filter((x) => x !== c);
+        else if (f.cuisines.length < 3) f.cuisines.push(c);
+        else return toast('Al massimo 3 cucine');
+        renderCuisine();
+      });
+      const addCuisine = () => {
+        const v = q('#pf-cuisine-new').value.trim().replace(/^./, (x) => x.toUpperCase());
+        if (!v) return;
+        if (!f.cuisines.includes(v)) {
+          if (f.cuisines.length >= 3) return toast('Al massimo 3 cucine');
+          f.cuisines.push(v);
+        }
+        q('#pf-cuisine-new').value = '';
+        renderCuisine();
+      };
+      q('#pf-cuisine-add').addEventListener('click', addCuisine);
+      q('#pf-cuisine-new').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addCuisine(); } });
       q('#pf-dup').addEventListener('click', (e) => {
         const b = e.target.closest('[data-dup]');
         if (!b) return;

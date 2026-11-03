@@ -677,3 +677,7 @@ a:hover { color: var(--accent-strong); }
 .mich-line .mich:first-child { margin-left: 0; }
 #pf-mich button.m-red[aria-pressed="true"] { background: #C8102E; color: #fff; }
 #pf-mich button.m-green[aria-pressed="true"] { background: #2E8B3D; color: #fff; }
+
+/* Cucina */
+#pf-cuisine .cat-opt { --c: var(--accent); }
+.field-note { font-weight: 500; color: var(--ink-3); text-transform: none; letter-spacing: 0; }

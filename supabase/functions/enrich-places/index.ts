@@ -30,6 +30,7 @@ type Place = {
   phone: string | null; email: string | null; instagram: string | null; menu_url: string | null;
   opening_hours: string | null; photo_url: string | null; photo_source: string | null; enriched_at: string | null;
   google_checked_at?: string | null; price?: number | null; price_range?: string | null; price_checked_at?: string | null;
+  cuisines?: string[] | null; cuisine_checked_at?: string | null;
 };
 type Photo = { url: string; credit: string };
 
@@ -122,11 +123,12 @@ async function quota(kind: 'search' | 'photo') {
 }
 
 async function google(place: Place) {
-  if (!GKEY || (place.google_checked_at && place.price_checked_at)) return null;
+  const wantCuisine = !place.cuisine_checked_at && isFood(place);
+  if (!GKEY || (place.google_checked_at && place.price_checked_at && !wantCuisine)) return null;
   if (!(await quota('search'))) return null;
-  // Segna subito il tentativo: ogni posto si cerca su Google una volta sola (dettagli e prezzo insieme)
+  // Segna subito il tentativo: ogni posto si cerca su Google una volta sola (dettagli, prezzo e cucina insieme)
   const now = new Date().toISOString();
-  await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify({ google_checked_at: place.google_checked_at || now, price_checked_at: now }) });
+  await db(`places?id=eq.${place.id}`, { method: 'PATCH', body: JSON.stringify({ google_checked_at: place.google_checked_at || now, price_checked_at: now, cuisine_checked_at: now }) });
   const body = {
     textQuery: [place.name, place.address || place.area].filter(Boolean).join(', '),
     languageCode: 'it',
@@ -138,7 +140,7 @@ async function google(place: Place) {
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': GKEY,
-      'X-Goog-FieldMask': 'places.displayName,places.location,places.internationalPhoneNumber,places.websiteUri,places.regularOpeningHours,places.photos,places.priceLevel,places.priceRange'
+      'X-Goog-FieldMask': 'places.displayName,places.location,places.internationalPhoneNumber,places.websiteUri,places.regularOpeningHours,places.photos,places.priceLevel,places.priceRange,places.primaryType,places.types'
     },
     body: JSON.stringify(body)
   });
@@ -151,8 +153,32 @@ async function google(place: Place) {
     opening_hours: googleHours(hit.regularOpeningHours),
     photo: hit.photos?.[0] || null,
     price: PRICE_LEVEL[hit.priceLevel] ?? null,
-    price_range: priceRange(hit.priceRange)
+    price_range: priceRange(hit.priceRange),
+    cuisines: cuisinesOf(hit)
   };
+}
+
+// Tipi di Google → cucina in italiano
+const CUISINE: Record<string, string> = {
+  italian_restaurant: 'Italiana', pizza_restaurant: 'Pizza', japanese_restaurant: 'Giapponese', sushi_restaurant: 'Sushi',
+  ramen_restaurant: 'Ramen', chinese_restaurant: 'Cinese', korean_restaurant: 'Coreana', thai_restaurant: 'Thai',
+  vietnamese_restaurant: 'Vietnamita', indian_restaurant: 'Indiana', asian_restaurant: 'Asiatica', fusion_restaurant: 'Fusion',
+  asian_fusion_restaurant: 'Fusion', spanish_restaurant: 'Spagnola', tapas_restaurant: 'Tapas', french_restaurant: 'Francese',
+  greek_restaurant: 'Greca', turkish_restaurant: 'Turca', lebanese_restaurant: 'Libanese', middle_eastern_restaurant: 'Mediorientale',
+  mediterranean_restaurant: 'Mediterranea', mexican_restaurant: 'Messicana', peruvian_restaurant: 'Peruviana',
+  brazilian_restaurant: 'Brasiliana', american_restaurant: 'Americana', hamburger_restaurant: 'Hamburger',
+  steak_house: 'Carne', barbecue_restaurant: 'Griglia', seafood_restaurant: 'Pesce', vegetarian_restaurant: 'Vegetariana',
+  vegan_restaurant: 'Vegana', brunch_restaurant: 'Brunch', breakfast_restaurant: 'Colazione', basque_restaurant: 'Basca',
+  argentinian_restaurant: 'Argentina', african_restaurant: 'Africana', ethiopian_restaurant: 'Etiope',
+  ice_cream_shop: 'Gelato', dessert_shop: 'Dolci', bakery: 'Forno', wine_bar: 'Vini', pub: 'Pub', cocktail_bar: 'Cocktail'
+};
+function cuisinesOf(hit: any): string[] {
+  const out: string[] = [];
+  for (const t of [hit.primaryType, ...(hit.types || [])]) {
+    const c = CUISINE[t];
+    if (c && !out.includes(c)) out.push(c);
+  }
+  return out.slice(0, 3);
 }
 
 const PRICE_LEVEL: Record<string, number> = {
@@ -341,6 +367,8 @@ async function enrich(place: Place, given?: { osm: any } | null) {
   // Prezzo: solo se non l'avete già messo voi
   if (g && place.price == null && g.price != null) { patch.price = g.price; used.push('Google'); }
   if (g && !place.price_range && g.price_range) patch.price_range = g.price_range;
+  if (g && isFood(place) && !(place.cuisines || []).length && g.cuisines.length) patch.cuisines = g.cuisines;
+  if (!isFood(place) && !place.cuisine_checked_at) patch.cuisine_checked_at = new Date().toISOString();
   let website = place.url;
   if (needsDetails) {
     if (g) {
@@ -401,7 +429,7 @@ Deno.serve(async (req) => {
   let body: any = {};
   try { body = await req.json(); } catch { /* corpo vuoto */ }
   if (body?.debug) {
-    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at';
+    const sel0 = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at,cuisines,cuisine_checked_at';
     const rr = await db(`places?select=${sel0}&id=eq.${encodeURIComponent(body.debug)}`);
     const [pl] = await rr.json();
     if (!pl) return new Response(JSON.stringify({ error: 'posto non trovato' }), { headers: { ...cors, 'Content-Type': 'application/json' } });
@@ -418,8 +446,8 @@ Deno.serve(async (req) => {
   }
 
   // Solo i posti da compilare: dettagli mai cercati, o senza foto e mai cercata
-  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at';
-  const filter = 'or=(enriched_at.is.null,price_checked_at.is.null,and(photo_url.is.null,photo_source.is.null))';
+  const sel = 'id,name,category_id,extra_categories,lat,lng,area,address,url,phone,email,instagram,menu_url,opening_hours,photo_url,photo_source,enriched_at,google_checked_at,price,price_range,price_checked_at,cuisines,cuisine_checked_at';
+  const filter = 'or=(enriched_at.is.null,price_checked_at.is.null,cuisine_checked_at.is.null,and(photo_url.is.null,photo_source.is.null))';
   // Il flusso GitHub manda {osm: {"<id>": {...dati OpenStreetMap...} | null}}: lavora solo quei posti
   const token = Deno.env.get('ENRICH_TOKEN') || '';
   const trusted = !!token && req.headers.get('x-enrich-token') === token;
