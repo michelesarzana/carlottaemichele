@@ -4,6 +4,7 @@ const P = {
   cup: '<path d="M5 8h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M7 3v2M10 3v2M13 3v2"/>',
   beer: '<path d="M6 9h10v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zM16 11h1.5a2.5 2.5 0 0 1 0 5H16M6 9a2.5 2.5 0 0 1 2.5-4.5 3 3 0 0 1 5 0A2.5 2.5 0 0 1 16 9M9.5 13v5M12.5 13v5"/>',
   wheat: '<path d="M12 22V6M12 19c-2.2 0-4-1.6-4.5-4 2.2 0 4 1.6 4.5 4zM12 19c2.2 0 4-1.6 4.5-4-2.2 0-4 1.6-4.5 4zM12 14.5c-2.2 0-4-1.6-4.5-4 2.2 0 4 1.6 4.5 4zM12 14.5c2.2 0 4-1.6 4.5-4-2.2 0-4 1.6-4.5 4zM12 10c-2.2 0-4-1.6-4.5-4 2.2 0 4 1.6 4.5 4zM12 10c2.2 0 4-1.6 4.5-4-2.2 0-4 1.6-4.5 4zM12 6c-1-1-1.3-2.6-1-4 1.2.6 1.7 2.4 1 4z"/>',
+  cards: '<rect x="4" y="6" width="11" height="15" rx="2"/><path d="M9 6V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M9.5 10.3l1 2 2.2.3-1.6 1.6.4 2.2-2-1-2 1 .4-2.2-1.6-1.6 2.2-.3z"/>',
   wine: '<path d="M8 3h8v5a4 4 0 0 1-8 0zM12 12v8M8 21h8"/>',
   bag: '<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>',
   mountain: '<path d="M3 20l6-11 4 7 3-4 5 8z"/>',
@@ -38,7 +39,7 @@ const P = {
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
 };
 
-export const CATEGORY_ICONS = ['fork', 'cup', 'beer', 'wine', 'wheat', 'bag', 'mountain', 'star', 'bed', 'plane', 'heart', 'pin'];
+export const CATEGORY_ICONS = ['fork', 'cup', 'beer', 'wine', 'wheat', 'cards', 'bag', 'mountain', 'star', 'bed', 'plane', 'heart', 'pin'];
 
 export function icon(name, size = 20, stroke = 2) {
   const body = P[name] || P.pin;
