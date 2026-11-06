@@ -26,7 +26,8 @@
         "023_salzana_ristoranti_val_taleggio.sql",
         "024_michelin.sql",
         "025_cucina.sql",
-        "026_mezzi_voti.sql"
+        "026_mezzi_voti.sql",
+        "027_icona_spiga.sql"
       ],
       "cron": [
         {
