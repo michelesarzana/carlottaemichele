@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261103160624';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261103160624';
-import { Sheet } from './sheet.js?v=20261103160624';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261103160624';
-import { prettyHours } from './enrich.js?v=20261103160624';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106113210';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261106113210';
+import { Sheet } from './sheet.js?v=20261106113210';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106113210';
+import { prettyHours } from './enrich.js?v=20261106113210';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -936,10 +936,9 @@ function voteLabel(v) {
   return `${fmtScore(v)}: tra ${VOTE_LABELS[Math.floor(v) - 1].toLowerCase()} e ${VOTE_LABELS[Math.ceil(v) - 1].toLowerCase()}`;
 }
 
+// Indicazioni sempre in Google Maps (su iPhone apre l'app, se c'è)
 function directionsUrl(p) {
-  return isApple()
-    ? `https://maps.apple.com/?daddr=${p.lat},${p.lng}&q=${encodeURIComponent(p.name)}`
-    : `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
 }
 
 function viewPlace() {
