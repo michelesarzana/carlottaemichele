@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106195304';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261106195304';
-import { Sheet } from './sheet.js?v=20261106195304';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106195304';
-import { prettyHours } from './enrich.js?v=20261106195304';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106195550';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261106195550';
+import { Sheet } from './sheet.js?v=20261106195550';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106195550';
+import { prettyHours } from './enrich.js?v=20261106195550';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -393,6 +393,7 @@ function renderMarkers() {
     const btn = document.createElement('button');
     btn.className = 'pin' + (p.done ? ' done' : '') + (p.id === selected ? ' selected' : '');
     btn.style.setProperty('--c', safeColor(c.color));
+    btn.dataset.cat = c.id;
     btn.innerHTML = icon(c.icon, 16, 2.2) + (p.starred ? `<span class="pin-star">${icon('star', 10, 3)}</span>` : '');
     btn.setAttribute('aria-label', `${p.name}${p.starred ? ', da non perdere' : ''}${p.done ? ', fatto' : ', da fare'}`);
     if (p.starred) el.style.zIndex = '2';
