@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106113210';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261106113210';
-import { Sheet } from './sheet.js?v=20261106113210';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106113210';
-import { prettyHours } from './enrich.js?v=20261106113210';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106122338';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261106122338';
+import { Sheet } from './sheet.js?v=20261106122338';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106122338';
+import { prettyHours } from './enrich.js?v=20261106122338';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -250,6 +250,7 @@ function allCuisines() {
 }
 function locateMe() {
   return new Promise((resolve) => {
+    if (live.on && S.here) return resolve(S.here);
     if (!navigator.geolocation) { toast('Posizione non disponibile su questo dispositivo'); return resolve(null); }
     navigator.geolocation.getCurrentPosition(
       (pos) => { S.here = { lat: pos.coords.latitude, lng: pos.coords.longitude }; resolve(S.here); },
@@ -707,25 +708,121 @@ document.addEventListener('click', (e) => {
   if (!pop.hidden && !pop.contains(e.target)) pop.hidden = true;
 });
 
-let youMarker = null;
-$('locate').addEventListener('click', () => {
-  if (!navigator.geolocation) return toast('Posizione non disponibile su questo dispositivo');
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const ll = [pos.coords.longitude, pos.coords.latitude];
-      if (!youMarker) {
-        const el = document.createElement('div');
-        el.style.cssText = 'width:16px;height:16px;border-radius:8px;background:#0A84FF;border:3px solid #fff;box-shadow:0 0 0 6px rgba(10,132,255,.2)';
-        el.setAttribute('aria-hidden', 'true');
-        youMarker = new maplibregl.Marker({ element: el });
-      }
-      youMarker.setLngLat(ll).addTo(map);
-      map.flyTo({ center: ll, zoom: Math.max(map.getZoom(), 13), padding: mapPadding() });
+// ─────────────────────────────────────────────
+// Posizione in tempo reale
+// Primo tocco: segue la tua posizione. Se sposti la mappa smette di seguirti
+// ma il pallino continua ad aggiornarsi; ritocca per tornare a seguirti,
+// tocca di nuovo mentre ti segue per spegnerla.
+// ─────────────────────────────────────────────
+const live = { watch: null, follow: false, on: false, marker: null, el: null, acc: 0, heading: null, lastRender: null };
+function liveEl() {
+  if (live.el) return live.el;
+  const el = document.createElement('div');
+  el.className = 'you';
+  el.setAttribute('aria-hidden', 'true');
+  el.innerHTML = '<span class="you-acc"></span><span class="you-cone"></span><span class="you-dot"></span>';
+  live.el = el;
+  return el;
+}
+function liveAccuracy() {
+  if (!live.el || !S.here) return;
+  const mpp = (40075016.686 * Math.cos((S.here.lat * Math.PI) / 180)) / (512 * 2 ** map.getZoom());
+  const d = Math.min(600, Math.max(0, (live.acc / mpp) * 2));
+  live.el.querySelector('.you-acc').style.setProperty('--d', `${d}px`);
+}
+function liveButton() {
+  const b = $('locate');
+  b.classList.toggle('live', live.on);
+  b.classList.toggle('follow', live.on && live.follow);
+  b.setAttribute('aria-pressed', String(live.on));
+  b.setAttribute('aria-label', !live.on ? 'Mostra la mia posizione' : live.follow ? 'Smetti di mostrare la mia posizione' : 'Segui la mia posizione');
+}
+function onPosition(pos, first) {
+  const ll = [pos.coords.longitude, pos.coords.latitude];
+  const prev = S.here;
+  S.here = { lat: ll[1], lng: ll[0] };
+  live.acc = pos.coords.accuracy || 0;
+  if (pos.coords.heading != null && !Number.isNaN(pos.coords.heading) && pos.coords.speed > 1) setHeading(pos.coords.heading);
+  if (!live.marker) live.marker = new maplibregl.Marker({ element: liveEl() });
+  live.marker.setLngLat(ll).addTo(map);
+  liveAccuracy();
+  if (first) map.flyTo({ center: ll, zoom: Math.max(map.getZoom(), 15), padding: mapPadding() });
+  else if (live.follow) map.easeTo({ center: ll, duration: 600, padding: mapPadding() });
+  // Distanze e "Vicino a me": si aggiornano quando ti sposti di almeno 40 m
+  if (!live.lastRender || metersBetween(live.lastRender, S.here) > 40) {
+    live.lastRender = S.here;
+    if (prev && (S.view.name === 'search' || S.filter.near)) { renderMarkers(); renderSheet(); }
+  }
+}
+function setHeading(deg) {
+  live.heading = deg;
+  if (live.el) { live.el.classList.add('has-heading'); live.el.style.setProperty('--h', `${deg}deg`); }
+}
+function onOrientation(e) {
+  const h = e.webkitCompassHeading ?? (e.absolute && e.alpha != null ? 360 - e.alpha : null);
+  if (h != null) setHeading(h);
+}
+async function liveStart({ quiet = false } = {}) {
+  if (!navigator.geolocation) { if (!quiet) toast('Posizione non disponibile su questo dispositivo'); return; }
+  // Bussola (iPhone chiede il permesso al tocco)
+  try {
+    if (!quiet && typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
+      DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') window.addEventListener('deviceorientation', onOrientation); }).catch(() => {});
+    } else {
+      window.addEventListener('deviceorientationabsolute', onOrientation);
+      window.addEventListener('deviceorientation', onOrientation);
+    }
+  } catch { /* niente */ }
+  live.on = true;
+  live.follow = !quiet;
+  liveButton();
+  let first = !quiet;
+  if (live.watch != null) navigator.geolocation.clearWatch(live.watch);
+  live.watch = navigator.geolocation.watchPosition(
+    (pos) => { onPosition(pos, first); first = false; },
+    (err) => {
+      if (err.code === 1) { liveStop(); if (!quiet) toast('Serve il permesso per la posizione'); }
+      else if (!quiet && first) toast('Non riesco a leggere la posizione');
     },
-    () => toast('Non riesco a leggere la posizione'),
-    { enableHighAccuracy: true, timeout: 10000 }
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
   );
+  try { localStorage.setItem('cem-live', '1'); } catch { /* niente */ }
+}
+function liveStop() {
+  if (live.watch != null) navigator.geolocation.clearWatch(live.watch);
+  live.watch = null; live.on = false; live.follow = false;
+  live.marker?.remove();
+  window.removeEventListener('deviceorientation', onOrientation);
+  window.removeEventListener('deviceorientationabsolute', onOrientation);
+  liveButton();
+  try { localStorage.removeItem('cem-live'); } catch { /* niente */ }
+}
+$('locate').addEventListener('click', () => {
+  if (!live.on) return liveStart();
+  if (!live.follow) {
+    live.follow = true; liveButton();
+    if (S.here) map.flyTo({ center: [S.here.lng, S.here.lat], zoom: Math.max(map.getZoom(), 15), padding: mapPadding() });
+    return;
+  }
+  liveStop();
 });
+// Se sposti la mappa a mano smette di seguirti
+map.on('dragstart', () => { if (live.follow) { live.follow = false; liveButton(); } });
+map.on('zoom', liveAccuracy);
+// Batteria: in background si ferma, al ritorno riparte
+document.addEventListener('visibilitychange', () => {
+  if (!live.on) return;
+  if (document.visibilityState === 'hidden') { if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; }
+  else if (live.watch == null) {
+    live.watch = navigator.geolocation.watchPosition((pos) => onPosition(pos, false), () => {}, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+  }
+});
+// Se l'avevate accesa e il permesso c'è già, riparte da sola (senza spostare la mappa)
+try {
+  if (localStorage.getItem('cem-live') === '1' && navigator.permissions?.query) {
+    navigator.permissions.query({ name: 'geolocation' }).then((r) => { if (r.state === 'granted') liveStart({ quiet: true }); }).catch(() => {});
+  }
+} catch { /* niente */ }
 
 // ─────────────────────────────────────────────
 // Sheet: contenuti
@@ -823,6 +920,7 @@ function resultCard(p) {
         <span class="row-title">${p.starred ? `<span class="star-mark">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}${michelin(p, 11)}</span>
         <span class="row-sub">${line1}</span>
         ${line2 ? `<span class="row-sub">${line2}</span>` : ''}
+        ${dist ? `<span class="row-sub rcard-dist">${icon('locate', 11, 2.4)}${esc(dist)}</span>` : ''}
       </span>
       ${end}
     </button>`;
