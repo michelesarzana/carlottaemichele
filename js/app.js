@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106133123';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261106133123';
-import { Sheet } from './sheet.js?v=20261106133123';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106133123';
-import { prettyHours } from './enrich.js?v=20261106133123';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106181329';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261106181329';
+import { Sheet } from './sheet.js?v=20261106181329';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106181329';
+import { prettyHours } from './enrich.js?v=20261106181329';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -1670,8 +1670,11 @@ function openProfile() {
       body.innerHTML = `
         <p class="login-note">${S.editor ? `Sei dentro come <b>${esc(S.me)}</b>. Puoi aggiungere posti, visite e guide.` : `Sei dentro come ${esc(S.email)}, ma questo account non può modificare.`}</p>
         ${S.editor ? `<button class="btn btn-quiet btn-block" id="manage-cats">${icon('edit', 16)}Categorie</button>` : ''}
+        <button class="btn btn-quiet btn-block" id="kml">${icon('globe', 16)}Scarica per Google My Maps</button>
+        <p class="kml-note">Su My Maps, dal computer: Importa la prima volta, poi dal menu del livello "Reimporta e unisci" per aggiornare.</p>
         <button class="btn btn-quiet btn-block" id="logout">Esci</button>`;
       body.querySelector('#manage-cats')?.addEventListener('click', () => openCategories());
+      body.querySelector('#kml').addEventListener('click', downloadKml);
       body.querySelector('#logout').addEventListener('click', async () => {
         await sb.auth.signOut();
         api.close();
@@ -1681,6 +1684,69 @@ function openProfile() {
 }
 
 // Gestione categorie: nome, colore, icona; elimina quelle non usate
+// File KML per Google My Maps: una cartella per categoria, pin del colore del sito
+function kmlEsc(s) { return String(s ?? '').replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c])); }
+function kmlColor(hex) {
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex || '') || [0, '8E', '2C', '48'];
+  return `ff${m[3]}${m[2]}${m[1]}`.toLowerCase(); // KML vuole aabbggrr
+}
+function buildKml() {
+  const site = 'https://carlottaemichele.it/';
+  const styles = S.categories.map((c) => ['todo', 'done'].map((st) => `
+    <Style id="c-${kmlEsc(c.id)}-${st}">
+      <IconStyle><color>${kmlColor(c.color)}</color><scale>${st === 'done' ? 1.1 : 0.9}</scale>
+        <Icon><href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href></Icon></IconStyle>
+      <LabelStyle><scale>0</scale></LabelStyle>
+    </Style>`).join('')).join('');
+  const folders = S.categories.map((c) => {
+    const list = S.places.filter((p) => p.category_id === c.id && p.lat != null).sort((a, b) => a.name.localeCompare(b.name));
+    if (!list.length) return '';
+    return `
+    <Folder><name>${kmlEsc(c.name)}</name>${list.map((p) => {
+      const trip = p.trip_id ? S.tripById.get(p.trip_id)?.name : '';
+      const lines = [
+        [cat(p.category_id).name, (p.cuisines || []).join(', '), p.area].filter(Boolean).join(' · '),
+        [price(p.price), p.price_range, ...michelinText(p)].filter(Boolean).join(' · '),
+        p.done ? `Fatto${p.score != null ? ` · voto ${fmtScore(p.score)} su 4` : ''}` : `Da fare${p.proposed_by ? ` · proposto da ${p.proposed_by}` : ''}`,
+        p.starred ? 'Da non perdere' : '',
+        trip ? `Viaggio: ${trip}` : '',
+        p.url ? p.url : '',
+        `${site}#/posto/${p.id}`
+      ].filter(Boolean);
+      return `
+      <Placemark>
+        <name>${kmlEsc(p.name)}</name>
+        <description>${kmlEsc(lines.join('\n'))}</description>
+        <styleUrl>#c-${kmlEsc(c.id)}-${p.done ? 'done' : 'todo'}</styleUrl>
+        <ExtendedData>
+          <Data name="Categoria"><value>${kmlEsc(c.name)}</value></Data>
+          <Data name="Stato"><value>${p.done ? 'Fatto' : 'Da fare'}</value></Data>
+          <Data name="Scheda"><value>${kmlEsc(`${site}#/posto/${p.id}`)}</value></Data>
+        </ExtendedData>
+        <Point><coordinates>${Number(p.lng).toFixed(6)},${Number(p.lat).toFixed(6)},0</coordinates></Point>
+      </Placemark>`;
+    }).join('')}
+    </Folder>`;
+  }).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Carlotta e Michele</name>
+    <description>I posti di carlottaemichele.it, aggiornati al ${new Date().toLocaleDateString('it-IT')}</description>${styles}${folders}
+  </Document>
+</kml>`;
+}
+function downloadKml() {
+  const blob = new Blob([buildKml()], { type: 'application/vnd.google-earth.kml+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'carlottaemichele.kml';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  toast(`File con ${S.places.length} posti pronto`);
+}
+
 function openCategories() {
   let open = null;
   let draft = null;

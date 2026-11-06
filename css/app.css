@@ -829,3 +829,4 @@ a:hover { color: var(--accent-strong); }
 #locate.follow { color: #fff; background: #0A84FF; }
 #locate.follow .ic { fill: currentColor; }
 @media (prefers-reduced-motion: reduce) { .you-acc::after { animation: none; } .you-acc { transition: none; } }
+.kml-note { margin: -4px 4px 4px; font-size: 0.75rem; color: var(--ink-3); line-height: 1.35; }
