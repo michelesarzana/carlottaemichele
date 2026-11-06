@@ -1,10 +1,10 @@
 [
   {
     "ultime": [
+      "026_mezzi_voti.sql",
+      "025_cucina.sql",
       "024_michelin.sql",
-      "023_salzana_ristoranti_val_taleggio.sql",
-      "022_categoria_bere.sql",
-      "021_stelle_prezzi.sql"
+      "023_salzana_ristoranti_val_taleggio.sql"
     ],
     "colonne": [
       "michelin_bib",

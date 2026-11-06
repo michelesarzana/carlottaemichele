@@ -1,85 +1,85 @@
 [
   {
-    "posti": 80,
-    "prezzo_cercato": 80,
-    "con_prezzo": 43,
+    "posti": 96,
+    "prezzo_cercato": 96,
+    "con_prezzo": 59,
     "esempi": [
       {
-        "n": "YAJIRI maison by Yumi",
+        "n": "Celicioso",
+        "p": 1,
+        "r": "10–20 €"
+      },
+      {
+        "n": "Castelgrande",
+        "p": 4,
+        "r": "da 100 CHF"
+      },
+      {
+        "n": "Radio Rooftop Bar",
         "p": 3,
-        "r": "40–50 €"
+        "r": "20–60 €"
       },
       {
-        "n": "Il Colmetto | Ristorante in Franciacorta",
-        "p": null,
-        "r": "50–100 €"
+        "n": "Voya Rooftop",
+        "p": 4,
+        "r": "40–100 €"
       },
       {
-        "n": "Trattoria Nonno Fifì",
+        "n": "Ironica Bar",
         "p": 2,
         "r": "20–30 €"
       },
       {
-        "n": "Ristorante San Marco",
+        "n": "Tunas Pescheria & Bistrot",
+        "p": 2,
+        "r": null
+      },
+      {
+        "n": "Antica Hostaria della Lanterna",
         "p": 2,
         "r": "10–20 €"
       },
       {
-        "n": "Albergo Ristorante dell'Angelo",
-        "p": null,
-        "r": null
+        "n": "El Barbapedana",
+        "p": 3,
+        "r": "30–40 €"
       },
       {
-        "n": "Trattoria dell'Arlecchino",
-        "p": 2,
-        "r": "20–30 €"
+        "n": "Osteria la Carbonaia",
+        "p": 3,
+        "r": "30–60 €"
       },
       {
-        "n": "Duca d'Aosta",
-        "p": 2,
-        "r": "20–30 €"
+        "n": "Osteria Fiorentina",
+        "p": 3,
+        "r": "30–70 €"
       },
       {
-        "n": "Cornello dei Tasso",
-        "p": null,
-        "r": null
+        "n": "Antica Trattoria Monluè",
+        "p": 3,
+        "r": "40–70 €"
       },
       {
-        "n": "Pizzino",
-        "p": 2,
-        "r": "10–20 €"
-      },
-      {
-        "n": "Casearia Arnoldi Valtaleggio",
-        "p": null,
-        "r": null
-      },
-      {
-        "n": "Coop. Agricola S.Antonio",
-        "p": null,
-        "r": null
-      },
-      {
-        "n": "Orrido della Val Taleggio",
-        "p": null,
-        "r": null
+        "n": "Costa Sigieri",
+        "p": 3,
+        "r": "40–70 €"
       }
     ],
     "uso": [
       {
         "month": "2026-11",
-        "kind": "photo",
-        "count": 13
-      },
-      {
-        "month": "2026-11",
         "kind": "locate",
-        "count": 18
+        "count": 28
       },
       {
         "month": "2026-11",
         "kind": "search",
-        "count": 81
+        "count": 150
+      },
+      {
+        "month": "2026-11",
+        "kind": "photo",
+        "count": 21
       },
       {
         "month": "2026-10",

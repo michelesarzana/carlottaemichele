@@ -3,6 +3,21 @@
     "stato": {
       "usage": [
         {
+          "month": "2026-11",
+          "kind": "locate",
+          "count": 28
+        },
+        {
+          "month": "2026-11",
+          "kind": "search",
+          "count": 150
+        },
+        {
+          "month": "2026-11",
+          "kind": "photo",
+          "count": 21
+        },
+        {
           "month": "2026-10",
           "kind": "photo",
           "count": 21
@@ -16,21 +31,6 @@
           "month": "2026-10",
           "kind": "search",
           "count": 45
-        },
-        {
-          "month": "2026-11",
-          "kind": "photo",
-          "count": 13
-        },
-        {
-          "month": "2026-11",
-          "kind": "locate",
-          "count": 18
-        },
-        {
-          "month": "2026-11",
-          "kind": "search",
-          "count": 81
         }
       ],
       "places": [
@@ -756,9 +756,9 @@
           "insta": "https://www.instagram.com/nestsushi/",
           "menu": "https://nestsushimilano.it/menu/index.htm",
           "hours": "Mo 19:15-23:30; Tu 19:15-23:30; We 12:15-15:00,19:15-23:30; Th 12:15-15:00,19:15-23:30; Fr 12:15-15:00,19:15-23:30; Sa 12:15-15:00,19:15-23:30; Su 12:15-15:00,19:15-23:30",
-          "photo": "https://nestsushimilano.it/images/og.jpg",
-          "credit": "Foto: nestsushimilano.it",
-          "photo_source": "auto",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/mw0s9afl-i9rjm.jpg",
+          "credit": null,
+          "photo_source": "own",
           "enriched_at": "2026-10-26T14:27:07.969+00:00",
           "google": "2026-10-26T14:27:04.143+00:00"
         },
@@ -1071,34 +1071,6 @@
           "google": "2026-11-02T22:05:13.396+00:00"
         },
         {
-          "name": "Duca d'Aosta",
-          "url": "https://www.caffeducadaosta.it/",
-          "phone": "+39 348 614 4748",
-          "email": null,
-          "insta": "http://www.instagram.com/caffe_duca_daosta/",
-          "menu": "https://www.caffeducadaosta.it/menu/",
-          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
-          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-15-at-16.28.12-7.jpeg",
-          "credit": "Foto: caffeducadaosta.it",
-          "photo_source": "auto",
-          "enriched_at": "2026-11-02T22:04:53.864+00:00",
-          "google": "2026-11-02T22:04:51.026+00:00"
-        },
-        {
-          "name": "Ristorante San Marco",
-          "url": null,
-          "phone": "+39 0345 47340",
-          "email": null,
-          "insta": null,
-          "menu": null,
-          "hours": "Mo 08:00-15:30; Tu 08:00-00:30; We 08:00-00:30; Th 08:00-00:30; Fr 08:00-00:30; Sa 08:00-00:30; Su 08:00-00:30",
-          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-badf7e6a-9c94-46c9-a890-3384d873359d.jpg?v=mvzt4u68",
-          "credit": "Foto: Martina Pazzano su Google Maps",
-          "photo_source": "auto",
-          "enriched_at": "2026-11-02T22:05:13.28+00:00",
-          "google": "2026-11-02T22:05:06.314+00:00"
-        },
-        {
           "name": "Albergo Ristorante dell'Angelo",
           "url": null,
           "phone": "+39 0345 47073",
@@ -1127,6 +1099,34 @@
           "google": "2026-11-02T22:04:53.95+00:00"
         },
         {
+          "name": "Ristorante San Marco",
+          "url": null,
+          "phone": "+39 0345 47340",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 08:00-15:30; Tu 08:00-00:30; We 08:00-00:30; Th 08:00-00:30; Fr 08:00-00:30; Sa 08:00-00:30; Su 08:00-00:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-badf7e6a-9c94-46c9-a890-3384d873359d.jpg?v=mvzt4u68",
+          "credit": "Foto: Martina Pazzano su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:05:13.28+00:00",
+          "google": "2026-11-02T22:05:06.314+00:00"
+        },
+        {
+          "name": "Duca d'Aosta",
+          "url": "https://www.caffeducadaosta.it/",
+          "phone": "+39 348 614 4748",
+          "email": null,
+          "insta": "http://www.instagram.com/caffe_duca_daosta/",
+          "menu": "https://www.caffeducadaosta.it/menu/",
+          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
+          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-15-at-16.28.12-7.jpeg",
+          "credit": "Foto: caffeducadaosta.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-02T22:04:53.864+00:00",
+          "google": "2026-11-02T22:04:51.026+00:00"
+        },
+        {
           "name": "Il Colmetto | Ristorante in Franciacorta",
           "url": null,
           "phone": null,
@@ -1153,6 +1153,230 @@
           "photo_source": "auto",
           "enriched_at": "2026-11-03T09:38:31.453+00:00",
           "google": "2026-11-03T09:38:28.018+00:00"
+        },
+        {
+          "name": "Venta El Buscón",
+          "url": "https://tabernaelbuscon.com/",
+          "phone": "+34 915 22 54 12",
+          "email": null,
+          "insta": "https://instagram.com/ventaelbuscon",
+          "menu": "https://tabernaelbuscon.com/carta",
+          "hours": "Mo off; Tu 13:00-01:00; We 13:00-01:00; Th 13:00-01:00; Fr 13:00-01:00; Sa 13:00-01:00; Su 13:00-01:00",
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Madrid_-_Alhambra_%2835940002744%29.jpg/1280px-Madrid_-_Alhambra_%2835940002744%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "credit": "Foto: Fred Romero from Paris, France, CC BY 2.0, Wikimedia Commons",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-03T09:58:34.701+00:00",
+          "google": "2026-11-03T09:58:31.673+00:00"
+        },
+        {
+          "name": "Meliá Castilla",
+          "url": "https://www.melia.com/en/hotels/spain/madrid/melia-castilla?utm_campaign=google&utm_content=2804&utm_medium=organic&utm_source=directories",
+          "phone": "+34 915 67 50 00",
+          "email": null,
+          "insta": "https://instagram.com/meliahtlresorts/",
+          "menu": null,
+          "hours": null,
+          "photo": "https://dam.melia.com/melia/accounts/f8/4000018/projects/127/assets/be/43017/3bc2a708ee0d81a893fbbefaaf5fe7bc-1601249351.jpg?im=RegionOfInterestCrop=",
+          "credit": "Foto: www.melia.com",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-04T07:47:12.135+00:00",
+          "google": "2026-11-04T07:47:07.161+00:00"
+        },
+        {
+          "name": "Crazy Patrick’s",
+          "url": null,
+          "phone": "+39 375 102 6428",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo off; Tu 18:00-01:00; We 18:00-01:00; Th 18:00-01:00; Fr 18:00-01:00; Sa 18:00-01:00; Su 18:00-00:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-069dafa7-bd89-460a-80be-54acca1a51bf.jpg?v=mw37fiol",
+          "credit": "Foto: VASILIS Kolios su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:08:44.757+00:00",
+          "google": "2026-11-05T07:08:37.992+00:00"
+        },
+        {
+          "name": "Costa Sigieri",
+          "url": "http://www.costasigieri.it/",
+          "phone": "+39 02 8568 2152",
+          "email": null,
+          "insta": "https://www.instagram.com/costasigieri/",
+          "menu": "https://costasigieri.it/menu/",
+          "hours": "Mo 12:15-14:30,19:15-23:00; Tu 12:15-14:30,19:15-23:00; We 12:15-14:30,19:15-23:00; Th 12:15-14:30,19:15-23:00; Fr 12:15-14:30,19:15-23:00; Sa 12:15-14:30,19:15-23:00; Su 12:15-14:30,19:15-23:00",
+          "photo": "https://costasigieri.it/wp-content/uploads/2020/12/testa-home_mobile-costa.jpg?id=219",
+          "credit": "Foto: costasigieri.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:10:11.799+00:00",
+          "google": "2026-11-05T07:10:08.297+00:00"
+        },
+        {
+          "name": "Osteria Della Conca Fallata",
+          "url": "http://www.osteriadellaconcafallata.it/",
+          "phone": "+39 02 8951 1530",
+          "email": "osteriadellaconcafallata@gmail.com",
+          "insta": "https://www.instagram.com/osteriadellaconcafallata/",
+          "menu": "http://www.osteriadellaconcafallata.it/Men%C3%B9%20alla%20carta.pdf",
+          "hours": "Mo 12:00-15:00,19:30-23:30; Tu 12:00-14:45,19:30-23:30; We 12:00-15:00,19:30-00:00; Th 12:00-15:00,19:30-00:00; Fr 12:00-15:00,19:30-00:00; Sa 19:30-00:00; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-1bcede8a-580c-44c1-8e09-3f0cef7019a1.jpg?v=mw37hb2y",
+          "credit": "Foto: Osteria Della Conca Fallata su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:10:08.218+00:00",
+          "google": "2026-11-05T07:10:01.554+00:00"
+        },
+        {
+          "name": "Antica Trattoria Monluè",
+          "url": "https://trattoriamonlue.it/",
+          "phone": "+39 02 761 0246",
+          "email": null,
+          "insta": "https://www.instagram.com/anticatrattoriamonlue/",
+          "menu": "https://trattoriamonlue.it/wp-content/uploads/2026/11/Menu-Vini-Ottobre-2026.pdf",
+          "hours": "Mo 12:00-14:30,19:30-22:30; Tu 12:00-14:30,19:30-22:30; We 12:00-14:30,19:30-22:30; Th 12:00-14:30,19:30-22:30; Fr 12:00-14:30,19:30-22:30; Sa 12:30-15:30,19:30-22:30; Su 12:30-15:30",
+          "photo": "https://trattoriamonlue.it/wp-content/uploads/2022/11/Trattoria_Monlue.jpg",
+          "credit": "Foto: trattoriamonlue.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:10:22.398+00:00",
+          "google": "2026-11-05T07:10:13.01+00:00"
+        },
+        {
+          "name": "Osteria Fiorentina",
+          "url": "http://www.osteriafiorentina.com/",
+          "phone": "+39 02 8942 1512",
+          "email": null,
+          "insta": "https://www.instagram.com/osteriafiorentinamilano",
+          "menu": "https://www.osteriafiorentina.com/menu/",
+          "hours": "Mo 12:30-15:00,19:00-23:30; Tu 12:30-15:00,19:00-23:30; We 12:30-15:00,19:00-23:30; Th 12:30-15:00,19:00-23:30; Fr 12:30-15:00,19:00-23:30; Sa 12:30-15:00,19:00-23:30; Su 12:30-15:00,19:00-23:30",
+          "photo": "https://www.osteriafiorentina.com/wp-content/uploads/2026/01/osteriaFior_2@SimonaBrunoPh_68-scaled-1-e1767540863628.jpg",
+          "credit": "Foto: osteriafiorentina.com",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:10:34.783+00:00",
+          "google": "2026-11-05T07:10:27.948+00:00"
+        },
+        {
+          "name": "Osteria la Carbonaia",
+          "url": "http://www.osterialacarbonaia.it/",
+          "phone": "+39 02 4800 0088",
+          "email": null,
+          "insta": "https://www.instagram.com/osteria_la_carbonaia_carne/",
+          "menu": "https://www.osterialacarbonaia.it/il-nostro-menu/",
+          "hours": "Mo 12:30-14:30,19:30-23:00; Tu 12:30-14:30,19:30-23:00; We 12:30-14:30,19:30-23:00; Th 12:30-14:30,19:30-23:00; Fr 12:30-14:30,19:30-23:00; Sa 19:30-23:00; Su off",
+          "photo": "https://www.osterialacarbonaia.it/wp-content/uploads/2022/05/IMG-20181201-WA0009-scaled.jpeg",
+          "credit": "Foto: osterialacarbonaia.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:10:58.541+00:00",
+          "google": "2026-11-05T07:10:49.17+00:00"
+        },
+        {
+          "name": "El Barbapedana",
+          "url": "http://www.elbarbapedana.it/",
+          "phone": "+39 02 832 1732",
+          "email": null,
+          "insta": null,
+          "menu": "https://www.elbarbapedana.it/menu-pranzo-consegna-o-asporto/",
+          "hours": "Mo 12:30-14:30,19:30-23:00; Tu 12:30-14:30,19:30-23:00; We 19:30-23:00; Th 12:30-14:30,19:30-23:00; Fr 12:30-14:30,19:30-23:00; Sa 12:30-14:30,19:30-23:00; Su off",
+          "photo": "https://www.elbarbapedana.it/wp-content/uploads/2019/05/bgSlide.jpg",
+          "credit": "Foto: elbarbapedana.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:11:09.109+00:00",
+          "google": "2026-11-05T07:11:05.914+00:00"
+        },
+        {
+          "name": "Antica Hostaria della Lanterna",
+          "url": null,
+          "phone": "+39 02 5830 9604",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 12:30-15:00,20:30-00:00; Tu 12:30-15:00,20:30-00:00; We 12:30-15:00,20:30-00:00; Th 12:30-15:00,20:30-00:00; Fr 12:30-15:00,20:30-00:00; Sa 20:30-00:00; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-102dfa59-dbb4-4742-b0c8-b451a033289e.jpg?v=mw37iygm",
+          "credit": "Foto: Valentina Nuzzaci su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:11:25.174+00:00",
+          "google": "2026-11-05T07:11:21.246+00:00"
+        },
+        {
+          "name": "Tunas Pescheria & Bistrot",
+          "url": "https://tunasmilano.it/",
+          "phone": "+39 02 2318 3769",
+          "email": "info@tunasmilano.it",
+          "insta": "https://www.instagram.com/tunas.milano/",
+          "menu": "https://tunasmilano.it/menu/",
+          "hours": "Mo off; Tu 09:00-15:00,17:00-23:00; We 09:00-15:00,17:00-23:00; Th 09:00-15:00,17:00-23:00; Fr 09:00-15:00,17:00-23:00; Sa 09:00-23:00; Su 12:30-15:00,19:30-23:00",
+          "photo": "https://tunasmilano.it/wp-content/uploads/2021/10/Tunas-389-e1633527391183.jpg",
+          "credit": "Foto: tunasmilano.it",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:11:58.918+00:00",
+          "google": "2026-11-05T07:11:53.238+00:00"
+        },
+        {
+          "name": "Ironica Bar",
+          "url": null,
+          "phone": null,
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo off; Tu 18:00-23:00; We 18:00-23:00; Th 18:00-23:00; Fr 18:00-23:00; Sa 18:00-23:00; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-5d45f318-cfaf-4973-983f-36a14a5b0b42.jpg?v=mw37kovn",
+          "credit": "Foto: Ironica Bar su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:12:46.067+00:00",
+          "google": "2026-11-05T07:12:39.666+00:00"
+        },
+        {
+          "name": "Voya Rooftop",
+          "url": "https://voyarooftop.com/",
+          "phone": "+39 352 061 7165",
+          "email": "voyarooftop@gmail.com",
+          "insta": "https://www.instagram.com/voyarooftop.milano/",
+          "menu": null,
+          "hours": "Mo off; Tu 19:30-00:30; We 19:30-00:30; Th 19:30-00:30; Fr 20:00-02:00; Sa 20:00-02:00; Su 19:00-23:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-4064dba7-3fa9-42e4-8e5b-d847433310f4.jpg?v=mw37l3kt",
+          "credit": "Foto: Voya Rooftop su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:13:05.117+00:00",
+          "google": "2026-11-05T07:13:00.871+00:00"
+        },
+        {
+          "name": "Radio Rooftop Bar",
+          "url": null,
+          "phone": "+39 02 8422 0108",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 07:00-01:00; Tu 07:00-01:00; We 07:00-01:00; Th 07:00-01:00; Fr 07:00-01:00; Sa 07:00-01:00; Su 07:00-01:00",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-c52d7aaa-0dfd-498d-8547-1e655f56f2c7.jpg?v=mw37mg3z",
+          "credit": "Foto: valentina gariazzo su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-05T07:14:08.015+00:00",
+          "google": "2026-11-05T07:14:01.968+00:00"
+        },
+        {
+          "name": "Castelgrande",
+          "url": "https://castelgrande.ch/?page_id=59",
+          "phone": "+41 91 814 87 81",
+          "email": "ristorante@castelgrande.ch",
+          "insta": "https://www.instagram.com/ristorantecastelgrande/",
+          "menu": null,
+          "hours": "Mo off; Tu off; We off; Th 19:00-00:00; Fr 19:00-00:00; Sa 19:00-00:00; Su off",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/mw4uezt3-odno7.jpg",
+          "credit": null,
+          "photo_source": "own",
+          "enriched_at": "2026-11-06T10:40:05.458+00:00",
+          "google": "2026-11-06T10:40:01.961+00:00"
+        },
+        {
+          "name": "Celicioso",
+          "url": null,
+          "phone": "+34 915 31 88 87",
+          "email": null,
+          "insta": null,
+          "menu": null,
+          "hours": "Mo 09:30-21:30; Tu 09:30-21:30; We 09:30-21:30; Th 09:30-21:30; Fr 09:30-21:30; Sa 09:30-21:30; Su 09:30-21:30",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/auto-a9b14a5d-c0cc-4874-8cd5-5541032ca240.jpg?v=mw508k6c",
+          "credit": "Foto: Celicioso su Google Maps",
+          "photo_source": "auto",
+          "enriched_at": "2026-11-06T13:22:55.14+00:00",
+          "google": "2026-11-06T13:22:51.424+00:00"
         }
       ]
     }

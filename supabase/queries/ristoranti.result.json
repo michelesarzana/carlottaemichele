@@ -40,6 +40,14 @@
     "extra_categories": []
   },
   {
+    "id": "069dafa7-bd89-460a-80be-54acca1a51bf",
+    "name": "Crazy Patrick’s",
+    "area": "Milano",
+    "address": "Crazy Patrick’s, Via Dalmazia, Quartiere Forlanini, Mecenate, Municipio 4, Milano, Rodano, Milano, Lombardia, 20133, Italia",
+    "category_id": "bere",
+    "extra_categories": []
+  },
+  {
     "id": "706dbc3b-c873-4166-82c5-3f0d80ce6647",
     "name": "Farmhouse Alle Baite Branzi",
     "area": "Branzi",
@@ -116,6 +124,22 @@
     "extra_categories": []
   },
   {
+    "id": "102dfa59-dbb4-4742-b0c8-b451a033289e",
+    "name": "Antica Hostaria della Lanterna",
+    "area": "Milano",
+    "address": "Via Giuseppe Mercalli, Santa Sofia, Vigentina, Municipio 1, Milano, Rodano, Milano, Lombardia, 20122, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "99ab8f86-4ddc-47da-bb22-d01b2b901b5f",
+    "name": "Antica Trattoria Monluè",
+    "area": "Milano",
+    "address": "Antica Trattoria Monluè, 75, Via Monluè, Parco Monluè - Ponte Lambro, Municipio 4, Milano, Rodano, Milano, Lombardia, 20138, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "2dbdd318-fd3d-4ef8-b38b-641abc4c3f92",
     "name": "Bottega Sicula",
     "area": "Milano",
@@ -156,10 +180,26 @@
     "extra_categories": []
   },
   {
+    "id": "73d09b67-077d-4f65-a177-160179893921",
+    "name": "Costa Sigieri",
+    "area": "Milano",
+    "address": "Via Sigieri, Porta Romana, Municipio 4, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "655f859f-988b-43a4-a5b3-109c81ac0b5c",
     "name": "Duca d'Aosta",
     "area": "Sottochiesa",
     "address": "SP25, Sottochiesa (BG)",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "83c9bd8c-4d41-4141-966f-dd18563658fa",
+    "name": "El Barbapedana",
+    "area": "Milano",
+    "address": "Corso Cristoforo Colombo, Navigli, Municipio 6, Milano, Rodano, Milano, Lombardia, 20144, Italia",
     "category_id": "ristoranti",
     "extra_categories": []
   },
@@ -240,10 +280,34 @@
     "extra_categories": []
   },
   {
+    "id": "1bcede8a-580c-44c1-8e09-3f0cef7019a1",
+    "name": "Osteria Della Conca Fallata",
+    "area": "Milano",
+    "address": "Osteria Della Conca Fallata, 113, Via della Chiesa Rossa, Cascina Caimera, Stadera, Municipio 5, Milano, Rodano, Milano, Lombardia, 20142, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "84a4cec2-f656-4e12-8900-585b77f7e2cd",
+    "name": "Osteria Fiorentina",
+    "area": "Milano",
+    "address": "Via Novi, Tortona, Municipio 6, Milano, Rodano, Milano, Lombardia, 20144, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "9710c8bb-1b4e-4067-ba1f-459023d68a46",
     "name": "Osteria il Gran Burrone",
     "area": "Milano",
     "address": "10, Via Mantova, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "a213c453-8e7e-4b50-93cb-22fb9883d748",
+    "name": "Osteria la Carbonaia",
+    "area": "Milano",
+    "address": "Via Giosuè Carducci, Duomo, Cerchia dei Navigli, Municipio 1, Milano, Rodano, Milano, Lombardia, 20123, Italia",
     "category_id": "ristoranti",
     "extra_categories": []
   },
@@ -368,10 +432,26 @@
     "extra_categories": []
   },
   {
+    "id": "5591a37f-0ad9-4814-ae39-f24106dacedf",
+    "name": "Tunas Pescheria & Bistrot",
+    "area": "Milano",
+    "address": "Via Galvano Fiamma, XXII Marzo, Municipio 4, Milano, Rodano, Milano, Lombardia, 20129, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "1ef4a67c-a084-46ed-8020-2226b893d133",
     "name": "Un Sacco Bello",
     "area": "Milano",
     "address": "50, Via Lodovico Muratori, Porta Romana, Municipio 4, Milano, Rodano, Milano, Lombardia, 20135, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "e3122166-2164-4eb4-bad9-57021fbab6cc",
+    "name": "Venta El Buscón",
+    "area": "Madrid",
+    "address": "Venta El Buscón, 5-7, Calle de la Victoria, Sol, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
     "category_id": "ristoranti",
     "extra_categories": []
   },
@@ -408,12 +488,32 @@
     "extra_categories": []
   },
   {
+    "id": "5d45f318-cfaf-4973-983f-36a14a5b0b42",
+    "name": "Ironica Bar",
+    "area": "Milano",
+    "address": "Via Carlo Valvassori Peroni, Città Studi, Municipio 3, Milano, Rodano, Milano, Lombardia, 20134, Italia",
+    "category_id": "vino",
+    "extra_categories": [
+      "bere"
+    ]
+  },
+  {
     "id": "54a1c198-0da8-44b7-bb6b-aa826da33e7f",
     "name": "Primo Naso Vineria",
     "area": "Milano",
     "address": "1, Via San Faustino, Lambrate, Municipio 3, Milano, Rodano, Milano, Lombardia, 20134, Italia",
     "category_id": "vino",
     "extra_categories": []
+  },
+  {
+    "id": "c52d7aaa-0dfd-498d-8547-1e655f56f2c7",
+    "name": "Radio Rooftop Bar",
+    "area": "Milano",
+    "address": "Via Marco Polo, Centrale, Municipio 2, Milano, Rodano, Milano, Lombardia, 20124, Italia",
+    "category_id": "vino",
+    "extra_categories": [
+      "bere"
+    ]
   },
   {
     "id": "f0aff198-55db-4867-8cee-5d417c953f82",
@@ -423,6 +523,16 @@
     "category_id": "vino",
     "extra_categories": [
       "ristoranti"
+    ]
+  },
+  {
+    "id": "4064dba7-3fa9-42e4-8e5b-d847433310f4",
+    "name": "Voya Rooftop",
+    "area": "Milano",
+    "address": "6469_50936, Villapizzone, Municipio 8 di Milano, Milano, Lombardia, 20156, Italia",
+    "category_id": "vino",
+    "extra_categories": [
+      "bere"
     ]
   }
 ]

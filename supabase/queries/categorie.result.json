@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ristoranti",
+    "name": "Mangiare",
+    "icon": "fork"
+  },
+  {
+    "id": "bar",
+    "name": "Bar e caffè",
+    "icon": "cup"
+  },
+  {
+    "id": "bere",
+    "name": "Bere",
+    "icon": "beer"
+  },
+  {
+    "id": "vino",
+    "name": "Vino e cantine",
+    "icon": "wine"
+  },
+  {
+    "id": "negozi",
+    "name": "Negozi",
+    "icon": "bag"
+  },
+  {
+    "id": "posti",
+    "name": "Posti",
+    "icon": "mountain"
+  },
+  {
+    "id": "esperienze",
+    "name": "Esperienze",
+    "icon": "star"
+  },
+  {
+    "id": "dormire",
+    "name": "Dormire",
+    "icon": "bed"
+  },
+  {
+    "id": "gluten-free",
+    "name": "Gluten Free",
+    "icon": "pin"
+  }
+]
