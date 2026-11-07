@@ -122,6 +122,13 @@ async function googleLocate(text: string) {
   } catch { return null; }
 }
 
+function looksLikeAddress(s: string) {
+  const t = s.trim();
+  return /^(via|viale|v\.le|piazza|p\.za|piazzale|corso|c\.so|largo|vicolo|strada|str\.|località|loc\.|frazione|contrada|calle|c\/|avenida|avda\.?|av\.|plaza|pza\.|paseo|carrer|rue|boulevard|bd|street|road)\b/i.test(t) && /\d/.test(t)
+    || /^\d/.test(t)
+    || /\b\d{5}\b/.test(t) || /,\s*\d+[a-z]?\b/i.test(t) || /\b\d+[a-z]?,/i.test(t) || /Google Maps$/i.test(t);
+}
+
 async function resolveShort(req: Request, start: URL) {
   if (!SHORT.some((r) => r.test(start.hostname))) return json(req, { error: 'solo link corti di Google Maps' }, 400);
   let current = start;
@@ -168,11 +175,14 @@ async function resolveShort(req: Request, start: URL) {
       hops.push('google: posizione trovata');
     } else hops.push('google: niente');
   }
+  // Il nome non deve mai essere un indirizzo: tra i candidati prendo il primo che non lo sembra
+  const name = [gname, parts[0], title].find((x) => x && !looksLikeAddress(x)) || null;
+  hops.push(`nome: ${name || 'non trovato'}`);
   return json(req, {
     url: current.href,
     lat: coords?.lat ?? null,
     lng: coords?.lng ?? null,
-    name: gname || title || parts[0] || null,
+    name,
     address: gaddress || (parts.length > 1 ? parts.slice(1).join(', ') : null),
     hops
   });

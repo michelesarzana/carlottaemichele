@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261107145522';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261107145522';
-import { Sheet } from './sheet.js?v=20261107145522';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261107145522';
-import { prettyHours } from './enrich.js?v=20261107145522';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261107184851';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261107184851';
+import { Sheet } from './sheet.js?v=20261107184851';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261107184851';
+import { prettyHours } from './enrich.js?v=20261107184851';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -1896,6 +1896,13 @@ async function nominatimReverse(lat, lng) {
   return { area: areaOf(x.address), address: x.display_name };
 }
 
+function looksLikeAddress(s) {
+  const t = String(s || '').trim();
+  return /^(via|viale|v\.le|piazza|p\.za|piazzale|corso|c\.so|largo|vicolo|strada|str\.|località|loc\.|frazione|contrada|calle|c\/|avenida|avda\.?|av\.|plaza|pza\.|paseo|carrer|rue|boulevard|bd|street|road)\b/i.test(t) && /\d/.test(t)
+    || /^\d/.test(t)
+    || /\b\d{5}\b/.test(t) || /,\s*\d+[a-z]?\b/i.test(t) || /\b\d+[a-z]?,/i.test(t);
+}
+
 function parseLink(u) {
   const out = {};
   const m = u.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)
@@ -2392,7 +2399,8 @@ function openPlaceForm(place = null, preset = {}) {
               r = { ...r, ...Object.fromEntries(Object.entries(full).filter(([, v]) => v != null && v !== '')), isMap: true, isShort: true };
             }
             if (typeof data?.lat === 'number') { r.lat = data.lat; r.lng = data.lng; }
-            if (data?.name) r.name = data.name;
+            // Il nome scritto nel testo condiviso vince; un indirizzo non è mai un nome
+            if (data?.name && !looksLikeAddress(data.name)) r.name = textName && !looksLikeAddress(textName) ? textName : data.name;
             if (data?.address) r.address = data.address;
           } catch (e) {
             console.warn('resolve-link', e);
@@ -2405,6 +2413,7 @@ function openPlaceForm(place = null, preset = {}) {
             q('#pf-read').textContent = 'Leggi';
           }
         }
+        if (r.name && looksLikeAddress(r.name)) { if (!r.address) r.address = r.name; r.name = null; }
         if (r.name && !f.name.trim()) { f.name = r.name; q('#pf-name').value = r.name; }
         if (!r.isMap && !f.url && safeUrl(u)) { f.url = u; q('#pf-url').value = u; }
         if (r.lat != null) {
