@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261106195550';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261106195550';
-import { Sheet } from './sheet.js?v=20261106195550';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261106195550';
-import { prettyHours } from './enrich.js?v=20261106195550';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261107145522';
+import { icon, CATEGORY_ICONS } from './icons.js?v=20261107145522';
+import { Sheet } from './sheet.js?v=20261107145522';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261107145522';
+import { prettyHours } from './enrich.js?v=20261107145522';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -259,7 +259,7 @@ function locateMe() {
     );
   });
 }
-function fmtDist(m) { return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toLocaleString('it-IT', { maximumFractionDigits: 1 })} km`; }
+function fmtDist(m) { return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toLocaleString('it-IT', { maximumFractionDigits: m < 100000 ? 1 : 0 })} km`; }
 
 // ─────────────────────────────────────────────
 // Mappa
@@ -474,6 +474,8 @@ function renderAreas() {
       const ring = tripArea(t);
       if (!ring) continue;
       features.push({ type: 'Feature', properties: { id: t.id, sel: t.id === sel }, geometry: { type: 'Polygon', coordinates: [ring] } });
+      // Viaggio finito: resta l'area, sparisce l'etichetta (tranne quando lo state guardando)
+      if (t.status === 'fatto' && t.id !== sel) continue;
       const top = ring.reduce((a, b) => (b[1] > a[1] ? b : a));
       const n = tripPlaces(t).length;
       const el = document.createElement('div');
@@ -1402,7 +1404,10 @@ function viewTrip() {
 
   if (S.editor) {
     body += `
-      <button class="btn btn-quiet btn-block" style="margin-top:16px" data-act="add-place-trip" data-id="${esc(t.id)}">${icon('plus', 16, 2.6)}Aggiungi un posto al viaggio</button>
+      <div class="trip-add-row">
+        <button class="btn btn-accent" data-act="bulk-trip" data-id="${esc(t.id)}">${icon('sparkle', 16, 2.2)}Dai nostri posti</button>
+        <button class="btn btn-quiet" data-act="add-place-trip" data-id="${esc(t.id)}">${icon('plus', 16, 2.6)}Nuovo posto</button>
+      </div>
       <div class="editor-tools">
         <button class="btn btn-quiet" data-act="edit-trip" data-id="${esc(t.id)}">${icon('edit', 16)}Modifica</button>
         <button class="btn btn-danger" data-act="delete-trip" data-id="${esc(t.id)}">${icon('trash', 16)}Elimina</button>
@@ -1481,6 +1486,7 @@ $('sheet').addEventListener('click', async (e) => {
     case 'add-trip': openTripForm(); break;
     case 'edit-trip': openTripForm(S.tripById.get(id)); break;
     case 'add-place-trip': openPlaceForm(null, { trip_id: id }); break;
+    case 'bulk-trip': openTripPicker(S.tripById.get(id)); break;
     case 'delete-trip': {
       const tr = S.tripById.get(id);
       if (!tr || !confirm(`Eliminare il viaggio "${tr.name}"? I posti restano sulla mappa.`)) return;
@@ -2604,6 +2610,95 @@ async function tripCoversBackfill() {
 }
 
 // Nuovo viaggio / modifica
+// Aggiungi al viaggio, in un colpo solo, i posti già salvati vicino alla destinazione
+function tripCenter(t) {
+  if (typeof t.lat === 'number' && typeof t.lng === 'number') return { lat: t.lat, lng: t.lng };
+  const ps = tripPlaces(t);
+  if (!ps.length) return null;
+  return { lat: ps.reduce((a, p) => a + p.lat, 0) / ps.length, lng: ps.reduce((a, p) => a + p.lng, 0) / ps.length };
+}
+function openTripPicker(trip) {
+  if (!trip) return;
+  const center = tripCenter(trip);
+  let radius = center ? 25 : 0; // km, 0 = tutti
+  let q = '';
+  const picked = new Set();
+  const candidates = () => S.places
+    .filter((p) => p.trip_id !== trip.id && p.lat != null)
+    .map((p) => ({ p, d: center ? metersBetween(center, p) : null }))
+    .filter(({ p, d }) => (!radius || d == null || d <= radius * 1000) && (!q || norm(`${p.name} ${p.area || ''} ${(p.cuisines || []).join(' ')}`).includes(norm(q))))
+    .sort((a, b) => (a.p.trip_id ? 1 : 0) - (b.p.trip_id ? 1 : 0) || (a.d ?? 0) - (b.d ?? 0) || a.p.name.localeCompare(b.p.name));
+  openModal({
+    title: `Aggiungi a ${trip.name}`,
+    rightLabel: 'Aggiungi',
+    async onSave(api) {
+      const ids = [...picked];
+      if (!ids.length) return;
+      const { error } = await sb.from('places').update({ trip_id: trip.id, day: null }).in('id', ids);
+      if (error) return fail(error, 'Non riesco ad aggiungerli');
+      for (const id of ids) { const p = S.placeById.get(id); if (p) { p.trip_id = trip.id; p.day = null; } }
+      api.close();
+      renderMarkers(); renderAreas(); renderSheet();
+      toast(`${ids.length} ${ids.length === 1 ? 'posto aggiunto' : 'posti aggiunti'} a ${trip.name}`);
+    },
+    mount(body, api) {
+      body.innerHTML = `
+        ${center ? `<div class="segmented" id="tp-r" role="group" aria-label="Distanza dalla destinazione">
+          ${[[10, '10 km'], [25, '25 km'], [50, '50 km'], [0, 'Tutti']].map(([v, l]) => `<button type="button" data-r="${v}" aria-pressed="${radius === v}">${l}</button>`).join('')}
+        </div>` : '<div class="field-hint">Il viaggio non ha ancora una destinazione: ti mostro tutti i posti.</div>'}
+        <div class="group"><div class="group-line"><input class="left" id="tp-q" type="search" placeholder="Cerca per nome, zona o cucina" aria-label="Cerca"></div></div>
+        <div class="tp-head"><span id="tp-count"></span><button type="button" class="link-btn" id="tp-all"></button></div>
+        <div class="tp-list" id="tp-list"></div>`;
+      const draw = () => {
+        const list = candidates();
+        const free = list.filter(({ p }) => !p.trip_id);
+        body.querySelector('#tp-count').textContent = list.length
+          ? `${list.length} ${list.length === 1 ? 'posto' : 'posti'}${center && radius ? ` entro ${radius} km` : ''}${picked.size ? ` · ${picked.size} scelti` : ''}`
+          : 'Nessun posto qui intorno';
+        const allOn = free.length && free.every(({ p }) => picked.has(p.id));
+        const allBtn = body.querySelector('#tp-all');
+        allBtn.textContent = allOn ? 'Togli tutti' : 'Seleziona tutti';
+        allBtn.hidden = !free.length;
+        body.querySelector('#tp-list').innerHTML = list.map(({ p, d }) => {
+          const c = cat(p.category_id);
+          const ph = safeUrl(p.photo_url);
+          const other = p.trip_id ? S.tripById.get(p.trip_id)?.name : '';
+          const sub = [c.name, (p.cuisines || []).join(', '), d != null ? fmtDist(d) : '', other ? `ora in ${other}` : ''].filter(Boolean).map(esc).join(' · ');
+          return `<label class="tp-row${other ? ' other' : ''}">
+            <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(c.icon, 16, 2.1)}</span>
+            <span class="row-main"><span class="row-title">${esc(p.name)}${michelin(p, 10)}</span><span class="row-sub">${sub}</span></span>
+            <input type="checkbox" class="tp-check" data-id="${esc(p.id)}" ${picked.has(p.id) ? 'checked' : ''} aria-label="${esc(p.name)}">
+          </label>`;
+        }).join('');
+        api.setSaveEnabled(picked.size > 0);
+        const save = document.querySelector('.modal [data-save]');
+        if (save) save.textContent = picked.size ? `Aggiungi ${picked.size}` : 'Aggiungi';
+      };
+      body.querySelector('#tp-r')?.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-r]');
+        if (!b) return;
+        radius = Number(b.dataset.r);
+        body.querySelectorAll('#tp-r [data-r]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        draw();
+      });
+      body.querySelector('#tp-q').addEventListener('input', (e) => { q = e.target.value; draw(); });
+      body.querySelector('#tp-all').addEventListener('click', () => {
+        const free = candidates().filter(({ p }) => !p.trip_id);
+        const allOn = free.every(({ p }) => picked.has(p.id));
+        for (const { p } of free) allOn ? picked.delete(p.id) : picked.add(p.id);
+        draw();
+      });
+      body.querySelector('#tp-list').addEventListener('change', (e) => {
+        const c = e.target.closest('.tp-check');
+        if (!c) return;
+        c.checked ? picked.add(c.dataset.id) : picked.delete(c.dataset.id);
+        draw();
+      });
+      draw();
+    }
+  });
+}
+
 function openTripForm(trip = null) {
   const dates = trip ? S.tripDates.get(trip.id) || {} : {};
   const f = {
@@ -2652,6 +2747,7 @@ function openTripForm(trip = null) {
             <button class="btn btn-quiet" id="tf-search">Cerca</button>
           </div>
           <div id="tf-results"></div>
+          ${trip ? `<button type="button" class="btn btn-quiet btn-block" id="tf-bulk" style="margin-top:4px">${icon('sparkle', 16, 2.2)}Aggiungi dai nostri posti</button>` : ''}
           <div class="field-hint" id="tf-dest">${f.lat != null ? `${icon('check', 12, 3)} ${esc(f.destination)}` : 'Serve per l’area sulla mappa finché non ci sono posti.'}</div>
         </div>
         <div>
@@ -2769,6 +2865,7 @@ function openTripForm(trip = null) {
       q('#tf-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
 
       q('#tf-name').addEventListener('input', (e) => { f.name = e.target.value; validate(); });
+      q('#tf-bulk')?.addEventListener('click', () => { api.close(); setTimeout(() => openTripPicker(trip), 330); });
       q('#tf-start').addEventListener('input', (e) => { f.start_on = e.target.value; });
       q('#tf-end').addEventListener('input', (e) => { f.end_on = e.target.value; });
       q('#tf-days').addEventListener('change', (e) => { f.use_days = e.target.checked; });

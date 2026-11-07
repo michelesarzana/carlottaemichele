@@ -834,3 +834,15 @@ a:hover { color: var(--accent-strong); }
 /* Pokémon: rosso acceso con bordo scuro */
 .pin[data-cat="pokemon"] { border-color: #1C1C1E; }
 .pin.done[data-cat="pokemon"] { border-color: #1C1C1E; }
+
+/* Viaggio: aggiungi dai nostri posti */
+.trip-add-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.trip-add-row .btn { flex: 1 1 160px; }
+.tp-head { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; font-size: 0.8125rem; color: var(--ink-3); font-weight: 600; min-height: 32px; }
+.tp-head .link-btn { font-size: 0.875rem; }
+.tp-list { background: #fff; border-radius: 14px; overflow: hidden; }
+.tp-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; min-height: 56px; cursor: pointer; }
+.tp-row + .tp-row { box-shadow: 0 -0.5px 0 var(--line); }
+.tp-row .row-main { flex: 1; min-width: 0; }
+.tp-row.other .row-sub { color: #B25E00; }
+.tp-check { width: 24px; height: 24px; accent-color: var(--accent); flex: none; margin: 0; }
