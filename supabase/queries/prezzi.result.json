@@ -1,85 +1,85 @@
 [
   {
-    "posti": 96,
-    "prezzo_cercato": 96,
-    "con_prezzo": 59,
+    "posti": 111,
+    "prezzo_cercato": 111,
+    "con_prezzo": 64,
     "esempi": [
       {
-        "n": "Celicioso",
-        "p": 1,
+        "n": "Bentoteca Milano",
+        "p": 4,
+        "r": "da 100 €"
+      },
+      {
+        "n": "A10 Drugstore",
+        "p": null,
+        "r": null
+      },
+      {
+        "n": "Azabu10",
+        "p": 4,
+        "r": "da 100 €"
+      },
+      {
+        "n": "El Diario",
+        "p": 2,
         "r": "10–20 €"
       },
       {
-        "n": "Castelgrande",
-        "p": 4,
-        "r": "da 100 CHF"
+        "n": "Cervantes Cervecería",
+        "p": null,
+        "r": null
       },
       {
-        "n": "Radio Rooftop Bar",
-        "p": 3,
-        "r": "20–60 €"
+        "n": "Plaza de España",
+        "p": null,
+        "r": null
       },
       {
-        "n": "Voya Rooftop",
-        "p": 4,
-        "r": "40–100 €"
-      },
-      {
-        "n": "Ironica Bar",
+        "n": "O Cacho do José",
         "p": 2,
         "r": "20–30 €"
       },
       {
-        "n": "Tunas Pescheria & Bistrot",
-        "p": 2,
+        "n": "Itaca TCG Store",
+        "p": null,
         "r": null
       },
       {
-        "n": "Antica Hostaria della Lanterna",
-        "p": 2,
-        "r": "10–20 €"
+        "n": "Tienda de Juegos - TEMPEST STORE",
+        "p": null,
+        "r": null
       },
       {
-        "n": "El Barbapedana",
-        "p": 3,
-        "r": "30–40 €"
+        "n": "TopDeck",
+        "p": null,
+        "r": null
       },
       {
-        "n": "Osteria la Carbonaia",
-        "p": 3,
-        "r": "30–60 €"
+        "n": "Factory Cards",
+        "p": null,
+        "r": null
       },
       {
-        "n": "Osteria Fiorentina",
-        "p": 3,
-        "r": "30–70 €"
-      },
-      {
-        "n": "Antica Trattoria Monluè",
-        "p": 3,
-        "r": "40–70 €"
-      },
-      {
-        "n": "Costa Sigieri",
-        "p": 3,
-        "r": "40–70 €"
+        "n": "collectorage",
+        "p": null,
+        "r": null
       }
     ],
     "uso": [
       {
         "month": "2026-11",
+        "kind": "photo",
+        "count": 29
+      },
+      {
+        "month": "2026-11",
         "kind": "locate",
-        "count": 28
+        "count": 45
       },
       {
         "month": "2026-11",
         "kind": "search",
-        "count": 150
-      },
-      {
-        "month": "2026-11",
-        "kind": "photo",
-        "count": 21
+        "count": 165
       },
       {
         "month": "2026-10",

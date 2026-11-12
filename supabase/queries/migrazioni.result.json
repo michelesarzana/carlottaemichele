@@ -1,10 +1,10 @@
 [
   {
     "ultime": [
-      "027_icona_spiga.sql",
-      "026_mezzi_voti.sql",
-      "025_cucina.sql",
-      "024_michelin.sql"
+      "030_categorie_emoji.sql",
+      "029_pokemon_rosso.sql",
+      "028_categoria_pokemon.sql",
+      "027_icona_spiga.sql"
     ],
     "colonne": [
       "michelin_bib",

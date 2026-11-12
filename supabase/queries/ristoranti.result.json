@@ -8,14 +8,6 @@
     "extra_categories": []
   },
   {
-    "id": "a368c05d-acf6-44be-ba32-b61dcab4b92a",
-    "name": "Bodegas Rosell",
-    "area": "Madrid",
-    "address": "Calle de las Delicias, Palos de la Frontera, Arganzuela, Madrid, Comunidad de Madrid, 28045, Spagna",
-    "category_id": "bar",
-    "extra_categories": []
-  },
-  {
     "id": "1b0d8120-6b8a-4704-af93-a1c7d4523519",
     "name": "La Casa del Abuelo",
     "area": "Calle de la Victoria",
@@ -32,10 +24,26 @@
     "extra_categories": []
   },
   {
+    "id": "a368c05d-acf6-44be-ba32-b61dcab4b92a",
+    "name": "Bodegas Rosell",
+    "area": "Madrid",
+    "address": "Calle de las Delicias, Palos de la Frontera, Arganzuela, Madrid, Comunidad de Madrid, 28045, Spagna",
+    "category_id": "bere",
+    "extra_categories": []
+  },
+  {
     "id": "aaff1290-f8e2-435b-8aef-ae602324b7eb",
     "name": "Casa Camacho",
     "area": "Madrid",
     "address": "Calle de San Andrés, Malasaña, Universidad, Centro, Madrid, Comunidad de Madrid, 28004, Spagna",
+    "category_id": "bere",
+    "extra_categories": []
+  },
+  {
+    "id": "f0d40b7c-afb1-4e4f-8185-7ccdb8d68da4",
+    "name": "Cervantes Cervecería",
+    "area": "Madrid",
+    "address": "Plaza de Jesús, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
     "category_id": "bere",
     "extra_categories": []
   },
@@ -46,6 +54,16 @@
     "address": "Crazy Patrick’s, Via Dalmazia, Quartiere Forlanini, Mecenate, Municipio 4, Milano, Rodano, Milano, Lombardia, 20133, Italia",
     "category_id": "bere",
     "extra_categories": []
+  },
+  {
+    "id": "507e674b-2b31-4d37-a766-39523bf23887",
+    "name": "El Diario",
+    "area": "Madrid",
+    "address": "El Diario, 69, Calle de las Huertas, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28014, Spagna",
+    "category_id": "bere",
+    "extra_categories": [
+      "ristoranti"
+    ]
   },
   {
     "id": "706dbc3b-c873-4166-82c5-3f0d80ce6647",
@@ -108,6 +126,14 @@
     ]
   },
   {
+    "id": "014994f9-ad74-4224-bcc3-fdd245ba8b34",
+    "name": "A10 Drugstore",
+    "area": "Milano",
+    "address": "Via Giovanni Cagliero, Quartiere Maggiolina, Maciachini - Maggiolina, Municipio 2, Milano, Rodano, Milano, Lombardia, 20125, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "50846a08-384e-475f-8afd-3edd201238dc",
     "name": "Albergo Ristorante dell'Angelo",
     "area": "Vedeseta",
@@ -136,6 +162,22 @@
     "name": "Antica Trattoria Monluè",
     "area": "Milano",
     "address": "Antica Trattoria Monluè, 75, Via Monluè, Parco Monluè - Ponte Lambro, Municipio 4, Milano, Rodano, Milano, Lombardia, 20138, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "c2ae6281-6872-4d72-88d6-9eb4673114a2",
+    "name": "Azabu10",
+    "area": "Milano",
+    "address": "Via San Glicerio, Borgo Pirelli, Bicocca, Municipio 9, Milano, Rodano, Milano, Lombardia, 20126, Italia",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
+    "id": "8f3d615d-291e-48b8-b9ab-9d6256a38b03",
+    "name": "Bentoteca Milano",
+    "area": "Milano",
+    "address": "Via San Calocero, Magenta - San Vittore, Municipio 1, Milano, Rodano, Milano, Lombardia, 20123, Italia",
     "category_id": "ristoranti",
     "extra_categories": []
   },
@@ -264,6 +306,14 @@
     "extra_categories": []
   },
   {
+    "id": "88dc6370-937a-4172-bd77-8843db690733",
+    "name": "Mendokoro Janomeya",
+    "area": "Kyoto",
+    "address": "花遊小路, 中之町, 中京区, Kyoto, Prefettura di Kyoto, 604-8042, Giappone",
+    "category_id": "ristoranti",
+    "extra_categories": []
+  },
+  {
     "id": "82c5b9f8-a9f7-4d9a-b52d-3bc87e0a42c6",
     "name": "Mercado de San Antón",
     "area": "Chueca",
@@ -278,6 +328,16 @@
     "address": "Via Adige, Porta Romana, Municipio 5, Milano, Rodano, Milano, Lombardia, 20135, Italia",
     "category_id": "ristoranti",
     "extra_categories": []
+  },
+  {
+    "id": "7fb94815-f367-48a0-832f-47fe24975d9d",
+    "name": "O Cacho do José",
+    "area": "Madrid",
+    "address": "Calle del Príncipe, Barrio de las Letras, Cortes, Centro, Madrid, Comunidad de Madrid, 28012, Spagna",
+    "category_id": "ristoranti",
+    "extra_categories": [
+      "bere"
+    ]
   },
   {
     "id": "1bcede8a-580c-44c1-8e09-3f0cef7019a1",

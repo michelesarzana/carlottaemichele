@@ -27,7 +27,10 @@
         "024_michelin.sql",
         "025_cucina.sql",
         "026_mezzi_voti.sql",
-        "027_icona_spiga.sql"
+        "027_icona_spiga.sql",
+        "028_categoria_pokemon.sql",
+        "029_pokemon_rosso.sql",
+        "030_categorie_emoji.sql"
       ],
       "cron": [
         {
@@ -42,23 +45,203 @@
         {
           "status": 200,
           "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Celicioso\",\"filled\":[\"price\",\"price_range\",\"cuisines\",\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true}]}",
-          "at": "2026-11-06T13:22:51.2553+00:00"
+          "body": "{\"google\":true,\"done\":[{\"name\":\"Bentoteca Milano\",\"filled\":[\"price\",\"price_range\",\"url\",\"phone\",\"opening_hours\",\"instagram\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
+          "at": "2026-11-12T06:47:26.637401+00:00"
         },
         {
           "status": 200,
           "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Celicioso\",\"filled\":[\"price\",\"price_range\",\"cuisines\",\"phone\",\"opening_hours\",\"photo_url\"],\"from\":[\"Google\"],\"ok\":true}]}",
-          "at": "2026-11-06T13:22:20.038226+00:00"
+          "body": "{\"google\":true,\"done\":[{\"name\":\"A10 Drugstore\",\"filled\":[\"url\",\"opening_hours\",\"phone\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
+          "at": "2026-11-12T06:46:18.944185+00:00"
         },
         {
           "status": 200,
           "err": null,
-          "body": "{\"google\":true,\"done\":[{\"name\":\"Castelgrande\",\"filled\":[\"price\",\"price_range\",\"cuisine_checked_at\",\"url\",\"phone\",\"opening_hours\",\"email\",\"instagram\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
-          "at": "2026-11-06T10:40:00.54647+00:00"
+          "body": "{\"google\":true,\"done\":[{\"name\":\"Azabu10\",\"filled\":[\"price\",\"price_range\",\"url\",\"opening_hours\",\"phone\",\"photo_url\"],\"from\":[\"Google\",\"sito\"],\"ok\":true}]}",
+          "at": "2026-11-12T06:45:50.342443+00:00"
         }
       ],
       "posti": [
+        {
+          "name": "Bentoteca Milano",
+          "url": "https://www.bentoteca.com/",
+          "phone": "+39 340 835 7453",
+          "hours": "Mo off; Tu off; We 19:00-23:00; Th 19:00-23:00; Fr 12:30-15:00,19:00-23:00; Sa 12:30-15:00,19:00-23:00; Su 12:30-15:00,19:00-23:00",
+          "menu": null,
+          "insta": "https://www.instagram.com/bentotecamilano/",
+          "photo": "https://images.squarespace-cdn.com/content/v1/5eabe113286f2f29298ac6ec/0e135f02-",
+          "credit": "Foto: bentoteca.com",
+          "src": "auto",
+          "enriched": "2026-11-12T06:47:30.225+00:00"
+        },
+        {
+          "name": "A10 Drugstore",
+          "url": "https://a10ecosystem.com/a10-drugstore",
+          "phone": "+39 331 255 8271",
+          "hours": "Mo off; Tu 11:30-22:00; We 11:30-22:00; Th 11:30-22:00; Fr 11:30-22:00; Sa 11:30-22:00; Su off",
+          "menu": null,
+          "insta": null,
+          "photo": "https://a10ecosystem.com/media/azabu/hero-home-desktop.jpg",
+          "credit": "Foto: a10ecosystem.com",
+          "src": "auto",
+          "enriched": "2026-11-12T06:46:22.467+00:00"
+        },
+        {
+          "name": "Azabu10",
+          "url": "https://a10ecosystem.com/",
+          "phone": "+39 331 255 8271",
+          "hours": "Mo off; Tu 19:00-23:00; We 19:00-23:00; Th 19:00-23:00; Fr 13:00-14:15,19:00-23:00; Sa 13:00-14:00,19:00-23:00; Su off",
+          "menu": null,
+          "insta": null,
+          "photo": "https://a10ecosystem.com/media/azabu/hero-home-desktop.jpg",
+          "credit": "Foto: a10ecosystem.com",
+          "src": "auto",
+          "enriched": "2026-11-12T06:45:54.459+00:00"
+        },
+        {
+          "name": "El Diario",
+          "url": null,
+          "phone": "+34 914 29 28 00",
+          "hours": "Mo 12:00-00:00; Tu 12:00-00:00; We 12:00-00:00; Th 12:00-00:00; Fr 12:00-01:00; Sa 12:00-01:00; Su 12:00-00:00",
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: Cervecería El Diario su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-07T18:42:11.681+00:00"
+        },
+        {
+          "name": "Cervantes Cervecería",
+          "url": null,
+          "phone": "+34 914 29 60 93",
+          "hours": "Mo 11:00-23:30; Tu 11:00-23:30; We 11:00-23:30; Th 11:00-23:30; Fr 11:00-23:30; Sa 11:00-23:30; Su 11:00-23:30",
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: Giampiero Cortinovis su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-07T18:16:41.111+00:00"
+        },
+        {
+          "name": "Plaza de España",
+          "url": null,
+          "phone": null,
+          "hours": null,
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": null,
+          "src": "own",
+          "enriched": "2026-11-07T15:39:45.54+00:00"
+        },
+        {
+          "name": "O Cacho do José",
+          "url": "https://www.ocachodojose.com/",
+          "phone": "+34 915 21 09 84",
+          "hours": "Mo 09:30-00:30; Tu 09:30-00:30; We 09:30-00:30; Th 09:30-00:30; Fr 09:30-01:00; Sa 09:30-01:00; Su 09:30-00:30",
+          "menu": "https://ocachodojose.com/carta/",
+          "insta": "https://www.instagram.com/ocachodojose/?hl=es",
+          "photo": "https://ocachodojose.com/wp-content/uploads/o-cacho-do-jose-noticias.jpg",
+          "credit": "Foto: ocachodojose.com",
+          "src": "auto",
+          "enriched": "2026-11-07T14:44:21.472+00:00"
+        },
+        {
+          "name": "Itaca TCG Store",
+          "url": "https://itaca.gg/",
+          "phone": "+34 914 93 99 82",
+          "hours": "Mo 11:00-14:30,17:00-21:00; Tu 11:00-14:30,17:00-21:00; We 11:00-14:30,17:00-21:00; Th 11:00-14:30,17:00-21:00; Fr 11:00-14:30,16:30-21:00; Sa 11:00-14:30,17:00-21:00; Su 11:00-14:30,17:00-21:00",
+          "menu": null,
+          "insta": "https://www.instagram.com/itacagg/",
+          "photo": "https://itaca.gg//img/product/magic-intropack/888391.jpg",
+          "credit": "Foto: itaca.gg",
+          "src": "auto",
+          "enriched": "2026-11-07T10:26:26.773+00:00"
+        },
+        {
+          "name": "Tienda de Juegos - TEMPEST STORE",
+          "url": "https://tempeststore.com/",
+          "phone": "+34 918 05 85 94",
+          "hours": "Mo 12:30-14:30,16:00-20:30; Tu 12:30-14:30,16:00-20:30; We 12:30-14:30,16:00-20:30; Th 12:30-14:30,16:00-20:30; Fr 12:30-14:30,16:00-20:30; Sa 12:30-14:30,16:00-20:30; Su off",
+          "menu": null,
+          "insta": "https://instagram.com/mtgtempeststore/",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: David Dave su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-07T10:26:01.043+00:00"
+        },
+        {
+          "name": "TopDeck",
+          "url": "https://topdeck.es/",
+          "phone": "+34 912 90 35 05",
+          "hours": "Mo 16:00-21:00; Tu 16:00-21:00; We 16:00-21:00; Th 16:00-21:00; Fr 16:00-21:00; Sa 11:00-14:00,16:00-21:00; Su 11:00-14:00,16:00-21:00",
+          "menu": null,
+          "insta": "https://www.instagram.com/tcg_topdeck/",
+          "photo": "https://topdeck.es/wp-content/uploads/2026/11/4ec7c45f-3fd1-476b-a029-7c147e11c7",
+          "credit": "Foto: topdeck.es",
+          "src": "auto",
+          "enriched": "2026-11-07T10:25:07.871+00:00"
+        },
+        {
+          "name": "Factory Cards",
+          "url": "https://www.factorycardstcg.com/",
+          "phone": "692495498",
+          "hours": "Mo 10:30-13:30,17:00-20:30; Tu 10:30-13:30,17:00-20:30; We 10:30-13:30,17:00-20:30; Th 10:30-13:30,17:00-20:30; Fr 10:30-13:30,17:00-20:30; Sa 10:30-14:00,17:00-20:30; Su 10:30-14:00,17:00-20:30",
+          "menu": null,
+          "insta": "https://www.instagram.com/factorycards",
+          "photo": "https://factorycardstcg.com/cdn/shop/files/images_64.jpg?v=1793787694&width=165",
+          "credit": "Foto: factorycardstcg.com",
+          "src": "auto",
+          "enriched": "2026-11-07T10:24:29.09+00:00"
+        },
+        {
+          "name": "collectorage",
+          "url": "https://collectorage.com/",
+          "phone": "+34 628 93 27 40",
+          "hours": "Mo 11:00-14:30,17:00-20:30; Tu 11:00-14:30,17:00-20:30; We 11:00-14:30,17:00-20:30; Th 11:00-14:30,17:00-20:30; Fr 11:00-14:30,17:00-20:30; Sa 11:00-14:30,17:00-20:30; Su off",
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: collectorage - Tienda de Coleccionismo (Cartas, Figuras, Merchandising) y Juegos su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-07T10:23:31.275+00:00"
+        },
+        {
+          "name": "Metropolis Center",
+          "url": "https://www.metropolis-center.com/",
+          "phone": "+34 915 41 66 87",
+          "hours": "Mo 11:00-14:00,16:00-21:00; Tu 11:00-14:00,16:00-21:00; We 11:00-14:00,16:00-21:00; Th 11:00-14:00,16:00-21:00; Fr 11:00-14:00,16:00-21:00; Sa 10:00-14:00,16:00-21:00; Su 10:00-14:00,16:00-21:00",
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: Eduardo Herranz su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-07T10:22:25.853+00:00"
+        },
+        {
+          "name": "ARCO TCG - Madrid",
+          "url": "https://arcotcg.com/",
+          "phone": "+34 614 77 81 22",
+          "hours": "Mo 12:00-15:00,16:00-20:00; Tu 12:00-15:00,16:00-20:00; We 12:00-15:00,16:00-20:00; Th 12:00-15:00,16:00-20:00; Fr 12:00-15:00,16:00-21:00; Sa 12:00-15:00,16:00-21:00; Su 12:00-15:00,16:00-20:00",
+          "menu": null,
+          "insta": "https://www.instagram.com/arcotcg/",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: Samuel su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-06T19:58:11.42+00:00"
+        },
+        {
+          "name": "Mendokoro Janomeya",
+          "url": null,
+          "phone": "+81 75-231-2772",
+          "hours": "Mo 11:30-16:00,18:00-21:30; Tu 11:30-16:00,18:00-21:30; We 11:30-16:00,18:00-21:30; Th 11:30-16:00,18:00-21:30; Fr 11:30-16:00,18:00-21:30; Sa 11:30-16:00,18:00-21:30; Su 11:30-16:00,18:00-21:30",
+          "menu": null,
+          "insta": null,
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": "Foto: want to sleep all day su Google Maps",
+          "src": "auto",
+          "enriched": "2026-11-06T18:18:06.882+00:00"
+        },
         {
           "name": "Celicioso",
           "url": null,
@@ -234,9 +417,9 @@
           "hours": null,
           "menu": null,
           "insta": "https://instagram.com/meliahtlresorts/",
-          "photo": "https://dam.melia.com/melia/accounts/f8/4000018/projects/127/assets/be/43017/3bc",
-          "credit": "Foto: www.melia.com",
-          "src": "auto",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": null,
+          "src": "own",
           "enriched": "2026-11-04T07:47:12.135+00:00"
         },
         {
@@ -276,18 +459,6 @@
           "enriched": "2026-11-02T22:10:17.349+00:00"
         },
         {
-          "name": "Duca d'Aosta",
-          "url": "https://www.caffeducadaosta.it/",
-          "phone": "+39 348 614 4748",
-          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
-          "menu": "https://www.caffeducadaosta.it/menu/",
-          "insta": "http://www.instagram.com/caffe_duca_daosta/",
-          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10",
-          "credit": "Foto: caffeducadaosta.it",
-          "src": "auto",
-          "enriched": "2026-11-02T22:04:53.864+00:00"
-        },
-        {
           "name": "Albergo Ristorante dell'Angelo",
           "url": null,
           "phone": "+39 0345 47073",
@@ -298,6 +469,18 @@
           "credit": "Foto: Albergo Ristorante Pizzeria Bar dell'Angelo su Google Maps",
           "src": "auto",
           "enriched": "2026-11-02T22:05:06.21+00:00"
+        },
+        {
+          "name": "Trattoria Nonno Fifì",
+          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
+          "phone": "+39 345 113 4490",
+          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
+          "menu": null,
+          "insta": null,
+          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-",
+          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
+          "src": "auto",
+          "enriched": "2026-11-02T22:05:20.094+00:00"
         },
         {
           "name": "Trattoria dell'Arlecchino",
@@ -312,6 +495,18 @@
           "enriched": "2026-11-02T22:04:59.819+00:00"
         },
         {
+          "name": "Duca d'Aosta",
+          "url": "https://www.caffeducadaosta.it/",
+          "phone": "+39 348 614 4748",
+          "hours": "Mo 06:30-21:30; Tu off; We 06:30-21:30; Th 06:30-21:30; Fr 06:30-22:00; Sa 06:30-23:00; Su 06:30-22:00",
+          "menu": "https://www.caffeducadaosta.it/menu/",
+          "insta": "http://www.instagram.com/caffe_duca_daosta/",
+          "photo": "https://www.caffeducadaosta.it/wp-content/uploads/2025/10/WhatsApp-Image-2025-10",
+          "credit": "Foto: caffeducadaosta.it",
+          "src": "auto",
+          "enriched": "2026-11-02T22:04:53.864+00:00"
+        },
+        {
           "name": "Ristorante San Marco",
           "url": null,
           "phone": "+39 0345 47340",
@@ -322,18 +517,6 @@
           "credit": "Foto: Martina Pazzano su Google Maps",
           "src": "auto",
           "enriched": "2026-11-02T22:05:13.28+00:00"
-        },
-        {
-          "name": "Trattoria Nonno Fifì",
-          "url": "https://m.facebook.com/Bar-Trattoria-Nonno-Fif%C3%AD-103763587803105/?__tn__=,g",
-          "phone": "+39 345 113 4490",
-          "hours": "Mo 09:00-17:00; Tu off; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00; Sa 09:00-17:00; Su 08:00-19:00",
-          "menu": null,
-          "insta": null,
-          "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Strachitunt.jpg/1280px-",
-          "credit": "Foto: Sistoiv, CC BY-SA 3.0, Wikimedia Commons",
-          "src": "auto",
-          "enriched": "2026-11-02T22:05:20.094+00:00"
         },
         {
           "name": "Cornello dei Tasso",
@@ -439,8 +622,8 @@
           "menu": "http://bodegasrosell.es/Carta-de-comida/",
           "insta": "https://www.instagram.com/bodegasrosell/",
           "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
-          "credit": "Foto: Bodegas Rosell su Google Maps",
-          "src": "auto",
+          "credit": null,
+          "src": "own",
           "enriched": "2026-11-01T11:56:20.197+00:00"
         },
         {
@@ -835,8 +1018,8 @@
           "menu": null,
           "insta": null,
           "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
-          "credit": "Foto: Andy Perrotto su Google Maps",
-          "src": "auto",
+          "credit": null,
+          "src": "own",
           "enriched": "2026-10-25T12:12:36.197+00:00"
         },
         {
@@ -858,9 +1041,9 @@
           "hours": "Mo 10:00-21:00; Tu off; We 10:00-21:00; Th 10:00-21:00; Fr 10:00-21:00; Sa 10:00-21:00; Su 10:00-14:30",
           "menu": null,
           "insta": "https://www.instagram.com/museoreinasofia/",
-          "photo": "https://recursos.museoreinasofia.es/styles/small_landscape/public/Exposiciones/e",
-          "credit": "Foto: museoreinasofia.es",
-          "src": "auto",
+          "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
+          "credit": null,
+          "src": "own",
           "enriched": "2026-10-25T12:11:35.103+00:00"
         },
         {
@@ -871,8 +1054,8 @@
           "menu": null,
           "insta": "http://instagram.com/madrid",
           "photo": "https://btyvzzmyzmlvyhxwavxd.supabase.co/storage/v1/object/public/photos/places/",
-          "credit": "Foto: Murilo Pereira de Melo su Google Maps",
-          "src": "auto",
+          "credit": null,
+          "src": "own",
           "enriched": "2026-10-25T12:11:23.29+00:00"
         },
         {

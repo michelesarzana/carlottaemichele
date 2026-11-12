@@ -2,46 +2,51 @@
   {
     "id": "ristoranti",
     "name": "Mangiare",
-    "icon": "fork"
+    "icon": "🍴"
   },
   {
     "id": "bar",
     "name": "Bar e caffè",
-    "icon": "cup"
+    "icon": "☕"
   },
   {
     "id": "bere",
     "name": "Bere",
-    "icon": "beer"
+    "icon": "🍺"
   },
   {
     "id": "vino",
     "name": "Vino e cantine",
-    "icon": "wine"
+    "icon": "🍷"
   },
   {
     "id": "negozi",
     "name": "Negozi",
-    "icon": "bag"
+    "icon": "🛍️"
   },
   {
     "id": "posti",
     "name": "Posti",
-    "icon": "mountain"
+    "icon": "🏞️"
   },
   {
     "id": "esperienze",
     "name": "Esperienze",
-    "icon": "star"
+    "icon": "🎟️"
   },
   {
     "id": "dormire",
     "name": "Dormire",
-    "icon": "bed"
+    "icon": "🛏️"
+  },
+  {
+    "id": "pokemon",
+    "name": "Pokémon",
+    "icon": "🎴"
   },
   {
     "id": "gluten-free",
     "name": "Gluten Free",
-    "icon": "wheat"
+    "icon": "🌾"
   }
 ]
