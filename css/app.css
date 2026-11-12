@@ -846,3 +846,6 @@ a:hover { color: var(--accent-strong); }
 .tp-row .row-main { flex: 1; min-width: 0; }
 .tp-row.other .row-sub { color: #B25E00; }
 .tp-check { width: 24px; height: 24px; accent-color: var(--accent); flex: none; margin: 0; }
+
+/* Emoji della cucina nei pin e nelle righe */
+.emo { line-height: 1; display: inline-flex; align-items: center; justify-content: center; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
