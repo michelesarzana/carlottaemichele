@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261107184851';
-import { icon, CATEGORY_ICONS } from './icons.js?v=20261107184851';
-import { Sheet } from './sheet.js?v=20261107184851';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261107184851';
-import { prettyHours } from './enrich.js?v=20261107184851';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261112064928';
+import { icon, CATEGORY_ICONS, cuisineIcon } from './icons.js?v=20261112064928';
+import { Sheet } from './sheet.js?v=20261112064928';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261112064928';
+import { prettyHours } from './enrich.js?v=20261112064928';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -394,7 +394,7 @@ function renderMarkers() {
     btn.className = 'pin' + (p.done ? ' done' : '') + (p.id === selected ? ' selected' : '');
     btn.style.setProperty('--c', safeColor(c.color));
     btn.dataset.cat = c.id;
-    btn.innerHTML = icon(c.icon, 16, 2.2) + (p.starred ? `<span class="pin-star">${icon('star', 10, 3)}</span>` : '');
+    btn.innerHTML = icon(placeIcon(p), 16, 2.2) + (p.starred ? `<span class="pin-star">${icon('star', 10, 3)}</span>` : '');
     btn.setAttribute('aria-label', `${p.name}${p.starred ? ', da non perdere' : ''}${p.done ? ', fatto' : ', da fare'}`);
     if (p.starred) el.style.zIndex = '2';
     btn.addEventListener('click', (e) => { e.stopPropagation(); go(`#/posto/${p.id}`); });
@@ -649,7 +649,7 @@ function renderSuggest() {
       const ph = safeUrl(p.photo_url);
       const sub = [c.name, (p.cuisines || []).join(', '), p.area, price(p.price)].filter(Boolean);
       return `<button type="button" class="sg-row" data-sg-place="${esc(p.id)}">
-        <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(c.icon, 16, 2.1)}</span>
+        <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(placeIcon(p), 16, 2.1)}</span>
         <span class="sg-main"><span class="sg-name">${hl(p.name, qs)}${michelin(p, 10)}</span><span class="sg-sub">${sub.map((x) => hl(x, qs)).join(' · ')}</span></span>
       </button>`;
     }).join('') + '</div>';
@@ -856,6 +856,12 @@ function renderSheet() {
   sheet._apply && sheet.enabled && sheet._apply();
 }
 
+// Icona del posto: per mangiare e bere, quella della cucina (se c'è)
+function placeIcon(p) {
+  const c = cat(p.category_id);
+  return (FOOD.has(p.category_id) && cuisineIcon(p.cuisines)) || c.icon;
+}
+
 function placeRow(p) {
   const c = cat(p.category_id);
   const sub = [c.name, (p.cuisines || []).join(', '), p.area, price(p.price)].filter(Boolean).map(esc).join(' · ');
@@ -865,7 +871,7 @@ function placeRow(p) {
   const ph = safeUrl(p.photo_url);
   return `
     <button class="row" data-act="open-place" data-id="${esc(p.id)}">
-      <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 20, 2.1)}</span>
+      <span class="tile${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(placeIcon(p), 20, 2.1)}</span>
       <span class="row-main"><span class="row-title">${p.starred ? `<span class="star-mark" aria-label="Da non perdere">${icon('star', 13, 2.4)}</span>` : ''}${esc(p.name)}${michelin(p, 11)}</span><span class="row-sub">${sub}${p.price_range ? ` · ${esc(p.price_range)}` : ''}</span></span>
       ${end}
     </button>`;
@@ -913,7 +919,7 @@ function resultCard(p) {
   return `
     <button class="rcard" data-act="open-place" data-id="${esc(p.id)}">
       <span class="rcard-ph${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">
-        ${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(c.icon, 30, 1.6)}
+        ${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" decoding="async">` : icon(placeIcon(p), 30, 1.6)}
         <span class="rcard-pills">
           ${dist ? `<span class="pill">${esc(dist)}</span>` : '<span></span>'}
           ${p.starred ? `<span class="pill pill-star">${icon('star', 11, 2.6)}Da non perdere</span>` : ''}
@@ -1075,7 +1081,7 @@ function viewPlace() {
   if (photo || S.editor) {
     body += `<figure class="photo">${photo
       ? `<img src="${esc(photo)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
-      : `<span class="photo-empty" style="--c:${safeColor(c.color)}">${icon(c.icon, 34, 1.6)}</span>`}`;
+      : `<span class="photo-empty" style="--c:${safeColor(c.color)}">${icon(placeIcon(p), 34, 1.6)}</span>`}`;
     if (S.editor) {
       body += `<span class="photo-tools">
         <button class="photo-btn" data-act="photo-upload" data-id="${esc(p.id)}" aria-label="Carica una foto vostra">${icon('camera', 16, 2.2)}</button>
@@ -2674,7 +2680,7 @@ function openTripPicker(trip) {
           const other = p.trip_id ? S.tripById.get(p.trip_id)?.name : '';
           const sub = [c.name, (p.cuisines || []).join(', '), d != null ? fmtDist(d) : '', other ? `ora in ${other}` : ''].filter(Boolean).map(esc).join(' · ');
           return `<label class="tp-row${other ? ' other' : ''}">
-            <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(c.icon, 16, 2.1)}</span>
+            <span class="tile sm${ph ? ' has-photo' : ''}" style="--c:${safeColor(c.color)}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy">` : icon(placeIcon(p), 16, 2.1)}</span>
             <span class="row-main"><span class="row-title">${esc(p.name)}${michelin(p, 10)}</span><span class="row-sub">${sub}</span></span>
             <input type="checkbox" class="tp-check" data-id="${esc(p.id)}" ${picked.has(p.id) ? 'checked' : ''} aria-label="${esc(p.name)}">
           </label>`;
