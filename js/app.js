@@ -1,9 +1,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
-import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261112065324';
-import { icon, CATEGORY_ICONS, cuisineEmoji } from './icons.js?v=20261112065324';
-import { Sheet } from './sheet.js?v=20261112065324';
-import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261112065324';
-import { prettyHours } from './enrich.js?v=20261112065324';
+import { SUPABASE_URL, SUPABASE_KEY, MAP_STYLE, DEFAULT_VIEW, PEOPLE, VOTE_LABELS } from './config.js?v=20261112070957';
+import { icon, CATEGORY_EMOJI, cuisineEmoji, isEmoji } from './icons.js?v=20261112070957';
+import { Sheet } from './sheet.js?v=20261112070957';
+import { findTripCover, uploadPhoto, pickFile, placeCandidates, tripCandidates } from './photos.js?v=20261112070957';
+import { prettyHours } from './enrich.js?v=20261112070957';
 
 const FOOD = new Set(['ristoranti', 'bar', 'bere', 'vino']);
 const CUISINES = ['Italiana', 'Tradizionale', 'Pizza', 'Pesce', 'Carne', 'Giapponese', 'Sushi', 'Ramen', 'Cinese', 'Coreana',
@@ -87,7 +87,7 @@ function slugify(s) {
 function initial(name) { return name ? name[0].toUpperCase() + '.' : ''; }
 function isApple() { return /iPhone|iPad|Macintosh/.test(navigator.userAgent); }
 function placeCats(p) { return [p.category_id, ...(p.extra_categories || [])].filter(Boolean); }
-function cat(id) { return S.catById.get(id) || { id, name: 'Altro', color: '#5F6B7A', icon: 'pin' }; }
+function cat(id) { return S.catById.get(id) || { id, name: 'Altro', color: '#5F6B7A', icon: '📍' }; }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
 
 let toastTimer = 0;
@@ -1772,7 +1772,8 @@ function openCategories() {
         <div class="group cat-edit">
           <div class="group-line"><input class="left" id="ce-name" value="${esc(draft.name)}" placeholder="Nome categoria" aria-label="Nome categoria"></div>
           <div class="swatches" id="ce-colors">${PALETTE.map((c) => `<button class="swatch" data-c="${c}" style="--c:${c}" aria-label="Colore ${c}" aria-pressed="${draft.color.toLowerCase() === c.toLowerCase()}"></button>`).join('')}</div>
-          <div class="icon-opts" id="ce-icons">${CATEGORY_ICONS.map((n) => `<button class="icon-opt" data-i="${n}" aria-label="Icona ${n}" aria-pressed="${draft.icon === n}">${icon(n, 18)}</button>`).join('')}</div>
+          <div class="icon-opts" id="ce-icons">${[...new Set([...CATEGORY_EMOJI, ...(draft.icon && isEmoji(draft.icon) ? [draft.icon] : [])])].map((n) => `<button type="button" class="icon-opt" data-i="${n}" aria-label="Emoji ${n}" aria-pressed="${draft.icon === n}">${icon(n, 20)}</button>`).join('')}</div>
+            <div class="group-line emoji-own"><span>O scrivi un'emoji</span><input id="ce-icons-own" class="emoji-input" maxlength="16" inputmode="text" placeholder="🙂" aria-label="Scrivi un'emoji" value="${draft.icon && isEmoji(draft.icon) && !CATEGORY_EMOJI.includes(draft.icon) ? draft.icon : ''}"></div>
           <div class="group-line" style="gap:8px">
             ${draft.id ? (used(draft.id)
               ? `<span class="meta" style="flex:1">Usata da ${used(draft.id)} ${used(draft.id) === 1 ? 'posto' : 'posti'}</span>`
@@ -1804,7 +1805,7 @@ function openCategories() {
         }));
         body.querySelector('#ce-new')?.addEventListener('click', () => {
           open = '__new';
-          draft = { id: null, name: '', color: PALETTE[8], icon: 'pin' };
+          draft = { id: null, name: '', color: PALETTE[8], icon: '📍' };
           render();
           body.querySelector('#ce-name')?.focus();
         });
@@ -1812,6 +1813,10 @@ function openCategories() {
         body.querySelector('#ce-name').addEventListener('input', (e) => { draft.name = e.target.value; });
         body.querySelector('#ce-colors').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { draft.color = b.dataset.c; render(); } });
         body.querySelector('#ce-icons').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) { draft.icon = b.dataset.i; render(); } });
+        body.querySelector('#ce-icons-own').addEventListener('input', (e) => {
+          const v = e.target.value.trim();
+          if (isEmoji(v)) { draft.icon = v; body.querySelectorAll('#ce-icons [data-i]').forEach((x) => x.setAttribute('aria-pressed', 'false')); }
+        });
         body.querySelector('#ce-cancel').addEventListener('click', () => { open = null; draft = null; render(); });
         body.querySelector('#ce-del')?.addEventListener('click', async () => {
           if (!confirm(`Eliminare la categoria "${draft.name}"?`)) return;
@@ -1975,7 +1980,7 @@ function openFilters() {
           <div class="fgroup"><span class="field-label">Stato</span>
             <div class="segmented">${segBtn('st:all', 'Tutti', F.status === 'all')}${segBtn('st:todo', 'Da fare', F.status === 'todo')}${segBtn('st:done', 'Fatti', F.status === 'done')}</div></div>
           <div class="fgroup"><span class="field-label">Categoria</span>
-            <div class="fchips">${S.categories.map((c) => chip(`cat:${c.id}`, esc(c.name), F.cats.has(c.id), c.color)).join('')}</div></div>
+            <div class="fchips">${S.categories.map((c) => chip(`cat:${c.id}`, `${icon(c.icon, 15, 2.2)}${esc(c.name)}`, F.cats.has(c.id))).join('')}</div></div>
           ${cuis.length ? `<div class="fgroup"><span class="field-label">Cucina</span>
             <div class="fchips">${cuis.map((c) => chip(`cu:${c}`, esc(c), F.cuisines.has(c))).join('')}</div></div>` : ''}
           <div class="fgroup"><span class="field-label">Prezzo</span>
@@ -2272,7 +2277,7 @@ function openPlaceForm(place = null, preset = {}) {
       q('#pf-cats').addEventListener('click', (e) => {
         const b = e.target.closest('[data-cat]');
         if (!b) return;
-        if (b.dataset.cat === '__new') { newCat = { name: '', color: PALETTE[8], icon: 'pin' }; renderNewCat(); return; }
+        if (b.dataset.cat === '__new') { newCat = { name: '', color: PALETTE[8], icon: '📍' }; renderNewCat(); return; }
         toggleCat(b.dataset.cat);
       });
       q('#pf-main').addEventListener('click', (e) => {
@@ -2291,7 +2296,8 @@ function openPlaceForm(place = null, preset = {}) {
           <div class="group" style="margin-top:10px">
             <div class="group-line"><input class="left" id="nc-name" placeholder="Nome categoria" value="${esc(newCat.name)}" aria-label="Nome categoria"></div>
             <div class="swatches" id="nc-colors">${PALETTE.map((c) => `<button class="swatch" data-c="${c}" style="--c:${c}" aria-label="Colore ${c}" aria-pressed="${newCat.color === c}"></button>`).join('')}</div>
-            <div class="icon-opts" id="nc-icons">${CATEGORY_ICONS.map((n) => `<button class="icon-opt" data-i="${n}" aria-label="Icona ${n}" aria-pressed="${newCat.icon === n}">${icon(n, 18)}</button>`).join('')}</div>
+            <div class="icon-opts" id="nc-icons">${[...new Set([...CATEGORY_EMOJI, ...(newCat.icon && isEmoji(newCat.icon) ? [newCat.icon] : [])])].map((n) => `<button type="button" class="icon-opt" data-i="${n}" aria-label="Emoji ${n}" aria-pressed="${newCat.icon === n}">${icon(n, 20)}</button>`).join('')}</div>
+            <div class="group-line emoji-own"><span>O scrivi un'emoji</span><input id="nc-icons-own" class="emoji-input" maxlength="16" inputmode="text" placeholder="🙂" aria-label="Scrivi un'emoji" value="${newCat.icon && isEmoji(newCat.icon) && !CATEGORY_EMOJI.includes(newCat.icon) ? newCat.icon : ''}"></div>
             <div class="group-line" style="justify-content:flex-end; gap:8px">
               <button class="btn btn-quiet" id="nc-cancel" style="height:36px">Annulla</button>
               <button class="btn btn-accent" id="nc-save" style="height:36px">Crea</button>
@@ -2300,6 +2306,10 @@ function openPlaceForm(place = null, preset = {}) {
         q('#nc-name').addEventListener('input', (e) => { newCat.name = e.target.value; });
         q('#nc-colors').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { newCat.color = b.dataset.c; renderNewCat(); } });
         q('#nc-icons').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) { newCat.icon = b.dataset.i; renderNewCat(); } });
+        q('#nc-icons-own').addEventListener('input', (e) => {
+          const v = e.target.value.trim();
+          if (isEmoji(v)) { newCat.icon = v; el.querySelectorAll('#nc-icons [data-i]').forEach((x) => x.setAttribute('aria-pressed', 'false')); }
+        });
         q('#nc-cancel').addEventListener('click', () => { newCat = null; renderNewCat(); });
         q('#nc-save').addEventListener('click', async () => {
           const name = newCat.name.trim();

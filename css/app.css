@@ -849,3 +849,10 @@ a:hover { color: var(--accent-strong); }
 
 /* Emoji della cucina nei pin e nelle righe */
 .emo { line-height: 1; display: inline-flex; align-items: center; justify-content: center; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
+
+/* Scelta dell'emoji della categoria */
+.icon-opt .emo { font-size: 21px; }
+.icon-opt[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--accent) inset; background: var(--accent-soft); }
+.emoji-own { gap: 10px; }
+.emoji-own span { flex: 1; font-size: 0.9375rem; color: var(--ink-2); }
+.emoji-input { width: 64px; height: 36px; text-align: center; font-size: 22px; border-radius: 10px; border: 0; background: var(--fill); }

@@ -41,7 +41,15 @@ const P = {
 
 export const CATEGORY_ICONS = ['fork', 'cup', 'beer', 'wine', 'wheat', 'cards', 'bag', 'mountain', 'star', 'bed', 'plane', 'heart', 'pin'];
 
+// Un'emoji al posto dell'icona (categorie): solo caratteri emoji, niente HTML
+const EMOJI_RE = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator}|[\u200d\ufe0f\u20e3\u{1F3FB}-\u{1F3FF}#*0-9])+$/u;
+export function isEmoji(s) { return typeof s === 'string' && s.length <= 16 && EMOJI_RE.test(s) && /\p{Extended_Pictographic}|\p{Regional_Indicator}/u.test(s); }
+
+// Emoji proposte per le categorie (si può scriverne qualsiasi altra)
+export const CATEGORY_EMOJI = ['🍴', '🍝', '🍕', '🍣', '☕', '🍺', '🍷', '🍸', '🍰', '🍦', '🥐', '🌾', '🛍️', '📚', '🎨', '🏛️', '🏞️', '⛰️', '🏖️', '🌳', '🎟️', '🎭', '🎵', '⚽', '🏃', '🛏️', '✈️', '🚂', '🎴', '❤️', '⭐', '📍'];
+
 export function icon(name, size = 20, stroke = 2) {
+  if (!P[name] && isEmoji(name)) return `<span class="emo" style="font-size:${Math.round(size * 1.05)}px" aria-hidden="true">${name}</span>`;
   const body = P[name] || P.pin;
   return `<svg class="ic" aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
 }
